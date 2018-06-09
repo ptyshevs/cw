@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_lst.h>
 #include "asm.h"
 
 /*
@@ -49,21 +50,33 @@ void	open_files(t_asm *a)
 {
 	char	*new_filename;
 
-	if ((a->fd_from = open(a->line, O_RDONLY)) == -1)
-		ft_panic(ft_sprintf("Can't read source file %s", a->line), 2, 1);
-	new_filename = change_extension(a->line, ".s", ".cor");
+	if ((a->fd_from = open(a->name, O_RDONLY)) == -1)
+		ft_panic(ft_sprintf("Can't read source file %s", a->name), 2, 1);
+	new_filename = change_extension(a->name, ".s", ".cor");
 	if ((a->fd_to = open(new_filename, O_WRONLY|O_CREAT, 644)) == -1)
 		ft_panic(ft_sprintf("Cant write champion to %s", new_filename), 2, 1);
 	ft_strdel(&new_filename);
-	a->line = NULL; // need for using gnl later
+	a->name = NULL; // need for using gnl later
 }
 
 /*
 ** Handle end of execution properly
 */
 
-void	wrap_up(t_asm *asms)
+void	wrap_up(t_asm *asms, t_list **acontent)
 {
+	t_list	*tmp;
+	t_list	*prev;
+
+	tmp = *acontent;
+	while (tmp)
+	{
+		prev = tmp;
+		tmp = tmp->next;
+		ft_memdel(&prev->content);
+		ft_memdel((void **) &prev);
+	}
+	*acontent = NULL;
 	close(asms->fd_from);
 	close(asms->fd_to);
 }
@@ -85,7 +98,7 @@ t_asm	parse_cli(int ac, char **av)
 		if (ft_strequ(av[i], "-a"))
 			asms.to_stdout = TRUE;
 		else
-			asms.line = av[i];
+			asms.name = av[i];
 	}
 	return (asms);
 }

@@ -23,20 +23,25 @@
 
 typedef struct	s_asm
 {
-	char			*line;
-	unsigned int	line_cnt;
-	unsigned int	chr_cnt;
 	t_bool			to_stdout;
+
+	t_list			*lines;
+
+	char			*name;
+	char			*comment;
 
 	int				fd_from;
 	int				fd_to;
+
+	unsigned int	line_cnt;
+	unsigned int	chr_cnt;
 }				t_asm;
 
 
 t_asm	parse_cli(int ac, char **av);
 void	open_files(t_asm *a);
 
-void	wrap_up(t_asm *asms);
+void	wrap_up(t_asm *asms, t_list **acontent);
 
 
 #endif

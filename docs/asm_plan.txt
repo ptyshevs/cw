@@ -12,6 +12,7 @@
 2. Parse file:
   * permission denied
   * empty file
+  lexical check
   bot name and comment
     skip comments (#like this)
     check if each symbol is in LABEL_CHARS
