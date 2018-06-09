@@ -87,6 +87,6 @@ int main(int ac, char **av)
 	if (ac == 1)
 		asm_usage();
 	asms = parse_cli(ac, av);
-	open_files(&);
+	open_files(&asms);
 	ft_printf("%s: %d\n", asms.filename, asms.to_stdout);
 }
