@@ -7,11 +7,11 @@ LIBFT = libft
 LIBFTA = $(LIBFT)/libft.a
 LIBFT_INCDIR = $(LIBFT)/includes
 
-HEADERS = cw.h op.h
+HEADERS = cw.h op.h asm.h
 INCDIR = includes
 INCLUDES = $(addprefix $(INCDIR)/, $(HEADERS))
 
-ASM_FILENAMES = asm
+ASM_FILENAMES = asm asm_prerequisites
 
 ASM_SRCDIR = src
 ASM_SOURCES = $(patsubst %, $(ASM_SRCDIR)/%.c, $(ASM_FILENAMES))

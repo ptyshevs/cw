@@ -50,12 +50,5 @@ typedef struct	s_op
 	unsigned int	carry;
 }				t_op;
 
-typedef struct	s_asm
-{
-	char			*filename;
-	t_bool			to_stdout;
-	int				fd_from;
-	int				fd_to;
-}				t_asm;
 
 #endif
