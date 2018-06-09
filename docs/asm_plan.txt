@@ -12,15 +12,20 @@
 2. Parse file:
   * permission denied
   * empty file
-  * bad magic
+  bot name and comment
+    skip comments (#like this)
+    check if each symbol is in LABEL_CHARS
+    multiline name "\nname\n"
+    multiline comment
+
+3. Write into file in a proper form:
+  magic
   bot name
   2 NULL bytes
   bot size
   comment
   bot comment (isn't it the same as comment)
   2 NULL bytes after comment
-
-3. Translate executable code:
-
+  executable code
 
 4. Save to file with the same filename, extension *.cor

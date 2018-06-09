@@ -49,12 +49,13 @@ void	open_files(t_asm *a)
 {
 	char	*new_filename;
 
-	if ((a->fd_from = open(a->filename, O_RDONLY)) == -1)
-		ft_panic(ft_sprintf("Can't read source file %s", a->filename), 2, 1);
-	new_filename = change_extension(a->filename, ".s", ".cor");
+	if ((a->fd_from = open(a->line, O_RDONLY)) == -1)
+		ft_panic(ft_sprintf("Can't read source file %s", a->line), 2, 1);
+	new_filename = change_extension(a->line, ".s", ".cor");
 	if ((a->fd_to = open(new_filename, O_WRONLY|O_CREAT, 644)) == -1)
 		ft_panic(ft_sprintf("Cant write champion to %s", new_filename), 2, 1);
 	ft_strdel(&new_filename);
+	a->line = NULL; // need for using gnl later
 }
 
 /*
@@ -84,8 +85,7 @@ t_asm	parse_cli(int ac, char **av)
 		if (ft_strequ(av[i], "-a"))
 			asms.to_stdout = TRUE;
 		else
-			asms.filename = av[i];
+			asms.line = av[i];
 	}
-
 	return (asms);
 }

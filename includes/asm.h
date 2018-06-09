@@ -14,15 +14,20 @@
 # define ASM_H
 
 # include <fcntl.h>
+#include <op.h>
 # include "libft.h"
+#include "gnls.h"
 # include "ft_printf.h"
 # include "ft_str.h"
 # include "ft_tell.h"
 
 typedef struct	s_asm
 {
-	char			*filename;
+	char			*line;
+	unsigned int	line_cnt;
+	unsigned int	chr_cnt;
 	t_bool			to_stdout;
+
 	int				fd_from;
 	int				fd_to;
 }				t_asm;
