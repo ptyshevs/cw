@@ -42,12 +42,18 @@ typedef struct	s_op
 {
 	char			*name;
 	unsigned int	nargs;
-	unsigned int	args[nargs];
+	unsigned int	args[16];
 	unsigned int	op;
 	unsigned int	cycles;
 	char			*description;
 	unsigned int	codage;
 	unsigned int	carry;
 }				t_op;
+
+typedef struct	s_asm
+{
+	char			*filename;
+	t_bool			to_stdout;
+}				t_asm;
 
 #endif
