@@ -11,7 +11,7 @@ HEADERS = cw.h op.h
 INCDIR = includes
 INCLUDES = $(addprefix $(INCDIR)/, $(HEADERS))
 
-ASM_FILENAMES = asm_main
+ASM_FILENAMES = asm
 
 ASM_SRCDIR = src
 ASM_SOURCES = $(patsubst %, $(ASM_SRCDIR)/%.c, $(ASM_FILENAMES))

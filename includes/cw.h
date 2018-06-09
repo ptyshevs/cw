@@ -18,7 +18,7 @@
 
 typedef struct	s_map
 {
-	unsigned int map[MEM_SIZE];
+	unsigned int map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
 }				t_map;
 
 typedef struct	s_bot
@@ -31,10 +31,10 @@ typedef struct	s_bot
 
 typedef struct	s_proc
 {
-	unsigned int	pos;
-	unsigned int	carry;
+	unsigned int	pos; // same as PC?
+	unsigned int	carry; // flag that tells if the latest operation was successful
 	unsigned int	id; // Number of the player that have created it
-	unsigned int	reg[16]; // register
+	unsigned int	reg[REG_NUMBER]; // register
 	t_bool			alive;
 }				t_proc;
 
@@ -54,6 +54,8 @@ typedef struct	s_asm
 {
 	char			*filename;
 	t_bool			to_stdout;
+	int				fd_from;
+	int				fd_to;
 }				t_asm;
 
 #endif
