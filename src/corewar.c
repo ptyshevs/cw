@@ -12,6 +12,7 @@
 
 #include "ft_printf.h"
 #include "cw.h"
+#include <fcntl.h>
 
 int		usage()
 {
@@ -37,22 +38,41 @@ int		usage()
 	return (0);
 }
 
-t_bool	check_av(char **argv)
+t_bot	*init_bot(t_bot *bot)
 {
-	(void)av;
-	return (TRUE);
+	bot->name = NULL;
+	bot->comment = NULL;
+	bot->size = 0;
+	bot->id = 0;
+	return (bot);
+}
+
+void	read_file(t_bot *bot, char **binary)
+{
+	char	*str;
+	char	buff[1025];
+	int		bytes;
+	int		file_size;
+
+	file_size = 0;
+	open(binary[1], O_RDONLY);
+	while (gnl() > 0)
+	{
+	}
+	(void)bot;
 }
 
 int		main(int ac, char **av)
 {
+	t_bot bot;
 	if (ac == 1)
 		return (usage());
-	if (!check_av(av))
+	init_bot(&bot);
+	if (open(av[1], O_RDONLY) == -1)
 	{
 		write(1, "Can't read source file\n", 23);
 		return (1);
 	}
-	(void)av;
-	ft_printf("it's alive!\n");
+	read_file(&bot, av);
 	return (0);
 }
