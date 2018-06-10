@@ -20,6 +20,8 @@
 # include  "ft_printf.h"
 # include  "ft_str.h"
 # include  "ft_tell.h"
+# include  "ft_lst.h"
+
 
 typedef struct	s_asm
 {
@@ -46,6 +48,7 @@ typedef struct	s_tk
 
 t_asm	parse_cli(int ac, char **av);
 void	open_files(t_asm *a);
+void	lexical_analysis(t_list *line);
 
 void	wrap_up(t_asm *asms);
 
