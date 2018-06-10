@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include "gnls.h"
 #include "cw.h"
 #include <fcntl.h>
 
@@ -55,9 +56,10 @@ void	read_file(t_bot *bot, char **binary)
 	int		file_size;
 
 	file_size = 0;
-	open(binary[1], O_RDONLY);
-	while (gnl() > 0)
+	int fd = open(binary[1], O_RDONLY);
+	while (ft_gnl(fd, &str) > 0)
 	{
+		ft_printf("%s\n", str);
 	}
 	(void)bot;
 }
