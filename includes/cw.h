@@ -29,9 +29,13 @@ typedef struct	s_bot
 	unsigned int	id;
 }				t_bot;
 
+/*
+** Process - the same as caret
+*/
+
 typedef struct	s_proc
 {
-	unsigned int	pos; // same as PC?
+	unsigned int	pc; // process position
 	unsigned int	carry; // flag that tells if the latest operation was successful
 	unsigned int	id; // Number of the player that have created it
 	unsigned int	reg[REG_NUMBER]; // register

@@ -1,9 +1,19 @@
+Typical valid command: ld %0, r3, where:
+  ld - load a
+
 What is considered a valid string:
   1. comment (e.g. #hello)
   2. blank line
   3. line containing only space characters
   4. name/comment containing any character possible (.name: "привет")
   5. any amount of spaces between SEPARATOR_CHAR (,)
+  6. any amount of spaces between a command name and registers
 
 What is bad:
-  space between DIRECT_CHAR (%) or before LABEL_CHAR (:)
+  1. Opening brackets of name or comment without a closing one
+  2. space between DIRECT_CHAR (%) or before LABEL_CHAR (:)
+  3. another instruction in the same line
+
+What is wrong:
+	segfault: put `"` on line 7 of Gagnant.s.
+	reason: hell if I know
