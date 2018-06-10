@@ -64,13 +64,88 @@ void	parse_name_comment(t_asm *asms)
 }
 
 /*
+** Cut token into "fresh" string
+*/
+
+t_tk	*cut_token(char *line, int *i, int line_nbr)
+{
+	int		start;
+	t_tk	*token;
+
+	token = ft_memalloc(sizeof(t_tk));
+	start = *i;
+	*i += 1;
+	if (line[start] == '"')
+	{
+		while(line[*i] && line[*i] != '"')
+				*i += 1;
+		if (line[*i] == '"')
+			*i += 1;
+	}
+	else
+		while (line[*i] && !ft_isspace(line[*i]) && !ft_strchr(",", line[*i]))
+			*i += 1;
+	token->tk = ft_strtrunc(&(line[start]), (size_t) (*i - start), FALSE);
+	token->line = line_nbr;
+	token->chr = start;
+	return (token);
+}
+
+/*
+** Convert line to the list of tokens. Should the spaces be ignored?
+*/
+
+t_list	*line_to_tk(char *line, int line_nbr)
+{
+	t_list	*tk;
+	t_tk	*token;
+	int		i;
+
+	tk = NULL;
+	i = 0;
+	while (line[i])
+	{
+		while (line[i] && ft_isspace(line[i]))
+			i++;
+		if (!line[i] || line[i] == COMMENT_CHAR) // consider another comment symbol ';'
+			break ;
+		token = cut_token(line, &i, line_nbr);
+		ft_lstappend(&tk, ft_lstnew(token, sizeof(t_tk)));
+		if (line[i])
+			i++;
+	}
+	return (tk);
+}
+
+void	show_tokens(t_list *tokens)
+{
+	while (tokens)
+	{
+		ft_printf("%s -> ", ((t_tk *)tokens->content)->tk);
+		tokens = tokens->next;
+	}
+	ft_printf("NULL\n");
+}
+
+/*
 ** Check characters, labels, and tokens
 ** @param content list of lines read from file
 */
 
-void	lexical_analysis(t_list *content)
+void	lexical_analysis(t_list *line)
 {
+	t_list	*tk;
+	int		line_count;
 
+	tk = NULL;
+	line_count = 0;
+	while (line && ++line_count)
+	{
+		if (!ft_startswith(line->content, "#") && !ft_strispaces(line->content))
+			tk = line_to_tk(line->content, line_count);
+		show_tokens(tk);
+		line = line->next;
+	}
 }
 
 /*
@@ -82,18 +157,17 @@ void	read_file(t_asm *asms)
 	char	*tmp;
 
 	tmp = NULL;
-	while (ft_usgnl(asms->fd_from, &tmp) > 0)
+	while (ft_sgnl(asms->fd_from, &tmp) > 0)
 		ft_lstappend(&asms->lines, ft_lstnew(tmp, ft_slen(tmp) + 1));
 }
 
 int main(int ac, char **av)
 {
 	t_asm	asms;
-	t_list	*file_content;
 	asms = parse_cli(ac, av);
 	open_files(&asms);
 	read_file(&asms);
 	lexical_analysis(asms.lines);
-	parse_name_comment(&asms);
-	wrap_up(&asms, &file_content);
+//	parse_name_comment(&asms);
+	wrap_up(&asms);
 }

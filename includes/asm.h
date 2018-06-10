@@ -16,7 +16,7 @@
 # include  <fcntl.h>
 # include   "op.h"
 # include  "libft.h"
-# include   "gnls.h"
+# include   "ft_gnls.h"
 # include  "ft_printf.h"
 # include  "ft_str.h"
 # include  "ft_tell.h"
@@ -37,18 +37,17 @@ typedef struct	s_asm
 	unsigned int	chr_cnt;
 }				t_asm;
 
-typedef struct	s_instr
+typedef struct	s_tk
 {
-	t_bool	is_label;
-	int		opcode;
-
-}				t_isntr;
-
+	char		*tk;
+	int			line;
+	int			chr;
+}				t_tk;
 
 t_asm	parse_cli(int ac, char **av);
 void	open_files(t_asm *a);
 
-void	wrap_up(t_asm *asms, t_list **acontent);
+void	wrap_up(t_asm *asms);
 
 
 #endif
