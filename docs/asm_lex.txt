@@ -1,0 +1,9 @@
+What is considered a valid string:
+  1. comment (e.g. #hello)
+  2. blank line
+  3. line containing only space characters
+  4. name/comment containing any character possible (.name: "привет")
+  5. any amount of spaces between SEPARATOR_CHAR (,)
+
+What is bad:
+  space between DIRECT_CHAR (%) or before LABEL_CHAR (:)

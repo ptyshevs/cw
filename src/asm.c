@@ -44,7 +44,6 @@ void	parse_name_comment(t_asm *asms)
 	t_list	*lines;
 
 	lines = asms->lines;
-
 	while (lines->content && ++asms->line_cnt)
 	{
 		if (ft_startswith(lines->content, "#") || ft_strispaces(lines->content))
@@ -62,6 +61,16 @@ void	parse_name_comment(t_asm *asms)
 			break ;
 		lines = lines->next;
 	}
+}
+
+/*
+** Check characters, labels, and
+** @param content list of lines read from file
+*/
+
+void	lexical_analysis(t_list *content)
+{
+
 }
 
 /*
@@ -84,6 +93,7 @@ int main(int ac, char **av)
 	asms = parse_cli(ac, av);
 	open_files(&asms);
 	read_file(&asms);
+	lexical_analysis(asms.lines);
 	parse_name_comment(&asms);
 	wrap_up(&asms, &file_content);
 }
