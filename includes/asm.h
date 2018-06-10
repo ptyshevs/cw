@@ -13,13 +13,13 @@
 #ifndef ASM_H
 # define ASM_H
 
-# include <fcntl.h>
-#include <op.h>
-# include "libft.h"
-#include "gnls.h"
-# include "ft_printf.h"
-# include "ft_str.h"
-# include "ft_tell.h"
+# include  <fcntl.h>
+# include   "op.h"
+# include  "libft.h"
+# include   "gnls.h"
+# include  "ft_printf.h"
+# include  "ft_str.h"
+# include  "ft_tell.h"
 
 typedef struct	s_asm
 {
@@ -36,6 +36,13 @@ typedef struct	s_asm
 	unsigned int	line_cnt;
 	unsigned int	chr_cnt;
 }				t_asm;
+
+typedef struct	s_instr
+{
+	t_bool	is_label;
+	int		opcode;
+
+}				t_isntr;
 
 
 t_asm	parse_cli(int ac, char **av);

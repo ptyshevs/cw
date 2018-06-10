@@ -1,1 +1,5 @@
 CLI interface: ./corewar [-dump nbr_cycles] [[-n number] champion1.cor] ...
+
+If two instructions should be executed in the same cycle, they are processed in
+the decreasing order (t_proc.id). It means that the latest ("right-most" in
+CLI argument array) champion plays first.

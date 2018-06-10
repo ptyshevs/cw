@@ -12,20 +12,24 @@
 2. Parse file:
   * permission denied
   * empty file
-  lexical check
+  lexical check:
+
   bot name and comment
     skip comments (#like this)
     check if each symbol is in LABEL_CHARS
     multiline name "\nname\n"
+    * name is too long (PROG_NAME_LENGTH)
     multiline comment
+    * comment is too long (COMMENT_LENGTH)
 
-3. Write into file in a proper form:
+3. Compile:
   magic
-  bot name
+  champion name
+    * name is too long (PROG_NAME_LENGTH)
   2 NULL bytes
-  bot size
-  comment
-  bot comment (isn't it the same as comment)
+  champion size
+  champion comment
+    * comment is too long (COMMENT_LENGTH)
   2 NULL bytes after comment
   executable code
 

@@ -1,5 +1,12 @@
-Typical valid command: ld %0, r3, where:
-  ld - load a
+Typical command examples
+
+ld %0, r3
+  ld - load an argument to the registry (opcode - 2), codage = 2
+  %0 - argument, direct value 0
+  r3 - third registry
+
+sti r15,%0,r14
+  sti - store index by taking two indexes, adding them
 
 What is considered a valid string:
   1. comment (e.g. #hello)

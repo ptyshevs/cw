@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_lst.h>
+#include "ft_lst.h"
 #include "asm.h"
 
 /*
@@ -64,7 +64,7 @@ void	parse_name_comment(t_asm *asms)
 }
 
 /*
-** Check characters, labels, and
+** Check characters, labels, and tokens
 ** @param content list of lines read from file
 */
 
