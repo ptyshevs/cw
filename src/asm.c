@@ -68,11 +68,6 @@ char	*cut_comment(char *comment, t_list *lines)
 	return (collect);
 }
 
-char	*ft_strchr_ignore_comments(char *str, char c)
-{
-
-}
-
 /*
 ** Cut string in form "somestring" after a <what> field
 */
@@ -140,16 +135,30 @@ void	parse_name_comment(t_asm *asms)
 
 
 /*
-** Read file to list (required to perform preliminary lexical analysis
+** Read file to list (required to perform preliminary lexical analysis),
+** ignoring everything after COMMENT_CHAR
 */
 
 void	read_file(t_asm *asms)
 {
+	char	*iter;
 	char	*tmp;
+	size_t	len;
 
-	tmp = NULL;
-	while (ft_sgnl(asms->fd_from, &tmp) > 0)
-		ft_lstappend(&asms->lines, ft_lstnew(tmp, ft_slen(tmp) + 1));
+	iter = NULL;
+	while (ft_sgnl(asms->fd_from, &iter) > 0)
+	{
+		if ((tmp = ft_strchr(iter, COMMENT_CHAR)))
+		{
+			len = tmp - iter;
+			tmp = ft_strnew(len);
+			ft_strncpy(tmp, iter, len);
+			ft_lstappend(&asms->lines, ft_lstnew(tmp, ft_slen(tmp) + 1));
+			ft_strdel(&tmp);
+		}
+		else
+			ft_lstappend(&asms->lines, ft_lstnew(iter, ft_slen(iter) + 1));
+	}
 }
 
 int main(int ac, char **av)
