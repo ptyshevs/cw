@@ -46,16 +46,14 @@ void	parse_name_comment(t_asm *asms)
 	}
 }
 
-
-
 int main(int ac, char **av)
 {
 	t_asm	asms;
 	asms = parse_cli(ac, av);
 	open_files(&asms);
 	read_file(asms.fd_from, &asms.lines);
-//	lexical_analysis(asms.lines);
-	parse_name_comment(&asms);
-	ft_printf("name: %s\ncomment: %s\n", asms.name, asms.comment);
+	lexical_analysis(asms.lines);
+//	parse_name_comment(&asms);
+//	ft_printf("name: %s\ncomment: %s\n", asms.name, asms.comment);
 	wrap_up(&asms);
 }

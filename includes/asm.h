@@ -46,10 +46,26 @@ typedef struct	s_tk
 	int			chr;
 }				t_tk;
 
+/*
+** IO-operations
+*/
+
 t_asm	parse_cli(int ac, char **av);
 void	open_files(t_asm *a);
 void	read_file(int fd_from, t_list **where);
+
+/*
+** Tokenizing the input
+*/
+
+t_list	*tokenize(t_list *lines);
+void	iter_tokens(t_list *tokens);
+
 void	lexical_analysis(t_list *line);
+
+/*
+** Used for parsing name and comment of a file, right after lexical analysis
+*/
 
 char	*cut_string(t_asm *asms, t_list **lines, char *what);
 
