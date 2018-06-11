@@ -48,19 +48,20 @@ t_bot	*init_bot(t_bot *bot)
 	return (bot);
 }
 
-void	read_file(t_bot *bot, char **binary)
+void	read_file(t_bot *bot, char *file_name)
 {
 	char	*str;
-	char	buff[1025];
-	int		bytes;
-	int		file_size;
 
-	file_size = 0;
-	int fd = open(binary[1], O_RDONLY);
-	while (ft_gnl(fd, &str) > 0)
-	{
-		ft_printf("%s\n", str);
-	}
+	str = NULL;
+	int fd = open(file_name, O_RDONLY);
+	size_t filesize = lseek(fd, 0, SEEK_END);
+	lseek(fd, 0, SEEK_SET);
+	char *content = ft_memalloc(filesize);
+	ft_printf("read returned %d\n", read(fd, content, filesize));
+	write(1, content, filesize);
+	ft_printf("file content: %s\n", content);
+	ft_printf("gnl returned: %d\n", ft_gnl(fd, &str));
+	ft_printf("%s\n", str);
 	(void)bot;
 }
 
@@ -75,6 +76,6 @@ int		main(int ac, char **av)
 		write(1, "Can't read source file\n", 23);
 		return (1);
 	}
-	read_file(&bot, av);
+	read_file(&bot, av[1]);
 	return (0);
 }
