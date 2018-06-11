@@ -48,7 +48,10 @@ typedef struct	s_tk
 
 t_asm	parse_cli(int ac, char **av);
 void	open_files(t_asm *a);
+void	read_file(int fd_from, t_list **where);
 void	lexical_analysis(t_list *line);
+
+char	*cut_string(t_asm *asms, t_list **lines, char *what);
 
 void	wrap_up(t_asm *asms);
 

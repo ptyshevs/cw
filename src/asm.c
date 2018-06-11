@@ -12,93 +12,6 @@
 
 #include "asm.h"
 
-void	pass_lines(t_list **lines, int cnt)
-{
-	int	i;
-
-	i = 0;
-	while (i < cnt)
-	{
-		*lines = (*lines)->next;
-		i++;
-	}
-}
-
-/*
-** Parse name. Handle multi-line names
-** @param asms
-*/
-
-void	parse_name(t_asm *asms, t_list *lines)
-{
-	ft_printf("parsing name: %s\n", lines->content);
-	asms->name = ft_strdup(lines->content);
-}
-
-/*
-** Cut a comment, start to which is pointed by <comment>. Traverse multiple
-** lines if necessary.
-*/
-
-char	*cut_comment(char *comment, t_list *lines)
-{
-	char	*collect;
-	char	*tmp;
-
-	if (ft_strchr(comment, '"'))
-		return (ft_strtok(comment, "\""));
-	collect = ft_strdup(comment);
-	lines = lines->next;
-	while (lines && !ft_strchr(lines->content, '"'))
-	{
-		tmp = collect;
-		collect = ft_sjoin(3, collect, lines->content, "\n");
-		ft_strdel(&tmp);
-		lines = lines->next;
-	}
-	if (!lines) // Non enclosing double-quote
-		return (NULL);
-	// find closing double-quote
-	// calculate distance to it
-	size_t len = ft_strchr(lines->content, '"') - (char *)lines->content;
-	char *another = ft_strtrunc(lines->content, len, FALSE);
-	tmp = collect;
-	collect = ft_sjoin(3, collect, "\n", another);
-	ft_strdel(&tmp);
-	return (collect);
-}
-
-/*
-** Cut string in form "somestring" after a <what> field
-*/
-
-char	*cut_string(t_asm *asms, t_list **lines, char *what)
-{
-	char	*line;
-	int		cnt_lines;
-	char	*tmp;
-
-	line = (*lines)->content;
-	while (*line && ft_isspace(*line))
-		line++;
-	if (!ft_startswith(line, what))
-		return (NULL);
-	else
-		line += ft_slen(what);
-	while (*line && ft_isspace(*line))
-		line++;
-	if (*line != '"')
-		return (NULL);
-	line++; // skip opening double-quote
-	if (ft_strchr(line, '"') && (tmp = ft_strtok(line, "\"")))
-		return (tmp);
-	tmp = cut_comment(line, *lines);
-	cnt_lines = ft_strcnt(tmp, '\n');
-	asms->line_cnt += cnt_lines;
-	pass_lines(lines, cnt_lines);
-	return (tmp);
-}
-
 /*
 ** Insruction before comment and/or name
 */
@@ -134,39 +47,13 @@ void	parse_name_comment(t_asm *asms)
 }
 
 
-/*
-** Read file to list (required to perform preliminary lexical analysis),
-** ignoring everything after COMMENT_CHAR
-*/
-
-void	read_file(t_asm *asms)
-{
-	char	*iter;
-	char	*tmp;
-	size_t	len;
-
-	iter = NULL;
-	while (ft_sgnl(asms->fd_from, &iter) > 0)
-	{
-		if ((tmp = ft_strchr(iter, COMMENT_CHAR)))
-		{
-			len = tmp - iter;
-			tmp = ft_strnew(len);
-			ft_strncpy(tmp, iter, len);
-			ft_lstappend(&asms->lines, ft_lstnew(tmp, ft_slen(tmp) + 1));
-			ft_strdel(&tmp);
-		}
-		else
-			ft_lstappend(&asms->lines, ft_lstnew(iter, ft_slen(iter) + 1));
-	}
-}
 
 int main(int ac, char **av)
 {
 	t_asm	asms;
 	asms = parse_cli(ac, av);
 	open_files(&asms);
-	read_file(&asms);
+	read_file(asms.fd_from, &asms.lines);
 //	lexical_analysis(asms.lines);
 	parse_name_comment(&asms);
 	ft_printf("name: %s\ncomment: %s\n", asms.name, asms.comment);
