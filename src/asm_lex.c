@@ -64,25 +64,32 @@ void	filter_bad_tokens(t_list *tokens, int skip_n_lines)
 
 int		find_endquote(t_tk *tmp, t_list *tokens)
 {
+	t_bool	startline;
 	char	*token;
 	int		lines;
 	int		i;
 
-	(void)tokens;
-	token = tmp->tk;
+	startline = TRUE;
 	lines = 0;
-	i = 1;
-	while (token[i])
+	while (tokens)
 	{
-		if (token[i] == '"')
+		token = startline ? tmp->tk : ((t_tk *)tokens->content)->tk;
+		i = startline ? 1 : 0;
+		while (token[i])
 		{
-			if (token[i + 1])
-				lexical_error(tmp, i + 1);
-			else if (tmp->next)
-				lexical_error(tmp->next, 0);
-			return (lines);
+			if (token[i] == '"')
+			{
+				if (token[i + 1]) // char is after the closing doublequote
+					lexical_error(tmp, i + 1);
+				else if (tmp->next) // token after the closing doublequote
+					lexical_error(tmp->next, 0);
+				return (lines);
+			}
+			i++;
 		}
-		i++;
+		tokens = tokens->next;
+		lines++;
+		startline = FALSE;
 	}
 	ft_dprintf(2, "Something went wrong. You shouldn't be here\n");
 	return (lines);
@@ -106,13 +113,18 @@ int		filter_name_comment(t_list *tokens)
 		{
 			tmp = tokens->content;
 			// what if not .name or .comment?
-			if (ft_strequ(tmp->tk, NAME_CMD_STRING) ||
-					ft_strequ(tmp->tk, COMMENT_CMD_STRING))
+			if ((ft_strequ(tmp->tk, NAME_CMD_STRING) ||
+				ft_strequ(tmp->tk, COMMENT_CMD_STRING)))
 			{
-				tmp = tmp->next;
-				if (!ft_startswith(tmp->tk, "\""))
-					lexical_error(tmp, 0);
-				cnt_lines += find_endquote(tmp, tokens);
+				if ((tmp = tmp->next)) // empty string after .comment or .name
+				{
+					if (!ft_startswith(tmp->tk, "\""))
+						lexical_error(tmp, 0);
+					int skip_lines = find_endquote(tmp, tokens);
+					cnt_lines += skip_lines;
+					while (skip_lines--)
+						tokens = tokens->next;
+				}
 			}
 			else
 				return (cnt_lines);
