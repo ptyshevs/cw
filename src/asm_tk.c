@@ -26,15 +26,16 @@ t_tk	*cut_token(char *line, int *i, int line_nbr)
 	*i += 1;
 	if (line[start] == '"')
 	{
-		while(line[*i] && line[*i] != '"')
-				*i += 1;
-		if (line[*i] == '"')
+		while (line[*i] && line[*i] != '"')
 			*i += 1;
+		if (line[*i] == '"')
+			token->tk = ft_strtrunc(&(line[start]), *i + 1 - start, FALSE);
 	}
 	else
 		while (line[*i] && !ft_isspace(line[*i]) && !ft_strchr(",", line[*i]))
 			*i += 1;
-	token->tk = ft_strtrunc(&(line[start]), (size_t) (*i - start), FALSE);
+	if (!token->tk)
+		token->tk = ft_strtrunc(&(line[start]), (size_t)(*i - start), FALSE);
 	token->line = line_nbr;
 	token->chr = start + 1;
 	return (token);

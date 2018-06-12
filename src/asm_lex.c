@@ -27,19 +27,23 @@ void	lexical_error(t_tk *tk, int i)
 ** @param tokens
 */
 
-void	filter_bad_tokens(t_list *tokens)
+void	filter_bad_tokens(t_list *tokens, int skip_n_lines)
 {
-	t_list	*line;
 	t_tk	*tk;
 	char	*token;
 	int		i;
 
+	i = 0;
 	while (tokens)
 	{
-		line = tokens->content;
-		while (line)
+		if (i++ < skip_n_lines)
 		{
-			tk = line->content;
+			tokens = tokens->next;
+			continue ;
+		}
+		tk = tokens->content;
+		while (tk)
+		{
 			token = tk->tk;
 			i = 0;
 			while (token[i])
@@ -48,10 +52,40 @@ void	filter_bad_tokens(t_list *tokens)
 					lexical_error(tk, i);
 				i++;
 			}
-			line = line->next;
+			tk = tk->next;
 		}
 		tokens = tokens->next;
 	}
+}
+
+/*
+** If anything is after the closing quote, it's lexical error
+*/
+
+int		find_endquote(t_tk *tmp, t_list *tokens)
+{
+	char	*token;
+	int		lines;
+	int		i;
+
+	(void)tokens;
+	token = tmp->tk;
+	lines = 0;
+	i = 1;
+	while (token[i])
+	{
+		if (token[i] == '"')
+		{
+			if (token[i + 1])
+				lexical_error(tmp, i + 1);
+			else if (tmp->next)
+				lexical_error(tmp->next, 0);
+			return (lines);
+		}
+		i++;
+	}
+	ft_dprintf(2, "Something went wrong. You shouldn't be here\n");
+	return (lines);
 }
 
 /*
@@ -62,9 +96,8 @@ void	filter_bad_tokens(t_list *tokens)
 
 int		filter_name_comment(t_list *tokens)
 {
-	t_list	*tmp;
+	t_tk	*tmp;
 	int		cnt_lines;
-	t_tk	*tk;
 
 	cnt_lines = 0;
 	while (tokens)
@@ -73,20 +106,21 @@ int		filter_name_comment(t_list *tokens)
 		{
 			tmp = tokens->content;
 			// what if not .name or .comment?
-			if (ft_strequ(tmp->content, NAME_CMD_STRING) ||
-					ft_strequ(tmp->content, COMMENT_CMD_STRING))
+			if (ft_strequ(tmp->tk, NAME_CMD_STRING) ||
+					ft_strequ(tmp->tk, COMMENT_CMD_STRING))
 			{
 				tmp = tmp->next;
-				tk = tmp->content;
-				if (!ft_startswith(tk->tk, "\""))
-					lexical_error(tk, 0);
-
+				if (!ft_startswith(tmp->tk, "\""))
+					lexical_error(tmp, 0);
+				cnt_lines += find_endquote(tmp, tokens);
 			}
+			else
+				return (cnt_lines);
 		}
-		cnt_lines++;
 		tokens = tokens->next;
+		cnt_lines++;
 	}
-	return (0);
+	return (cnt_lines);
 }
 
 /*
@@ -101,6 +135,6 @@ void	lexical_analysis(t_list *lines)
 	tokens = tokenize(lines);
 	iter_tokens(tokens);
 	// Check name and comment
-//	int skip_n_lines = filter_name_comment(tokens);
-//	filter_bad_tokens(tokens);
+	int skip_n_lines = filter_name_comment(tokens);
+	filter_bad_tokens(tokens, skip_n_lines);
 }
