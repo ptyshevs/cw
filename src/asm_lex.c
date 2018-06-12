@@ -147,6 +147,6 @@ void	lexical_analysis(t_list *lines)
 	tokens = tokenize(lines);
 	iter_tokens(tokens);
 	// Check name and comment
-	int skip_n_lines = filter_name_comment(tokens);
-	filter_bad_tokens(tokens, skip_n_lines);
+//	int skip_n_lines = filter_name_comment(tokens);
+//	filter_bad_tokens(tokens, skip_n_lines);
 }

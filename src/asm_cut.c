@@ -33,14 +33,13 @@ void	pass_lines(t_list **lines, int cnt)
 ** lines if necessary.
 */
 
-char	*cut_substring(char *comment, t_list *lines)
+char	*cut_substring(char *start, t_list *lines)
 {
 	char	*collect;
 	char	*tmp;
 
-	if (ft_strchr(comment, '"'))
-		return (ft_strtok(comment, "\""));
-	collect = ft_strdup(comment);
+
+	collect = ft_strdup(start);
 	lines = lines->next;
 	while (lines && !ft_strchr(lines->content, '"'))
 	{
@@ -54,7 +53,7 @@ char	*cut_substring(char *comment, t_list *lines)
 	// find closing double-quote
 	// calculate distance to it
 	size_t len = ft_strchr(lines->content, '"') - (char *)lines->content;
-	char *another = ft_strtrunc(lines->content, len, FALSE);
+	char *another = ft_strtrunc(lines->content, len + 1, FALSE);
 	tmp = collect;
 	collect = ft_sjoin(3, collect, "\n", another);
 	ft_strdel(&tmp);
@@ -62,32 +61,31 @@ char	*cut_substring(char *comment, t_list *lines)
 }
 
 /*
-** Cut string in form "somestring" after a <what> field
+** Cut string token, from <start>. Start should be index of the opening doublequote
 */
 
-char	*cut_string(t_asm *asms, t_list **lines, char *what)
+t_tk	*cut_string(t_list **lines, int *line_nbr, int *start)
 {
-	char	*line;
 	int		cnt_lines;
 	char	*tmp;
+	char	*more;
+	t_tk	*token;
 
-	line = (*lines)->content;
-	while (*line && ft_isspace(*line))
-		line++;
-	if (!ft_startswith(line, what))
-		return (NULL);
+	tmp = (*lines)->content;
+	if ((more = ft_strchr(&(tmp[*start + 1]), '"')))
+		tmp = ft_strsub(tmp, *start, more - tmp - *start + 1);
 	else
-		line += ft_slen(what);
-	while (*line && ft_isspace(*line))
-		line++;
-	if (*line != '"')
-		return (NULL);
-	line++; // skip opening double-quote
-	if (ft_strchr(line, '"') && (tmp = ft_strtok(line, "\"")))
-		return (tmp);
-	tmp = cut_substring(line, *lines);
+		tmp = cut_substring(&(tmp[*start]), *lines);
 	cnt_lines = ft_strcnt(tmp, '\n');
-	asms->line_cnt += cnt_lines;
+	*line_nbr += cnt_lines;
 	pass_lines(lines, cnt_lines);
-	return (tmp);
+	token = create_token(tmp, *line_nbr - cnt_lines, *start, STRING);
+	if (!ft_strchr(token->tk, '\n'))
+		*start += ft_slen(token->tk) - 1;
+	else
+	{
+		more = ft_strrchr(token->tk, '\n') + 1;
+		*start = ft_slen(more) - 1;
+	}
+	return (token);
 }

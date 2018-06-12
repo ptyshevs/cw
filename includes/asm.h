@@ -40,9 +40,28 @@ typedef struct	s_asm
 	unsigned int	chr_cnt;
 }				t_asm;
 
+/*
+** Type of token
+*/
+
+typedef enum	e_type
+{
+	NONE,
+	INSTRUCTION,
+	STRING,
+	INDIRECT,
+	DIRECT,
+	REGISTER,
+	LABEL,
+	SEPARATOR,
+	INDIRECT_LABEL,
+	DIRECT_LABEL,
+}				t_type;
+
 typedef struct	s_tk
 {
 	char		*tk;
+	t_type		type;
 	int			line;
 	int			chr;
 	struct s_tk	*next;
@@ -68,8 +87,9 @@ void	lexical_analysis(t_list *line);
 /*
 ** Used for parsing name and comment of a file, right after lexical analysis
 */
+t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type);
 
-char	*cut_string(t_asm *asms, t_list **lines, char *what);
+t_tk	*cut_string(t_list **lines, int *line_nbr, int *start);
 
 void	wrap_up(t_asm *asms);
 
