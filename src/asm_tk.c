@@ -41,16 +41,35 @@ t_tk	*cut_token(char *line, int *i, int line_nbr)
 }
 
 /*
+** Append line tokens to the list of tokens
+*/
+
+void	tk_append(t_tk **atokens, t_tk *tk)
+{
+	t_tk	*tmp;
+
+	if (!*atokens)
+		*atokens = tk;
+	else
+	{
+		tmp = *atokens;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = tk;
+	}
+}
+
+/*
 ** Convert line to the list of tokens. Should the spaces be ignored?
 */
 
-t_list	*line_to_tk(char *line, int line_nbr)
+t_tk	*line_to_tk(char *line, int line_nbr)
 {
-	t_list	*tk;
+	t_tk	*tokens;
 	t_tk	*token;
 	int		i;
 
-	tk = NULL;
+	tokens = NULL;
 	i = 0;
 	while (line[i])
 	{
@@ -59,21 +78,18 @@ t_list	*line_to_tk(char *line, int line_nbr)
 		if (!line[i] || line[i] == COMMENT_CHAR) // consider another comment symbol ';'
 			break ;
 		token = cut_token(line, &i, line_nbr);
-		ft_lstappend(&tk, ft_lstnew(token, sizeof(t_tk)));
+		tk_append(&tokens, token);
 		if (line[i])
 			i++;
 	}
-	return (tk);
+	return (tokens);
 }
 
-void	show_tokens(t_list *tokens)
+void	show_tokens(t_tk *tokens)
 {
-	t_tk	*tmp;
-
 	while (tokens)
 	{
-		tmp = tokens->content;
-		ft_printf("%s [%d:%d]-> ", tmp->tk, tmp->line, tmp->chr);
+		ft_printf("%s [%d:%d]-> ", tokens->tk, tokens->line, tokens->chr);
 		tokens = tokens->next;
 	}
 	ft_printf("NULL\n");
@@ -86,14 +102,15 @@ void	show_tokens(t_list *tokens)
 t_list	*tokenize(t_list *lines)
 {
 	t_list	*tokens;
+	t_tk	*tk;
 	int		line_count;
 
 	tokens = NULL;
 	line_count = 0;
 	while (lines && ++line_count)
 	{
-		ft_lstappend(&tokens, ft_lstnew(line_to_tk(lines->content, line_count),
-										sizeof(t_list)));
+		tk = line_to_tk(lines->content, line_count);
+		ft_lstappend(&tokens, ft_lstnew(tk, sizeof(t_tk)));
 		lines = lines->next;
 	}
 	return (tokens);

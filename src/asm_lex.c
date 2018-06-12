@@ -62,6 +62,30 @@ void	filter_bad_tokens(t_list *tokens)
 
 int		filter_name_comment(t_list *tokens)
 {
+	t_list	*tmp;
+	int		cnt_lines;
+	t_tk	*tk;
+
+	cnt_lines = 0;
+	while (tokens)
+	{
+		if (tokens->content)
+		{
+			tmp = tokens->content;
+			// what if not .name or .comment?
+			if (ft_strequ(tmp->content, NAME_CMD_STRING) ||
+					ft_strequ(tmp->content, COMMENT_CMD_STRING))
+			{
+				tmp = tmp->next;
+				tk = tmp->content;
+				if (!ft_startswith(tk->tk, "\""))
+					lexical_error(tk, 0);
+
+			}
+		}
+		cnt_lines++;
+		tokens = tokens->next;
+	}
 	return (0);
 }
 
@@ -75,8 +99,8 @@ void	lexical_analysis(t_list *lines)
 	t_list	*tokens;
 
 	tokens = tokenize(lines);
-//		iter_tokens(tokens);
+	iter_tokens(tokens);
 	// Check name and comment
-	int skip_n_lines = filter_name_comment(tokens);
-	filter_bad_tokens(tokens);
+//	int skip_n_lines = filter_name_comment(tokens);
+//	filter_bad_tokens(tokens);
 }

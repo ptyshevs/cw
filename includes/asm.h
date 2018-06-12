@@ -45,6 +45,7 @@ typedef struct	s_tk
 	char		*tk;
 	int			line;
 	int			chr;
+	struct s_tk	*next;
 }				t_tk;
 
 /*
