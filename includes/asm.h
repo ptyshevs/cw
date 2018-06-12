@@ -22,6 +22,7 @@
 # include  "ft_tell.h"
 # include  "ft_lst.h"
 
+# define CHAR_SET "abcdefghijklmnopqrstuvwxyz_0123456789"
 
 typedef struct	s_asm
 {
