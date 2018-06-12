@@ -25,3 +25,27 @@ What is bad:
 What is wrong:
 	segfault: put `"` on line 7 of Gagnant.s.
 	reason: hell if I know
+
+Direct values can appear whenever they want, but not before name/comment section:
+```
+ 1
+ 42424
+ %42
+```
+is a valid piece of assembly
+
+Token types:
+  INSTRUCTION - token that contains at least one letter
+    e.g. 42_i_am_instruction, ___instruction__
+  STRING - anything that starts and ends with double-quotes(e.g. "hi\nthere\n")
+  INDIRECT - a value (e.g. 42, 0)
+  DIRECT - a value that starts with DIRECT_CHAR (e.g. %42)
+  DIRECT_LABEL - a label that starts with a DIRECT_CHAR (e.g. %:label)
+  INDIRECT_LABEL - token that starts with LABEL_CHAR
+    e.g. :42label, but not :"oops"
+  LABEL - token that ends with a LABEL_CHAR (e.g. label:)
+  REGISTER - token consists of 'r' and two digits after it (e.g. r99)
+  SEPARATOR - ','
+
+Lexical error is thus when the syntax of a sertain type of token is violated.
+For example, `% 42` contains a lexical error because DIRECT token cannot contain spaces.
