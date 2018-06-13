@@ -12,6 +12,10 @@
 
 #include "asm.h"
 
+/*
+** Cut register in format rX[X], where X - digit, [X] another optional digit
+*/
+
 t_tk	*cut_register(char *line, int *start, int line_nbr)
 {
 	t_tk	*token;
@@ -27,7 +31,25 @@ t_tk	*cut_register(char *line, int *start, int line_nbr)
 	return (token);
 }
 
-t_tk	*cut_separator(char *line, int start, int line_nbr)
+/*
+** Cut separator (,). Hope it will be useful when validating instructions
+*/
+
+t_tk	*cut_separator(char *line, const int *start, int line_nbr)
+{
+	t_tk	*token;
+	char	*tk;
+
+	tk = ft_strtrunc(&(line[*start]), 1, FALSE);
+	token = create_token(tk, line_nbr, *start, SEPARATOR);
+	return (token);
+}
+
+/*
+** Cut label in format `blablabla:`
+*/
+
+t_tk	*cut_label(char *line, int *start, int line_nbr)
 {
 
 }

@@ -33,3 +33,23 @@ t_bool	is_register(char *line, int start)
 		return (FALSE);
 	return (TRUE);
 }
+
+/*
+** It consists of LABEL_CHARS and ends with LABEL_CHAR?
+*/
+
+t_bool	is_label(char *line, int start, int line_nbr)
+{
+	int		i;
+
+	if (line[start] == LABEL_CHAR)
+		return (FALSE); // Indirect label (starts with `:`)
+	i = start;
+	while (line[i])
+	{
+		if (line[i] == LABEL_CHAR)
+			break ;
+		if (!ft_strchr(LABEL_CHARS, line[i]))
+			lexical_error(line_nbr, i);
+	}
+}

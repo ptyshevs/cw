@@ -67,6 +67,10 @@ t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 		token = cut_direct(line, i, *line_nbr);
 	else if (line[*i] == 'r' && is_register(line, *i))
 		return (cut_register(line, i, *line_nbr));
+	else if (line[*i] == SEPARATOR_CHAR)
+		return (cut_separator(line, i, *line_nbr));
+	else if (is_label(line, *i))
+		return (cut_label(line, i, *line_nbr));
 	return (token);
 }
 
