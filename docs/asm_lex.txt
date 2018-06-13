@@ -49,3 +49,8 @@ Token types:
 
 Lexical error is thus when the syntax of a sertain type of token is violated.
 For example, `% 42` contains a lexical error because DIRECT token cannot contain spaces.
+
+All token-cutting routines should perform the following operations:
+  1) Create a token.
+  2) Move pointer to token start (int *start argument) to the end of the token.
+  3) Validate token lexicographically.

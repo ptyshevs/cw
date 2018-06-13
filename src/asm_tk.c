@@ -44,32 +44,25 @@ t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type)
 }
 
 /*
-** Cut token starting from *i position, recording it into a structure
+** Dispatch token according to their type
+** @param line
+** @param lines
+** @param i
+** @param line_nbr
+** @return NULL if token type is not recognized, otherwise token (t_tk *)
 */
 
-t_tk	*cut_token(t_list **lines, char *line, int *i, int *line_nbr)
+t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 {
-	int		start;
 	t_tk	*token;
 
-	token = ft_memalloc(sizeof(t_tk));
-	start = *i;
-	*i += 1;
-	if (line[start] == '"')
-	{
-//		cut_string(lines,)
-		while (line[*i] && line[*i] != '"')
-			*i += 1;
-		if (line[*i] == '"')
-			token->tk = ft_strtrunc(&(line[start]), *i + 1 - start, FALSE);
-	}
-	else
-		while (line[*i] && !ft_isspace(line[*i]) && !ft_strchr(",", line[*i]))
-			*i += 1;
-	if (!token->tk)
-		token->tk = ft_strtrunc(&(line[start]), (size_t)(*i - start), FALSE);
-	token->line = *line_nbr;
-	token->chr = start + 1;
+	token = NULL;
+	if (line[*i] == '"')
+		token = cut_string(lines, line_nbr, i);
+	else if (line[*i] == '%' && line[*i + 1] == LABEL_CHAR)
+		token = cut_direct_label(line, i, line_nbr);
+	else if (line[*i] == '%')
+		token = cut_direct(line, i, line_nbr);
 	return (token);
 }
 
@@ -90,15 +83,12 @@ t_tk	*line_to_tk(t_list **lines, int *line_nbr)
 	i = 0;
 	while (line[i])
 	{
-		token = NULL;
 		while (line[i] && ft_isspace(line[i]))
 			i++;
 		if (!line[i] || line[i] == COMMENT_CHAR) // consider another comment symbol ';'
 			break ;
-//		token = cut_token(lines, line, &i, line_nbr);
-		if (line[i] == '"')
-			token = cut_string(lines, line_nbr, &i);
-		line = (*lines)->content;
+		token = token_dispatcher(line, lines, &i, line_nbr);
+		line = (*lines)->content; // need to jump after multiline STRING processing
 		tk_append(&tokens, token);
 		i += line[i] ? 1 : 0; // so you don't miss nul-terminator
 	}

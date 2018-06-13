@@ -13,13 +13,19 @@
 #include "asm.h"
 
 /*
-** Output a lexical error message and exit appropriatedly
+** Output a lexical error message for token and exit appropriatedly
 */
 
-void	lexical_error(t_tk *tk, int i)
+void	lexical_error_tk(t_tk *tk, int i)
 {
 	ft_dprintf(2, "Lexical error at [%d:%d]\n", tk->line, tk->chr + i);
 	exit (1);
+}
+
+void	lexical_error(int line, int chr)
+{
+	ft_dprintf(2, "Lexical error at [%d:%d]\n", line, chr);
+	exit(1);
 }
 
 /*
@@ -49,7 +55,7 @@ void	filter_bad_tokens(t_list *tokens, int skip_n_lines)
 			while (token[i])
 			{
 				if (!ft_strchr(CHAR_SET, token[i]))
-					lexical_error(tk, i);
+					lexical_error_tk(tk, i);
 				i++;
 			}
 			tk = tk->next;
@@ -80,9 +86,9 @@ int		find_endquote(t_tk *tmp, t_list *tokens)
 			if (token[i] == '"')
 			{
 				if (token[i + 1]) // char is after the closing doublequote
-					lexical_error(tmp, i + 1);
+					lexical_error_tk(tmp, i + 1);
 				else if (tmp->next) // token after the closing doublequote
-					lexical_error(tmp->next, 0);
+					lexical_error_tk(tmp->next, 0);
 				return (lines);
 			}
 			i++;
@@ -119,7 +125,7 @@ int		filter_name_comment(t_list *tokens)
 				if ((tmp = tmp->next)) // empty string after .comment or .name
 				{
 					if (!ft_startswith(tmp->tk, "\""))
-						lexical_error(tmp, 0);
+						lexical_error_tk(tmp, 0);
 					int skip_lines = find_endquote(tmp, tokens);
 					cnt_lines += skip_lines;
 					while (skip_lines--)

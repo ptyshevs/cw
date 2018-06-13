@@ -37,7 +37,8 @@ char	*cut_substring(char *start, t_list *lines)
 {
 	char	*collect;
 	char	*tmp;
-
+	char	*another;
+	size_t	len;
 
 	collect = ft_strdup(start);
 	lines = lines->next;
@@ -52,8 +53,8 @@ char	*cut_substring(char *start, t_list *lines)
 		return (NULL);
 	// find closing double-quote
 	// calculate distance to it
-	size_t len = ft_strchr(lines->content, '"') - (char *)lines->content;
-	char *another = ft_strtrunc(lines->content, len + 1, FALSE);
+	len = ft_strchr(lines->content, '"') - (char *)lines->content;
+	another = ft_strtrunc(lines->content, len + 1, FALSE);
 	tmp = collect;
 	collect = ft_sjoin(3, collect, "\n", another);
 	ft_strdel(&tmp);
@@ -76,6 +77,9 @@ t_tk	*cut_string(t_list **lines, int *line_nbr, int *start)
 		tmp = ft_strsub(tmp, *start, more - tmp - *start + 1);
 	else
 		tmp = cut_substring(&(tmp[*start]), *lines);
+	if (!tmp)
+		ft_panic(ft_sprintf("This should not be happening! No closing bracket found for STRING token [%d:%d] %s\n",
+							*line_nbr, *start, &(((char *)(*lines)->content)[*start])), 2, 1);
 	cnt_lines = ft_strcnt(tmp, '\n');
 	*line_nbr += cnt_lines;
 	pass_lines(lines, cnt_lines);
@@ -87,5 +91,39 @@ t_tk	*cut_string(t_list **lines, int *line_nbr, int *start)
 		more = ft_strrchr(token->tk, '\n') + 1;
 		*start = ft_slen(more) - 1;
 	}
+	return (token);
+}
+
+t_tk	*cut_direct_label(char *line, int *start, int *line_nbr)
+{
+
+}
+
+/*
+** Cut direct value that starts from DIRECT_CHAR (%)
+** @param line being processed
+** @param start index of token start (so line[*i] == DIRECT_CHAR)
+** @param line_nbr line order
+** @return New token of DIRECT type
+*/
+
+t_tk	*cut_direct(char *line, int *start, int *line_nbr)
+{
+	t_tk	*token;
+	char	*tk;
+	int		i;
+
+	i = *start;
+	while (line[++i])
+	{
+		if (ft_isspace(line[i]))
+			break ;
+		if (!ft_isdigit(line[i]))
+			lexical_error(*line_nbr, i);
+	}
+	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, FALSE)) == 1)
+		lexical_error(*line_nbr, i);
+	token = create_token(tk, *line_nbr, *start, DIRECT);
+	*start = i - 1;
 	return (token);
 }
