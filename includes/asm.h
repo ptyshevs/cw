@@ -90,6 +90,7 @@ t_tk	*cut_string(t_list **lines, int *start, int *line_nbr);
 t_tk	*cut_direct(char *line, int *start, int line_nbr);
 t_tk	*cut_direct_label(char *line, int *start, int line_nbr);
 t_tk	*cut_register(char *line, int *start, int line_nbr);
+t_tk	*cut_separator(char *line, int start, int line_nbr);
 
 /*
 * Checks

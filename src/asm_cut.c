@@ -65,7 +65,7 @@ char	*cut_substring(char *start, t_list *lines)
 ** Cut string token, from <start>. Start should be index of the opening doublequote
 */
 
-t_tk	*cut_string(t_list **lines, int *line_nbr, int *start)
+t_tk	*cut_string(t_list **lines, int *start, int *line_nbr)
 {
 	int		cnt_lines;
 	char	*tmp;
@@ -143,7 +143,11 @@ t_tk	*cut_direct(char *line, int *start, int line_nbr)
 		else if (ft_isspace(line[i]) || line[i] == SEPARATOR_CHAR)
 			break ;
 		else if (!ft_isdigit(line[i]))
-			lexical_error(line_nbr, i);
+		{
+			if (!ft_strchr(LABEL_CHARS, line[i]))
+				lexical_error(line_nbr, i + 1);
+			break ;
+		}
 		is_first_char = FALSE;
 	}
 	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, FALSE)) == 1)
