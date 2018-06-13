@@ -41,7 +41,6 @@ $(ASM): $(ASM_BIN)
 
 $(CW): $(CW_BIN)
 	@echo ""
-
 	@$(CC) $(FLAGS) $^ -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR) -L $(LIBFT) -l ft
 	@echo ${GREEN}[$(CW) is up to date.]${NC}
 

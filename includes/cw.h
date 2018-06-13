@@ -27,6 +27,7 @@ typedef struct	s_bot
 	char			*comment;
 	unsigned int	size;
 	unsigned int	id;
+	struct header_s *header;
 }				t_bot;
 
 /*
