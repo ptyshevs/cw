@@ -20,6 +20,8 @@ void	tk_append(t_tk **atokens, t_tk *tk)
 {
 	t_tk	*tmp;
 
+	if (!tk)
+		return ;
 	if (!*atokens)
 		*atokens = tk;
 	else
@@ -58,11 +60,13 @@ t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 
 	token = NULL;
 	if (line[*i] == '"')
-		token = cut_string(lines, line_nbr, i);
+		token = cut_string(lines, i, line_nbr);
 	else if (line[*i] == '%' && line[*i + 1] == LABEL_CHAR)
-		token = cut_direct_label(line, i, line_nbr);
+		token = cut_direct_label(line, i, *line_nbr);
 	else if (line[*i] == '%')
-		token = cut_direct(line, i, line_nbr);
+		token = cut_direct(line, i, *line_nbr);
+	else if (line[*i] == 'r' && is_register(line, *i))
+		return (cut_register(line, i, *line_nbr));
 	return (token);
 }
 

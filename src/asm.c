@@ -26,24 +26,24 @@ void	parse_name_comment(t_asm *asms)
 {
 	t_list	*lines;
 
-	lines = asms->lines;
-	while (lines->content && ++asms->line_cnt)
-	{
-		if (ft_startswith(lines->content, "#") || ft_strispaces(lines->content))
-		{
-			lines = lines->next;
-			continue ;
-		}
-		else if (ft_strstr(lines->content, NAME_CMD_STRING))
-			asms->name = cut_string(asms, &lines, NAME_CMD_STRING);
-		else if (ft_strstr(lines->content, COMMENT_CMD_STRING))
-			asms->comment = cut_string(asms, &lines, COMMENT_CMD_STRING);
-		else
-			syntax_error(asms, lines);
-		if (asms->name && asms->comment)
-			break ;
-		lines = lines->next;
-	}
+//	lines = asms->lines;
+//	while (lines->content && ++asms->line_cnt)
+//	{
+//		if (ft_startswith(lines->content, "#") || ft_strispaces(lines->content))
+//		{
+//			lines = lines->next;
+//			continue ;
+//		}
+//		else if (ft_strstr(lines->content, NAME_CMD_STRING))
+//			asms->name = cut_string(asms, &lines, NAME_CMD_STRING);
+//		else if (ft_strstr(lines->content, COMMENT_CMD_STRING))
+//			asms->comment = cut_string(asms, &lines, COMMENT_CMD_STRING);
+//		else
+//			syntax_error(asms, lines);
+//		if (asms->name && asms->comment)
+//			break ;
+//		lines = lines->next;
+//	}
 }
 
 int main(int ac, char **av)

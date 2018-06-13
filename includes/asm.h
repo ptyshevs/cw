@@ -84,21 +84,26 @@ void	iter_tokens(t_list *tokens);
 
 void	lexical_analysis(t_list *line);
 
-/*
-** Used for parsing name and comment of a file, right after lexical analysis
-*/
 t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type);
 
-t_tk	*cut_string(t_list **lines, int *line_nbr, int *start);
-t_tk	*cut_direct(char *line, int *i, int *line_nbr);
-t_tk	*cut_direct_label(char *line, int *start, int *line_nbr);
+t_tk	*cut_string(t_list **lines, int *start, int *line_nbr);
+t_tk	*cut_direct(char *line, int *start, int line_nbr);
+t_tk	*cut_direct_label(char *line, int *start, int line_nbr);
+t_tk	*cut_register(char *line, int *start, int line_nbr);
 
+/*
+* Checks
+*/
+t_bool	is_register(char *line, int start);
+
+/*
+** Errors
+*/
 
 void	syntax_error(t_asm *asms, t_list *lines);
 void	lexical_error(int line, int chr);
 void	lexical_error_tk(t_tk *tk, int i);
 
 void	wrap_up(t_asm *asms);
-
 
 #endif

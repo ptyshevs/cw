@@ -94,9 +94,29 @@ t_tk	*cut_string(t_list **lines, int *line_nbr, int *start)
 	return (token);
 }
 
-t_tk	*cut_direct_label(char *line, int *start, int *line_nbr)
-{
+/*
+** Cut direct label
+*/
 
+t_tk	*cut_direct_label(char *line, int *start, int line_nbr)
+{
+	t_tk	*token;
+	char	*tk;
+	int		i;
+
+	i = *start + 1;
+	while (line[++i])
+	{
+		if (ft_isspace(line[i]) || line[i] == SEPARATOR_CHAR)
+			break ;
+		else if (!ft_strchr(LABEL_CHARS, line[i]))
+			lexical_error(line_nbr, i + 1);
+	}
+	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, FALSE)) == 2)
+		lexical_error(line_nbr, *start + 1);
+	token = create_token(tk, line_nbr, *start, DIRECT_LABEL);
+	*start = i - 1;
+	return (token);
 }
 
 /*
@@ -107,23 +127,28 @@ t_tk	*cut_direct_label(char *line, int *start, int *line_nbr)
 ** @return New token of DIRECT type
 */
 
-t_tk	*cut_direct(char *line, int *start, int *line_nbr)
+t_tk	*cut_direct(char *line, int *start, int line_nbr)
 {
 	t_tk	*token;
 	char	*tk;
 	int		i;
+	t_bool	is_first_char;
 
 	i = *start;
+	is_first_char = TRUE;
 	while (line[++i])
 	{
-		if (ft_isspace(line[i]))
+		if (is_first_char && line[i] == '-')
+			;
+		else if (ft_isspace(line[i]) || line[i] == SEPARATOR_CHAR)
 			break ;
-		if (!ft_isdigit(line[i]))
-			lexical_error(*line_nbr, i);
+		else if (!ft_isdigit(line[i]))
+			lexical_error(line_nbr, i);
+		is_first_char = FALSE;
 	}
 	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, FALSE)) == 1)
-		lexical_error(*line_nbr, i);
-	token = create_token(tk, *line_nbr, *start, DIRECT);
+		lexical_error(line_nbr, i);
+	token = create_token(tk, line_nbr, *start, DIRECT);
 	*start = i - 1;
 	return (token);
 }
