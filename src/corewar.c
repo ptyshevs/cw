@@ -95,6 +95,34 @@ unsigned char	*read_file(char *file_name)
 	return (content);
 }
 
+unsigned char	*find_size(unsigned char *file)
+{
+	unsigned char	*size;
+	int				i;
+	int				j;
+
+	size = ft_memalloc(sizeof(char) * 4);
+	i = PROG_NAME_LENGTH + 8;
+	j = 0;
+	while (i < PROG_NAME_LENGTH + 12)
+		size[j++] = file[i++];
+	ft_printf("%d|%d|%d|%d\n", size[0], size[1], size[2], size[3]);
+	return (size);
+}
+
+unsigned int	check_size(unsigned char *size)
+{
+	unsigned int	nbr;
+	int				i;
+
+	nbr = 0;
+	i = 0;
+	while (i < 4)
+		nbr = (nbr << 8) + size[i++];
+	ft_printf("size is %0X\n", nbr);
+	return (nbr);
+}
+
 char			*find_name(unsigned char *file)
 {
 	char			*name;
@@ -144,6 +172,7 @@ void			complete_file(char *file_name)
 	ft_printf("magic is %0X\n", bot->header->magic);
 	bot->name = check_name(find_name(file));
 	ft_printf("name is %s\n", bot->name);
+	bot->size = check_size(find_size(file));
 }
 
 int				main(int ac, char **av)
