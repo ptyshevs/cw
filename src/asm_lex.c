@@ -16,30 +16,22 @@
 ** Output a lexical error message for token and exit appropriatedly
 */
 
-void	lexical_error_tk(t_tk *tk, int i)
-{
-	ft_dprintf(2, "Lexical error at [%d:%d]\n", tk->line, tk->chr + i);
-	exit (1);
-}
-
 void	lexical_error(int line, int chr)
 {
 	ft_dprintf(2, "Lexical error at [%d:%d]\n", line, chr);
 	exit(1);
 }
 
-
-
 /*
-** Check characters, labels, and tokens
+** Validate the file content
 ** @param content list of lines read from file
 */
 
-t_list	*lexical_analysis(t_list *lines)
+t_list	*validate(t_list *lines)
 {
 	t_list	*tokens;
 
-	tokens = tokenize(lines);
+	tokens = tokenize(lines); // and lexical analysis on-the-fly
 	check_instructions(tokens);
 	// Check name and comment
 //	int skip_n_lines = filter_name_comment(tokens);

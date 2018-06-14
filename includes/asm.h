@@ -84,7 +84,7 @@ t_list	*tokenize(t_list *lines);
 void	iter_tokens(t_list *tokens);
 void	release_tokens(t_list **atokens);
 
-t_list	*lexical_analysis(t_list *line);
+t_list	*validate(t_list *line);
 
 t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type);
 void	tk_append(t_tk **atokens, t_tk *tk);

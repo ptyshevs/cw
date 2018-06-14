@@ -110,7 +110,7 @@ t_tk	*cut_instruction(char *line, int *start, int line_nbr)
 		i++;
 	}
 	tk = ft_strtrunc(&(line[*start]), i - *start, FALSE);
-	token = create_token(tk, line_nbr, i, INSTRUCTION);
+	token = create_token(tk, line_nbr, *start + 1, INSTRUCTION);
 	*start = i - 1;
 	return (token);
 }

@@ -23,7 +23,7 @@ CW_SRCDIR = src
 CW_SOURCES = $(patsubst %, $(CW_SRCDIR)/%.c, $(CW_FILENAMES))
 CW_BIN = $(patsubst %, $(ODIR)/%.o, $(CW_FILENAMES))
 
-BOTH_SRC = op.c
+BOTH_SRC =
 BOTH_SRCDIR = src
 BOTH_SOURCES = $(addprefix $(BOTH_SRCDIR)/, $(BOTH_SRC))
 BOTH_BIN = $(BOTH_SOURCES:.c=.o)

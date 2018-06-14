@@ -74,7 +74,8 @@ t_tk	*line_to_tk(t_list **lines, int *line_nbr)
 }
 
 /*
-** Transform list of lines read into list of tokens for further analysis
+** Transform list of lines read into list of tokenized lines, validating
+** lexicon on-the-fly.
 */
 
 t_list	*tokenize(t_list *lines)

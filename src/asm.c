@@ -28,7 +28,7 @@ int main(int ac, char **av)
 	asms = parse_cli(ac, av);
 	open_files(&asms);
 	read_file(asms.fd_from, &asms.lines);
-	t_list *tokens = lexical_analysis(asms.lines);
+	t_list *tokens = validate(asms.lines);
 
 //	parse_name_comment(&asms);
 //	ft_printf("name: %s\ncomment: %s\n", asms.name, asms.comment);
