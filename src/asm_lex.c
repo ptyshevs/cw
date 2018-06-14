@@ -28,156 +28,21 @@ void	lexical_error(int line, int chr)
 	exit(1);
 }
 
-/*
-** Check character set of each token, stop execution on case of any errors
-** @param tokens
-*/
 
-void	filter_bad_tokens(t_list *tokens, int skip_n_lines)
-{
-	t_tk	*tk;
-	char	*token;
-	int		i;
-
-	i = 0;
-	while (tokens)
-	{
-		if (i++ < skip_n_lines)
-		{
-			tokens = tokens->next;
-			continue ;
-		}
-		tk = tokens->content;
-		while (tk)
-		{
-			token = tk->tk;
-			i = 0;
-			while (token[i])
-			{
-				if (!ft_strchr(CHAR_SET, token[i]))
-					lexical_error_tk(tk, i);
-				i++;
-			}
-			tk = tk->next;
-		}
-		tokens = tokens->next;
-	}
-}
-
-/*
-** If anything is after the closing quote, it's lexical error
-*/
-
-int		find_endquote(t_tk *tmp, t_list *tokens)
-{
-	t_bool	startline;
-	char	*token;
-	int		lines;
-	int		i;
-
-	startline = TRUE;
-	lines = 0;
-	while (tokens)
-	{
-		token = startline ? tmp->tk : ((t_tk *)tokens->content)->tk;
-		i = startline ? 1 : 0;
-		while (token[i])
-		{
-			if (token[i] == '"')
-			{
-				if (token[i + 1]) // char is after the closing doublequote
-					lexical_error_tk(tmp, i + 1);
-				else if (tmp->next) // token after the closing doublequote
-					lexical_error_tk(tmp->next, 0);
-				return (lines);
-			}
-			i++;
-		}
-		tokens = tokens->next;
-		lines++;
-		startline = FALSE;
-	}
-	ft_dprintf(2, "Something went wrong. You shouldn't be here\n");
-	return (lines);
-}
-
-/*
-** Filter name and comment section
-** @param tokens list of tokenized strings
-** @return number of lines to be skipped for instruction validation
-*/
-
-int		filter_name_comment(t_list *tokens)
-{
-	t_tk	*tmp;
-	int		cnt_lines;
-
-	cnt_lines = 0;
-	while (tokens)
-	{
-		if (tokens->content)
-		{
-			tmp = tokens->content;
-			// what if not .name or .comment?
-			if ((ft_strequ(tmp->tk, NAME_CMD_STRING) ||
-				ft_strequ(tmp->tk, COMMENT_CMD_STRING)))
-			{
-				if ((tmp = tmp->next)) // empty string after .comment or .name
-				{
-					if (!ft_startswith(tmp->tk, "\""))
-						lexical_error_tk(tmp, 0);
-					int skip_lines = find_endquote(tmp, tokens);
-					cnt_lines += skip_lines;
-					while (skip_lines--)
-						tokens = tokens->next;
-				}
-			}
-			else
-				return (cnt_lines);
-		}
-		tokens = tokens->next;
-		cnt_lines++;
-	}
-	return (cnt_lines);
-}
-
-void	release_tokens(t_list **atokens)
-{
-	t_list	*tmp;
-	t_list	*prev;
-	t_tk	*tk;
-	t_tk	*tk_prev;
-
-	tmp = *atokens;
-	while (tmp)
-	{
-		prev = tmp;
-		tmp = tmp->next;
-		tk = prev->content;
-		while (tk)
-		{
-			tk_prev = tk;
-			tk = tk->next;
-			ft_strdel(&tk_prev->tk);
-			ft_memdel((void **)&tk_prev);
-		}
-		ft_memdel((void **)&prev);
-	}
-}
 
 /*
 ** Check characters, labels, and tokens
 ** @param content list of lines read from file
 */
 
-void	lexical_analysis(t_list *lines)
+t_list	*lexical_analysis(t_list *lines)
 {
 	t_list	*tokens;
 
 	tokens = tokenize(lines);
-	iter_tokens(tokens);
+	check_instructions(tokens);
 	// Check name and comment
 //	int skip_n_lines = filter_name_comment(tokens);
 //	filter_bad_tokens(tokens, skip_n_lines);
-	release_tokens(&tokens);
+	return (tokens);
 }

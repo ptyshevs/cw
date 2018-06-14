@@ -82,10 +82,12 @@ void	read_file(int fd_from, t_list **where);
 
 t_list	*tokenize(t_list *lines);
 void	iter_tokens(t_list *tokens);
+void	release_tokens(t_list **atokens);
 
-void	lexical_analysis(t_list *line);
+t_list	*lexical_analysis(t_list *line);
 
 t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type);
+void	tk_append(t_tk **atokens, t_tk *tk);
 
 t_tk	*cut_string(t_list **lines, int *start, int *line_nbr);
 t_tk	*cut_direct(char *line, int *start, int line_nbr);
@@ -104,6 +106,12 @@ t_tk	*cut_instruction(char *line, int *start, int line_nbr);
 t_bool	is_label(char *line, int start, int line_nbr);
 t_bool	is_register(char *line, int start);
 t_bool	is_instruction(char *line, int start, int line_nbr);
+
+/*
+** Validation
+*/
+
+void	check_instructions(t_list *tokens);
 
 /*
 ** Errors
