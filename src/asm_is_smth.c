@@ -60,3 +60,12 @@ t_bool	is_label(char *line, int start, int line_nbr)
 	}
 	return (FALSE);
 }
+
+/*
+** Is it a valid instruction?
+*/
+
+t_bool	is_instruction(char *line, int start, int line_nbr)
+{
+	return (TRUE);
+}

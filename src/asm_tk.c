@@ -71,11 +71,11 @@ t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 		return (cut_separator(line, i, *line_nbr));
 	else if (line[*i] == '.')
 		return (cut_spec(line, i, *line_nbr));
-	else if (line[*i] == ':')
+	else if (line[*i] == LABEL_CHAR)
 		return (cut_indirect(line, i, *line_nbr));
 	else if (is_label(line, *i, *line_nbr))
 		return (cut_label(line, i, *line_nbr));
-	else if (is_instruction(line, *i, *line_nbr))
+	else
 		return (cut_instruction(line, i, *line_nbr));
 	return (token);
 }
@@ -159,6 +159,8 @@ void	show_tokens(t_tk *tokens)
 			ft_printf("INDIRECT_LABEL");
 		else if (tokens->type == DIRECT_LABEL)
 			ft_printf("DIRECT_LABEL");
+		else if (tokens->type == COMMAND)
+			ft_printf("COMMAND");
 		ft_printf("][%d:%d]-> ", tokens->line, tokens->chr);
 		tokens = tokens->next;
 	}

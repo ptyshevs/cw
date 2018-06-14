@@ -68,12 +68,56 @@ t_tk	*cut_label(char *line, int *start, int line_nbr)
 
 t_tk	*cut_indirect(char *line, int *start, int line_nbr)
 {
-	ft_dprintf(2, "indirect label!\n");
-	return (NULL);
+	t_tk	*token;
+	char	*tk;
+	int		i;
+
+	i = *start + 1;
+	while (line[i])
+	{
+		if (!ft_strchr(LABEL_CHARS, line[i]))
+			lexical_error(line_nbr, i);
+		else if (ft_isspace(line[i]))
+			break ;
+		i++;
+	}
+	tk = ft_strtrunc(&(line[*start]), i - *start, FALSE);
+	token = create_token(tk, line_nbr, i, INDIRECT_LABEL);
+	*start = i - 1;
+	return (token);
 }
 
 /*
-** Cut everything that starts with a dot
+** Cut an instruction, hopefully
+*/
+
+t_tk	*cut_instruction(char *line, int *start, int line_nbr)
+{
+	t_tk	*token;
+	char	*tk;
+	int		i;
+
+	i = *start;
+	while (line[i])
+	{
+		if (ft_isspace(line[i]) || line[i] == DIRECT_CHAR)
+			break ;
+		if (!ft_strchr(LABEL_CHARS, line[i]))
+		{
+			ft_dprintf(2, "[d] cut_instruction(%s)\n", &(line[*start]));
+			lexical_error(line_nbr, i);
+		}
+		i++;
+	}
+	tk = ft_strtrunc(&(line[*start]), i - *start, FALSE);
+	token = create_token(tk, line_nbr, i, INSTRUCTION);
+	*start = i - 1;
+	return (token);
+}
+
+/*
+** Cut everything that starts with a dot.
+** JK ;) cut only .name or .comment, everything else is a lexical error
 */
 
 t_tk	*cut_spec(char *line, int *start, int line_nbr)
@@ -83,14 +127,14 @@ t_tk	*cut_spec(char *line, int *start, int line_nbr)
 	token = NULL;
 	if (ft_strnequ(&(line[*start]), NAME_CMD_STRING, ft_slen(NAME_CMD_STRING)))
 	{
-		token = create_token(NAME_CMD_STRING, line_nbr, *start, NONE);
-		*start += ft_slen(NAME_CMD_STRING);
+		token = create_token(NAME_CMD_STRING, line_nbr, *start, COMMAND);
+		*start += ft_slen(NAME_CMD_STRING) - 1;
 	}
 	else if (ft_strnequ(&(line[*start]), COMMENT_CMD_STRING,
 						ft_slen(COMMENT_CMD_STRING)))
 	{
-		token = create_token(COMMENT_CMD_STRING, line_nbr, *start, NONE);
-		*start += ft_slen(COMMENT_CMD_STRING);
+		token = create_token(COMMENT_CMD_STRING, line_nbr, *start, COMMAND);
+		*start += ft_slen(COMMENT_CMD_STRING) - 1;
 	}
 	else
 		lexical_error(line_nbr, *start);

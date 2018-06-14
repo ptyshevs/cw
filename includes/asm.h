@@ -56,6 +56,7 @@ typedef enum	e_type
 	SEPARATOR,
 	INDIRECT_LABEL,
 	DIRECT_LABEL,
+	COMMAND
 }				t_type;
 
 typedef struct	s_tk
@@ -94,6 +95,7 @@ t_tk	*cut_separator(char *line, const int *start, int line_nbr);
 t_tk	*cut_label(char *line, int *start, int line_nbr);
 t_tk	*cut_spec(char *line, int *start, int line_nbr);
 t_tk	*cut_indirect(char *line, int *start, int line_nbr);
+t_tk	*cut_instruction(char *line, int *start, int line_nbr);
 
 /*
 * Checks
@@ -101,6 +103,7 @@ t_tk	*cut_indirect(char *line, int *start, int line_nbr);
 
 t_bool	is_label(char *line, int start, int line_nbr);
 t_bool	is_register(char *line, int start);
+t_bool	is_instruction(char *line, int start, int line_nbr);
 
 /*
 ** Errors
