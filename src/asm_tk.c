@@ -33,6 +33,17 @@ void	tk_append(t_tk **atokens, t_tk *tk)
 	}
 }
 
+/**
+ *  Create a token structure.
+ *
+ *  [!] Don't release the <tk>! It is not duplicated, but is used as-is.
+ * @param tk
+ * @param line_pos
+ * @param chr_pos
+ * @param type
+ * @return
+ */
+
 t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type)
 {
 	t_tk	*token;
@@ -47,24 +58,21 @@ t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type)
 
 /*
 ** Dispatch token according to their type
-** @param line
-** @param lines
-** @param i
-** @param line_nbr
+** @param line      current line being processed
+** @param lines     pointer to the current line in the list of lines
+** @param i         index from which to start parsing
+** @param line_nbr  line number
 ** @return NULL if token type is not recognized, otherwise token (t_tk *)
 */
 
 t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 {
-	t_tk	*token;
-
-	token = NULL;
 	if (line[*i] == '"')
-		token = cut_string(lines, i, line_nbr);
+		return (cut_string(lines, i, line_nbr));
 	else if (line[*i] == '%' && line[*i + 1] == LABEL_CHAR)
-		token = cut_direct_label(line, i, *line_nbr);
+		return (cut_direct_label(line, i, *line_nbr));
 	else if (line[*i] == '%')
-		token = cut_direct(line, i, *line_nbr);
+		return (cut_direct(line, i, *line_nbr));
 	else if (line[*i] == 'r' && is_register(line, *i))
 		return (cut_register(line, i, *line_nbr));
 	else if (line[*i] == SEPARATOR_CHAR)
@@ -77,7 +85,6 @@ t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 		return (cut_label(line, i, *line_nbr));
 	else
 		return (cut_instruction(line, i, *line_nbr));
-	return (token);
 }
 
 /*
@@ -103,7 +110,8 @@ t_tk	*line_to_tk(t_list **lines, int *line_nbr)
 			break ;
 		token = token_dispatcher(line, lines, &i, line_nbr);
 		line = (*lines)->content; // need to jump after multiline STRING processing
-		tk_append(&tokens, token);
+		if (token)
+			tk_append(&tokens, token);
 		i += line[i] ? 1 : 0; // so you don't miss nul-terminator
 	}
 	return (tokens);
@@ -124,7 +132,9 @@ t_list	*tokenize(t_list *lines)
 	while (lines && ++line_count)
 	{
 		tk = line_to_tk(&lines, &line_count);
-		ft_lstappend(&tokens, ft_lstnew(tk, sizeof(t_tk)));
+		if (tk)
+			ft_lstappend(&tokens, ft_lstnew(tk, sizeof(t_tk)));
+		ft_memdel((void **)&tk);
 		lines = lines->next;
 	}
 	return (tokens);

@@ -141,6 +141,30 @@ int		filter_name_comment(t_list *tokens)
 	return (cnt_lines);
 }
 
+void	release_tokens(t_list **atokens)
+{
+	t_list	*tmp;
+	t_list	*prev;
+	t_tk	*tk;
+	t_tk	*tk_prev;
+
+	tmp = *atokens;
+	while (tmp)
+	{
+		prev = tmp;
+		tmp = tmp->next;
+		tk = prev->content;
+		while (tk)
+		{
+			tk_prev = tk;
+			tk = tk->next;
+			ft_strdel(&tk_prev->tk);
+			ft_memdel((void **)&tk_prev);
+		}
+		ft_memdel((void **)&prev);
+	}
+}
+
 /*
 ** Check characters, labels, and tokens
 ** @param content list of lines read from file
@@ -155,4 +179,5 @@ void	lexical_analysis(t_list *lines)
 	// Check name and comment
 //	int skip_n_lines = filter_name_comment(tokens);
 //	filter_bad_tokens(tokens, skip_n_lines);
+	release_tokens(&tokens);
 }

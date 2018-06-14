@@ -54,3 +54,8 @@ All token-cutting routines should perform the following operations:
   1) Create a token.
   2) Move pointer to token start (int *start argument) to the end of the token.
   3) Validate token lexicographically.
+
+If "memory was not allocated" error shows up while releasing string associated
+with t_tk token, this is likely due to the fact that `ft_strtrunc()` haven't
+allocated memory for it, but passed it as-is. This can cause very intricate bugs
+later, especially when releasing memory associated with the list of lines and tokens.

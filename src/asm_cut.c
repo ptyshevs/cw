@@ -58,6 +58,7 @@ char	*cut_substring(char *start, t_list *lines)
 	tmp = collect;
 	collect = ft_sjoin(3, collect, "\n", another);
 	ft_strdel(&tmp);
+	ft_strdel(&another);
 	return (collect);
 }
 

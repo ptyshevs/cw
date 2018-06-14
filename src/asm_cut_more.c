@@ -127,13 +127,15 @@ t_tk	*cut_spec(char *line, int *start, int line_nbr)
 	token = NULL;
 	if (ft_strnequ(&(line[*start]), NAME_CMD_STRING, ft_slen(NAME_CMD_STRING)))
 	{
-		token = create_token(NAME_CMD_STRING, line_nbr, *start, COMMAND);
+		token = create_token(ft_strdup(NAME_CMD_STRING), line_nbr,
+							*start, COMMAND);
 		*start += ft_slen(NAME_CMD_STRING) - 1;
 	}
 	else if (ft_strnequ(&(line[*start]), COMMENT_CMD_STRING,
 						ft_slen(COMMENT_CMD_STRING)))
 	{
-		token = create_token(COMMENT_CMD_STRING, line_nbr, *start, COMMAND);
+		token = create_token(ft_strdup(COMMENT_CMD_STRING), line_nbr,
+							*start, COMMAND);
 		*start += ft_slen(COMMENT_CMD_STRING) - 1;
 	}
 	else
