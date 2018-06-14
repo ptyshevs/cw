@@ -84,6 +84,36 @@ void	release_tokens(t_list **atokens)
 	}
 }
 
+char	*tk_type_to_str(t_type type)
+{
+	if (type == NONE)
+		return ("NONE");
+	else if (type == INSTRUCTION)
+		return ("INSTRUCTION");
+	else if (type == STRING)
+		return ("STRING");
+	else if (type == INDIRECT)
+		return ("INDIRECT");
+	else if (type == DIRECT)
+		return ("DIRECT");
+	else if (type == REGISTER)
+		return ("REGISTER");
+	else if (type == LABEL)
+		return ("LABEL");
+	else if (type == SEPARATOR)
+		return ("SEPARATOR");
+	else if (type == INDIRECT_LABEL)
+		return ("INDIRECT_LABEL");
+	else if (type == DIRECT_LABEL)
+		return ("DIRECT_LABEL");
+	else if (type == COMMAND)
+		return ("COMMAND");
+	else if (type == END)
+		return ("END");
+	else
+		return (NULL);
+}
+
 /*
 ** Display tokens of a single line
 */
@@ -93,28 +123,7 @@ void	show_tokens(t_tk *tokens)
 	while (tokens)
 	{
 		ft_printf("%s [", tokens->tk);
-		if (tokens->type == NONE)
-			ft_printf("NONE");
-		else if (tokens->type == INSTRUCTION)
-			ft_printf("INSTRUCTION");
-		else if (tokens->type == STRING)
-			ft_printf("STRING");
-		else if (tokens->type == INDIRECT)
-			ft_printf("INDIRECT");
-		else if (tokens->type == DIRECT)
-			ft_printf("DIRECT");
-		else if (tokens->type == REGISTER)
-			ft_printf("REGISTER");
-		else if (tokens->type == LABEL)
-			ft_printf("LABEL");
-		else if (tokens->type == SEPARATOR)
-			ft_printf("SEPARATOR");
-		else if (tokens->type == INDIRECT_LABEL)
-			ft_printf("INDIRECT_LABEL");
-		else if (tokens->type == DIRECT_LABEL)
-			ft_printf("DIRECT_LABEL");
-		else if (tokens->type == COMMAND)
-			ft_printf("COMMAND");
+		ft_printf("%s", tk_type_to_str(tokens->type));
 		ft_printf("][%d:%d]-> ", tokens->line, tokens->chr);
 		tokens = tokens->next;
 	}

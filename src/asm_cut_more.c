@@ -76,7 +76,7 @@ t_tk	*cut_indirect(char *line, int *start, int line_nbr)
 	while (line[i])
 	{
 		if (!ft_strchr(LABEL_CHARS, line[i]))
-			lexical_error(line_nbr, i);
+			lexical_error(line_nbr, i + 1);
 		else if (ft_isspace(line[i]))
 			break ;
 		i++;
@@ -105,7 +105,7 @@ t_tk	*cut_instruction(char *line, int *start, int line_nbr)
 		if (!ft_strchr(LABEL_CHARS, line[i]))
 		{
 			ft_dprintf(2, "[d] cut_instruction(%s)\n", &(line[*start]));
-			lexical_error(line_nbr, i);
+			lexical_error(line_nbr, i + 1);
 		}
 		i++;
 	}
@@ -139,6 +139,6 @@ t_tk	*cut_spec(char *line, int *start, int line_nbr)
 		*start += ft_slen(COMMENT_CMD_STRING) - 1;
 	}
 	else
-		lexical_error(line_nbr, *start);
+		lexical_error(line_nbr, *start + 1);
 	return (token);
 }

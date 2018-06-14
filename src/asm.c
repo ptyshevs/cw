@@ -12,15 +12,7 @@
 
 #include "asm.h"
 
-/*
-** Insruction before comment and/or name
-*/
 
-void	syntax_error(t_asm *asms, t_list *lines)
-{
-	(void)asms;
-	ft_panic(ft_sprintf("This should not be happening! String that have cause the error: %s\n", lines->content), 2, 1);
-}
 
 int main(int ac, char **av)
 {

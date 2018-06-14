@@ -56,7 +56,8 @@ typedef enum	e_type
 	SEPARATOR,
 	INDIRECT_LABEL,
 	DIRECT_LABEL,
-	COMMAND
+	COMMAND,
+	END
 }				t_type;
 
 typedef struct	s_tk
@@ -77,17 +78,22 @@ void	open_files(t_asm *a);
 void	read_file(int fd_from, t_list **where);
 
 /*
-** Tokenizing the input
+** Tokenize the file content
 */
 
 t_list	*tokenize(t_list *lines);
 void	iter_tokens(t_list *tokens);
 void	release_tokens(t_list **atokens);
+char	*tk_type_to_str(t_type type);
 
 t_list	*validate(t_list *line);
 
 t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type);
 void	tk_append(t_tk **atokens, t_tk *tk);
+
+/*
+** Cut into token structure
+*/
 
 t_tk	*cut_string(t_list **lines, int *start, int *line_nbr);
 t_tk	*cut_direct(char *line, int *start, int line_nbr);
@@ -111,15 +117,16 @@ t_bool	is_instruction(char *line, int start, int line_nbr);
 ** Validation
 */
 
+void	check_name_comment(t_list *tokens);
 void	check_instructions(t_list *tokens);
 
 /*
 ** Errors
 */
 
-void	syntax_error(t_asm *asms, t_list *lines);
 void	lexical_error(int line, int chr);
-void	lexical_error_tk(t_tk *tk, int i);
+void	syntax_error(char *token, char *type, int line, int chr);
+void	instruction_error(char *instruction, int line, int chr);
 
 void	wrap_up(t_asm *asms);
 

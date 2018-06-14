@@ -70,6 +70,11 @@ t_tk	*line_to_tk(t_list **lines, int *line_nbr)
 			tk_append(&tokens, token);
 		i += line[i] ? 1 : 0; // so you don't miss nul-terminator
 	}
+	if (tokens)
+	{
+		token = create_token(NULL, *line_nbr, i, END);
+		tk_append(&tokens, token);
+	}
 	return (tokens);
 }
 
@@ -94,5 +99,8 @@ t_list	*tokenize(t_list *lines)
 		ft_memdel((void **)&tk);
 		lines = lines->next;
 	}
+	tk = create_token(ft_strdup("(null)"), line_count, 1, END);
+	ft_lstappend(&tokens, ft_lstnew(tk, sizeof(t_tk)));
+	ft_memdel((void **)&tk);
 	return (tokens);
 }
