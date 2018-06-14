@@ -92,6 +92,8 @@ t_tk	*cut_direct_label(char *line, int *start, int line_nbr);
 t_tk	*cut_register(char *line, int *start, int line_nbr);
 t_tk	*cut_separator(char *line, const int *start, int line_nbr);
 t_tk	*cut_label(char *line, int *start, int line_nbr);
+t_tk	*cut_spec(char *line, int *start, int line_nbr);
+t_tk	*cut_indirect(char *line, int *start, int line_nbr);
 
 /*
 * Checks

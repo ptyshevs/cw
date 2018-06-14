@@ -48,8 +48,15 @@ t_bool	is_label(char *line, int start, int line_nbr)
 	while (line[i])
 	{
 		if (line[i] == LABEL_CHAR)
+			return (TRUE);
+		else if (ft_isspace(line[i]) || line[i] == DIRECT_CHAR)
 			break ;
-		if (!ft_strchr(LABEL_CHARS, line[i]))
-			lexical_error(line_nbr, i);
+		else if (!ft_strchr(LABEL_CHARS, line[i]))
+		{
+			ft_dprintf(2, "[d] is_label has found char not from a LABEL_CHARS: %c\n", line[i]);
+			lexical_error(line_nbr, i + 1);
+		}
+		i++;
 	}
+	return (FALSE);
 }
