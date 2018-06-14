@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include "gnls.h"
+#include "ft_gnls.h"
+#include "ft_str.h"
 #include "ft_strnum.h"
 #include "cw.h"
 #include "ft_tell.h"
@@ -111,6 +112,24 @@ unsigned char	*find_size(unsigned char *file)
 	return (size);
 }
 
+unsigned char	*find_code(unsigned char *file)
+{
+	unsigned char	*code;
+	unsigned int	i;
+	unsigned int	j;
+
+	code = ft_memalloc(sizeof(char) * 3185);
+	i = 2191;
+	j = 0;
+	while (i < 3185)
+		code[j++] = file[i++];
+	j = 0;
+	while (j < 1020)
+		ft_printf("%d|", code[j++]);
+	ft_printf("\n");
+	return (code);
+}
+
 unsigned int	check_size(unsigned char *size)
 {
 	unsigned int	nbr;
@@ -174,9 +193,6 @@ char			*find_comment(unsigned char *file)
 	while (i < 140 + COMMENT_LENGTH + 1)
 		comment[j++] = file[i++];
 	j = 0;
-	// while (j < COMMENT_LENGTH + 1)
-	// 	ft_printf("%d|", comment[j++]);
-	// ft_printf("\n");
 	return (comment);
 }
 
@@ -200,32 +216,43 @@ char			*check_comment(char *comment)
 	return (ret);
 }
 
-void			complete_file(char *file_name)
+void			complete_file(char *file_name, t_bot *bot)
 {
 	unsigned char	*file;
-	t_bot			*bot;
 
-	bot = init_bot();
 	file = read_file(file_name);
 	bot->header->magic = check_magic(find_magic(file));
 	ft_printf("magic is %0X\n", bot->header->magic);
 	bot->name = check_name(find_name(file));
 	ft_printf("name is %s\n", bot->name);
 	bot->size = check_size(find_size(file));
-	ft_printf("size is %i\n", bot->size);
+	ft_printf("size is %d\n", bot->size);
 	bot->comment = check_comment(find_comment(file));
 	ft_printf("comment is %s\n", bot->comment);
+	bot->code = find_code(file);
 }
 
 int				main(int ac, char **av)
 {
+	t_bot			*bot;
+	int				i;
+
+	bot = init_bot();
+	i = 1;
 	if (ac == 1)
 		return (usage());
-	if (open(av[1], O_RDONLY) == -1)
+	while (av[i])
 	{
-		write(1, "Can't read source file\n", 23);
-		return (1);
+		if (ft_strcmp(av[i], "-n") == 0)
+			ft_panic("Flag detected!\n", 2, 1);
+		if (open(av[i], O_RDONLY) == -1)
+			ft_panic("Can't read source file\n", 2, 1);
+		else
+		{
+			bot->id = i;
+			complete_file(av[i], bot);
+		}
+		i++;
 	}
-	complete_file(av[1]);
 	return (0);
 }
