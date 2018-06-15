@@ -1,5 +1,7 @@
 asm:
-  - make asm
+  script:
+    - make asm
 
 cw:
-  - make corewar
+  script:
+    - make corewar
