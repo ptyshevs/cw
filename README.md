@@ -5,7 +5,7 @@ language and a champion.
 
 ## Installation
 
-`git clone https://`login:pass@gitlab.com/ptyshevs/cw.git --recursive`.
+`git clone https://login:pass@gitlab.com/ptyshevs/cw.git --recursive`.
 
 ## Usage
 
