@@ -1,6 +1,10 @@
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
+stages:
+  - test
+  - build
+
 asm:
   script:
     - make asm
@@ -8,3 +12,8 @@ asm:
 cw:
   script:
     - make corewar
+
+test:
+  stage: test
+  script:
+    - sh test/run.sh
