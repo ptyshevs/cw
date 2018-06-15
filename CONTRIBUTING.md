@@ -27,7 +27,6 @@ future releases).
 ## Submitting Changes
 
 When you consider the feature finished, you have two options.
-
 1. The first one is to merge changes by yourself locally and push the
    merge commit to the repo:   
   1.1 `git checkout dev`   
@@ -38,7 +37,7 @@ or even worse, damage the work of other contributors. The short guide is below.
 2. The other one is to create a merge request   
   2.1 Push the button here:   
     ![merge button](docs/screenshots/merge-request.png)
-  2.2 Select source branch `feature_name` and target branch `dev`, ...
+  2.2 Select source branch `feature_name` and target branch `dev`,   
 Describe the changes made, choose assignee person to be responsible for the merge.
     ![merge form](docs/screenshots/merge-form.png)
 
