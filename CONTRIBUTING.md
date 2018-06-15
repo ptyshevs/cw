@@ -63,4 +63,9 @@ Describe the changes made, choose assignee person to be responsible for the merg
 ## Resolving Conflicts
 
 1. Open Corewar in CLion
-2.
+2. Go to VCS-Git-Resolve Conflicts...
+![resolve](https://pasteboard.co/HpYgDxh.png)
+3. You see a list of files with conflicts. For each file, open it and choose
+   the appropriate piece of conflicting code.
+![conflicts](https://pasteboard.co/HpYh8oU.png)
+4. Once finished, commit the merge and push to the repo.
