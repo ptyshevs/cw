@@ -57,7 +57,8 @@ You are writing this not for others, but for
 1. Open Corewar in CLion
 2. Go to VCS-Git-Resolve Conflicts...   
 ![resolve](docs/screenshots/vcs-git-resolve.png)
-3. You see a list of files with conflicts. For each file, open it and choose
-   the appropriate piece of conflicting code.   
+3. You see a list of files with conflicts:
+![list](docs/screenshots/conflict_files.png)
+4. For each file, open it and choose the appropriate piece of conflicting code.
 ![conflicts](docs/screenshots/resolve.png)
-4. Once finished, commit the merge and push to the repo.
+5. Once finished, commit the merge and push to the repo.
