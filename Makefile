@@ -11,7 +11,8 @@ HEADERS = cw.h op.h asm.h
 INCDIR = includes
 INCLUDES = $(addprefix $(INCDIR)/, $(HEADERS))
 
-ASM_FILENAMES = asm asm_prerequisites
+ASM_FILENAMES = asm asm_prerequisites asm_lex asm_io asm_cut asm_cut_more \
+    asm_is_smth asm_tk asm_tk_helper asm_tk_validate asm_errors
 
 ASM_SRCDIR = src
 ASM_SOURCES = $(patsubst %, $(ASM_SRCDIR)/%.c, $(ASM_FILENAMES))
@@ -22,7 +23,7 @@ CW_SRCDIR = src
 CW_SOURCES = $(patsubst %, $(CW_SRCDIR)/%.c, $(CW_FILENAMES))
 CW_BIN = $(patsubst %, $(ODIR)/%.o, $(CW_FILENAMES))
 
-BOTH_SRC = op.c
+BOTH_SRC =
 BOTH_SRCDIR = src
 BOTH_SOURCES = $(addprefix $(BOTH_SRCDIR)/, $(BOTH_SRC))
 BOTH_BIN = $(BOTH_SOURCES:.c=.o)

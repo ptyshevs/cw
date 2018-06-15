@@ -42,17 +42,4 @@ typedef struct	s_proc
 	t_bool			alive;
 }				t_proc;
 
-typedef struct	s_op
-{
-	char			*name;
-	unsigned int	nargs;
-	unsigned int	args[16];
-	unsigned int	op;
-	unsigned int	cycles;
-	char			*description;
-	unsigned int	codage;
-	unsigned int	carry;
-}				t_op;
-
-
 #endif

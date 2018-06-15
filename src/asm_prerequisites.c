@@ -63,20 +63,17 @@ void	open_files(t_asm *a)
 ** Handle end of execution properly
 */
 
-void	wrap_up(t_asm *asms, t_list **acontent)
+void	wrap_up(t_asm *asms)
 {
-	t_list	*tmp;
 	t_list	*prev;
 
-	tmp = *acontent;
-	while (tmp)
+	while (asms->lines)
 	{
-		prev = tmp;
-		tmp = tmp->next;
+		prev = asms->lines;
+		asms->lines = asms->lines->next;
 		ft_memdel(&prev->content);
 		ft_memdel((void **) &prev);
 	}
-	*acontent = NULL;
 	close(asms->fd_from);
 	close(asms->fd_to);
 }
