@@ -24,6 +24,16 @@ future releases).
 2. Commit you work to the corresponding remote branch
    `git push origin feature_name`
 
+## Writing Code
+
+1. Respect the Norm.
+2. Every function must have a docstring - short description of the arguments,
+   expected behavior and caveats.
+You are writing this not for others, but for
+   your later self debugging piles of code angrily.
+3. Use descriptive names for files. Try to make each file modular.
+4. Any function not exposed by file should be `static`.
+
 ## Submitting Changes
 
 When you consider the feature finished, you have two options.
@@ -37,19 +47,9 @@ or even worse, damage the work of other contributors. The short guide is below.
 2. The other one is to create a merge request   
   2.1 Push the button here:   
     ![merge button](docs/screenshots/merge-request.png)
-  2.2 Select source branch `feature_name` and target branch `dev`,   
+  2.2 Select source branch `feature_name` and target branch `dev`,
 Describe the changes made, choose assignee person to be responsible for the merge.
     ![merge form](docs/screenshots/merge-form.png)
-
-## Writing Code
-
-1. Respect the Norm.
-2. Every function must have a docstring - short description of the arguments,
-   expected behavior and caveats.   
-You are writing this not for others, but for
-   your later self debugging piles of code angrily.
-3. Use descriptive names for files. Try to make each file modular.
-4. Any function not exposed by file should be `static`.
 
 ## Resolving Conflicts
 
