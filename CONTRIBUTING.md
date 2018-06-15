@@ -37,10 +37,10 @@ or even worse, damage the work of other contributors. The short guide is below.
 
 2. The other one is to create a merge request   
   2.1 Push the button here:   
-    ![merge button](https://prnt.sc/jv710x)   
-  2.2 Select source branch `feature_name` and target branch `dev`:   
-    ![branches](https://prnt.sc/jv710x)   
+    ![merge button](docs/screenshots/merge-request.png)
+  2.2 Select source branch `feature_name` and target branch `dev`, ...
 Describe the changes made, choose assignee person to be responsible for the merge.
+    ![merge form](docs/screenshots/merge-form.png)
 
 ## Writing Code
 
@@ -56,8 +56,8 @@ You are writing this not for others, but for
 
 1. Open Corewar in CLion
 2. Go to VCS-Git-Resolve Conflicts...   
-![resolve](https://pasteboard.co/HpYgDxh.png)
+![resolve](docs/screenshots/vcs-git-resolve.png)
 3. You see a list of files with conflicts. For each file, open it and choose
    the appropriate piece of conflicting code.   
-![conflicts](https://pasteboard.co/HpYh8oU.png)
+![conflicts](docs/screenshots/resolve.png)
 4. Once finished, commit the merge and push to the repo.
