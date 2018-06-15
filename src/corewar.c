@@ -232,15 +232,26 @@ void			complete_file(char *file_name, t_bot *bot)
 	bot->code = find_code(file);
 }
 
+t_bot 	*creat_new_bot(t_bot *bot)
+{
+	while (bot->next)
+		bot = bot->next;
+	bot->next = ft_memalloc(sizeof(t_bot));
+	bot->next->header = ft_memalloc(sizeof(header_t));
+	return (bot->next); 
+}
+
 int				main(int ac, char **av)
 {
 	t_bot			*bot;
 	int				i;
+	t_bot 			*check;
 
 	bot = init_bot();
 	i = 1;
 	if (ac == 1)
 		return (usage());
+	check = bot;
 	while (av[i])
 	{
 		if (ft_strcmp(av[i], "-n") == 0)
@@ -251,8 +262,16 @@ int				main(int ac, char **av)
 		{
 			bot->id = i;
 			complete_file(av[i], bot);
+			if (av[i + 1])
+				bot = creat_new_bot(bot);
 		}
 		i++;
+	}
+	i = 0;
+	while (check)
+	{
+		ft_printf("%p:, %d: %s\n", check, i++, check->name);
+		check = check->next;
 	}
 	return (0);
 }

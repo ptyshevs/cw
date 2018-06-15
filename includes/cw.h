@@ -25,18 +25,12 @@ typedef struct	s_bot
 {
 	char			*name;
 	char			*comment;
+	struct s_bot	*next;
 	unsigned char	*code;
 	unsigned int	size;
 	unsigned int	id;
 	struct header_s *header;
 }				t_bot;
-
-typedef struct		s_bots
-{
-	int				id;
-	struct s_bots	*next;
-}					t_bots;
-
 /*
 ** Process - the same as caret
 */
