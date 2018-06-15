@@ -8,21 +8,12 @@ stages:
 asm:
   script:
     - make asm
-  only:
-    - dev
-    - master
 
 cw:
   script:
     - make corewar
-  only:
-    - dev
-    - master
 
 test:
   stage: test
   script:
     - sh test/run.sh
-  only:
-    - dev
-    - master
