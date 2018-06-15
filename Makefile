@@ -35,14 +35,13 @@ all: $(LIBFTA) $(ASM) $(CW)
 $(LIBFTA):
 	@make -C libft
 
-$(ASM): $(ASM_BIN)
+$(ASM): $(LIBFTA) $(ASM_BIN)
 	@echo ""
 	@$(CC) $(FLAGS) $^ -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR) -L $(LIBFT) -l ft
 	@echo ${GREEN}[$(ASM) is up to date.]${NC}
 
-$(CW): $(CW_BIN)
+$(CW): $(LIBFTA) $(CW_BIN)
 	@echo ""
-
 	@$(CC) $(FLAGS) $^ -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR) -L $(LIBFT) -l ft
 	@echo ${GREEN}[$(CW) is up to date.]${NC}
 
