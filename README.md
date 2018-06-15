@@ -11,7 +11,6 @@ language and a champion.
 
 To build the whole project, just use `make` without any target. Otherwise,
 specify the target you want to build, like `make asm` or `make corewar`.
-All default rules (`all`, `$(NAME)`, `clean`, `fclean`, and `re`) are enabled.
 
 ## Contributing
 
