@@ -5,3 +5,4 @@ corewar
 *.cor
 *.s
 *.pcl
+__pycache__
