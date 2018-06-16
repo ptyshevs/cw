@@ -48,16 +48,16 @@ or even worse, damage the work of other contributors. The short guide is below.
   2.1 Push the button here:   
     <img src="docs/screenshots/merge-request.png" width="400px" />   
   2.2 Select source branch `feature_name` and target branch `dev`,
-Describe the changes made, choose assignee person to be responsible for the merge.
+Describe the changes made, choose assignee person to be responsible for the merge.   
     <img src="docs/screenshots/merge-form.png" width="400px" />   
 
 ## Resolving Conflicts
 
-1. Open Corewar in CLion
-2. Go to VCS-Git-Resolve Conflicts...
+1. Open Corewar in CLion   
+2. Go to VCS-Git-Resolve Conflicts...   
 <img src="docs/screenshots/vcs-git-resolve.png" width="400px" />   
-3. You see a list of files with conflicts:
+3. You see a list of files with conflicts:   
 <img src="docs/screenshots/conflict_files.png" width="200px" />   
-4. For each file, open it and choose the appropriate piece of conflicting code.
+4. For each file, open it and choose the appropriate piece of conflicting code.   
 <img src="docs/screenshots/resolve.png" width="400px" />   
 5. Once finished, commit the merge and push to the repo.
