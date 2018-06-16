@@ -2,6 +2,7 @@ import pickle
 
 
 class Db:
+    """Small wrapup around pickle module. Not very useful, but does its job"""
     def __init__(self, dbname='db.pcl'):
         self.dbname = dbname
         self.pcl = dict()

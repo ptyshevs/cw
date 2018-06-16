@@ -24,21 +24,18 @@ smaller.
 
 WARNING: only the output is compared, not the files generated (comes in the future releases)
 """
-from fuzzer import Fuzzer
-import os
-import sys
-import random
-import string
+from Fuzzer import Fuzzer
 """
 [*] Store/update path to my asm and to original asm in pickle
 [*] Ask for a directory with *.s files
 [*] Implement all 3 modes of file manipulation
-[ ] Open all *.s files and store somewhere as originals
+[*] Open all *.s files and store somewhere as originals
+[*] Add basic working mode
 """
 
 
 if __name__ == '__main__':
     fz = Fuzzer()
     fz.open_files()
-    fz.fuzz_once()
+    fz.fuzz()
     fz.db.wrap_up()

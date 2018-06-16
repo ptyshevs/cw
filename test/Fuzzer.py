@@ -1,4 +1,4 @@
-from db import Db
+from Db import Db
 import os
 import sys
 import subprocess
@@ -13,13 +13,12 @@ class Fuzzer:
         self.args = self.parse_args()
         self.db = self.init_db()
         self.operations = [("insert", Fuzzer.insert), ("remove", Fuzzer.remove), ("replace", Fuzzer.replace)]
+        self.modes = {'easy': (1, 1), 'moderate': (5, 5), 'hard': (8, 8)}
         self.files = dict()
         self.out_dir = 'traces'
-        self.l = 1
-        self.m = 5
+        self.m, self.l = self.modes[self.args['mode']]
         if not os.path.exists(self.out_dir):
             os.makedirs(self.out_dir)
-
 
     def open_files(self):
         """Find all files with *.s extension in src_dir"""
@@ -40,16 +39,24 @@ class Fuzzer:
             mod_output = subprocess.check_output(my_command, shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             mod_output = str(e.output, encoding='utf-8')
-        print("Original output:", orig_output)
-        print("Mod output:", mod_output)
+        return orig_output, mod_output
 
     def fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
         file = self.mod_file(file, self.m)
         mod_filename = self.save_file(file, filename)
-        self.asm_run(mod_filename)
+        orig_out, mod_out = self.asm_run(mod_filename)
+        if orig_out != mod_out:
+            print("Output differs for file {}".format(mod_filename))
+        else:
+            os.remove(mod_filename)
+
+    def fuzz(self):
+        for i in range(self.args['n']):
+            self.fuzz_once()
 
     def mod_file(self, file, m):
+        """Modify file content by copying it."""
         mod_file = [line for line in file]
         for i in range(m):
             opname, op = random.choice(self.operations)
@@ -89,7 +96,7 @@ class Fuzzer:
             return ''.join([chr(random.randint(0, 30000)) for _ in range(length)])
         elif mode == 'spec':
             i = random.randint(0, 1)  # beginning or end
-            spec = random.choice(Fuzzer.specs)
+            spec = random.choice(Fuzzer.specs) if random.randint(0, 1) else random.choice(string.ascii_letters)
             s = ''.join([random.choice(string.ascii_lowercase) for _ in range(length - 1)])
             return spec + s if i else s + spec
         elif mode == 'spaces':
@@ -159,16 +166,26 @@ class Fuzzer:
     @staticmethod
     def parse_args():
         """Parse CLI arguments"""
-        args = {'-u': False}
-        for arg in sys.argv[1:]:
+        args = {'-u': False, 'n': 40, 'mode': 'easy'}
+        for i, arg in enumerate(sys.argv[1:]):
             if arg == '-u' or arg == '--update_paths':
                 args['-u'] = True
+            elif arg == '-n' and sys.argv[i + 2].isdecimal():
+                args['n'] = int(sys.argv[i + 2])
+            elif arg == '--hard':
+                args['mode'] = 'hard'
+            elif arg == '-h':
+                Fuzzer.usage()
+                exit(0)
         return args
 
     @staticmethod
     def usage():
-        print("usage: python3 asm_fuzzer.py [-u|--update_paths]")
-        print("  -u|--update_paths\t\tShow dialog to update paths to asm binaries")
+        print("usage: python3 asm_fuzzer.py [-u|--update_paths] [-n <n_tests>] [--hard]")
+        print("\nasm_fuzzer - test your asm compiler by randomly introducing changes to original files.\n")
+        print("  -u|--update_paths\tShow dialog to update paths to asm binaries")
+        print("  -n\t\t\tAmount of tests to run")
+        print("  --hard\t\tFiles are modified more")
 
     def init_db(self):
         db = Db()
