@@ -2,18 +2,29 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
 stages:
-  - test
   - build
+  - test
 
 asm:
+  stage: build
   script:
     - make asm
+  only:
+    - master
+    - dev
 
 cw:
+  stage: build
   script:
     - make corewar
+  only:
+    - master
+    - dev
 
 test:
   stage: test
   script:
     - sh test/run.sh
+  only:
+    - master
+    - dev
