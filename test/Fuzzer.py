@@ -5,6 +5,24 @@ import subprocess
 import random
 import string
 
+BLACK = '\033[0;30m'
+RED = '\033[0;31m'
+GREEN = '\033[0;32m'
+BROWN = '\033[0;33m'
+BLUE = '\033[0;34m'
+PURPLE = '\033[0;35m'
+CYAN = '\033[0;36m'
+LGRAY = '\033[0;37m'
+DGRAY = '\033[1;30m'
+LRED = '\033[1;31m'
+LGREEN = '\033[1;32m'
+YELLOW = '\033[1;33m'
+LBLUE = '\033[1;34m'
+PINK = '\033[1;35m'
+LCYAN = '\033[1;36m'
+WHITE = '\033[1;37m'
+NC = '\033[0m'
+
 class Fuzzer:
     specs = ";\"'#$%^&*()[],-.=>?\|/\\}{"
     spaces = [9, 10, 11, 12, 13, 32]
@@ -47,13 +65,22 @@ class Fuzzer:
         mod_filename = self.save_file(file, filename)
         orig_out, mod_out = self.asm_run(mod_filename)
         if orig_out != mod_out:
-            print("Output differs for file {}".format(mod_filename))
+            if self.args['v']:
+                print("Output differs for file {}".format(mod_filename))
+            else:
+                print("{}.{}".format(RED, NC), end='')
         else:
             os.remove(mod_filename)
+            if self.args['v']:
+                print("Output matches the original version")
+            else:
+                print("{}.{}".format(GREEN, NC), end='')
 
     def fuzz(self):
         for i in range(self.args['n']):
             self.fuzz_once()
+        if not self.args['v']:
+            print("")
 
     def mod_file(self, file, m):
         """Modify file content by copying it."""
@@ -147,7 +174,7 @@ class Fuzzer:
     def select_random_location(file: list):
         """Find a new random position (n, k) in a file, where n - line, and k - position in a line"""
         n = random.randrange(0, len(file))
-        k = random.randrange(0, len(file[n]))
+        k = random.randrange(0, len(file[n])) if len(file[n]) > 0 else 0
         return n, k
 
     def save_file(self, file, filename):
@@ -166,7 +193,7 @@ class Fuzzer:
     @staticmethod
     def parse_args():
         """Parse CLI arguments"""
-        args = {'-u': False, 'n': 40, 'mode': 'easy'}
+        args = {'-u': False, 'n': 40, 'mode': 'easy', 'v': False}
         for i, arg in enumerate(sys.argv[1:]):
             if arg == '-u' or arg == '--update_paths':
                 args['-u'] = True
@@ -174,6 +201,8 @@ class Fuzzer:
                 args['n'] = int(sys.argv[i + 2])
             elif arg == '--hard':
                 args['mode'] = 'hard'
+            elif arg == '-v' or arg == '--verbose':
+                args['v'] = True
             elif arg == '-h':
                 Fuzzer.usage()
                 exit(0)
@@ -181,10 +210,11 @@ class Fuzzer:
 
     @staticmethod
     def usage():
-        print("usage: python3 asm_fuzzer.py [-u|--update_paths] [-n <n_tests>] [--hard]")
+        print("usage: python3 asm_fuzzer.py [-u|--update_paths] [-n <n_tests>] [--hard] [-v|--verbose]")
         print("\nasm_fuzzer - test your asm compiler by randomly introducing changes to original files.\n")
         print("  -u|--update_paths\tShow dialog to update paths to asm binaries")
         print("  -n\t\t\tAmount of tests to run")
+        print("  -v|--verbose\t\tVerbose mode")
         print("  --hard\t\tFiles are modified more")
 
     def init_db(self):
