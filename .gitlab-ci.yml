@@ -25,6 +25,10 @@ fuzz_asm:
   stage: test
   script:
     - cd test && python3 cw_fuzzer.py -m asm
+  artifacts:
+    paths:
+      - test/traces
+    expire_in: 1 week
   only:
     - master
     - dev
