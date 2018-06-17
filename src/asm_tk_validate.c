@@ -49,7 +49,7 @@ void	check_name_comment(t_list *tokens)
 ** Check if the instruction is in the instruction set
 */
 
-t_bool	is_valid_instruction(t_tk *tmp)
+static t_bool	is_valid_instruction(t_tk *tmp)
 {
 	int	i;
 

@@ -16,7 +16,7 @@
 ** Pass <cnt> lines of <lines> list.
 */
 
-void	pass_lines(t_list **lines, int cnt)
+static void	pass_lines(t_list **lines, int cnt)
 {
 	int	i;
 
@@ -33,7 +33,7 @@ void	pass_lines(t_list **lines, int cnt)
 ** lines if necessary.
 */
 
-char	*cut_substring(char *start, t_list *lines)
+static char	*cut_substring(char *start, t_list *lines)
 {
 	char	*collect;
 	char	*tmp;
@@ -63,8 +63,10 @@ char	*cut_substring(char *start, t_list *lines)
 }
 
 /*
-** Cut string token, from <start>. Start should be index of the opening doublequote
-*/
+** Cut string token, from <start>.
+**
+** Start should be index of the opening double quote.
+ */
 
 t_tk	*cut_string(t_list **lines, int *start, int *line_nbr)
 {
@@ -79,13 +81,13 @@ t_tk	*cut_string(t_list **lines, int *start, int *line_nbr)
 	else
 		tmp = cut_substring(&(tmp[*start]), *lines);
 	if (!tmp)
-		lexical_error(*line_nbr, *start);
-//		ft_panic(ft_sprintf("This should not be happening! No closing bracket found for STRING token [%d:%d] %s\n",
-//							*line_nbr, *start, &(((char *)(*lines)->content)[*start])), 2, 1);
+//		lexical_error(*line_nbr, *start);
+		error(1, "This should not be happening! No closing bracket found for STRING token [%d:%d] %s\n",
+				*line_nbr, *start, &(((char *)(*lines)->content)[*start]));
 	cnt_lines = ft_strcnt(tmp, '\n');
 	*line_nbr += cnt_lines;
 	pass_lines(lines, cnt_lines);
-	token = create_token(tmp, *line_nbr - cnt_lines, *start, STRING);
+	token = create_token(tmp, *line_nbr - cnt_lines, *start + 1, STRING);
 	if (!ft_strchr(token->tk, '\n'))
 		*start += ft_slen(token->tk) - 1;
 	else
@@ -116,7 +118,7 @@ t_tk	*cut_direct_label(char *line, int *start, int line_nbr)
 	}
 	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, FALSE)) == 2)
 		lexical_error(line_nbr, *start + 1);
-	token = create_token(tk, line_nbr, *start, DIRECT_LABEL);
+	token = create_token(tk, line_nbr, *start + 1, DIRECT_LABEL);
 	*start = i - 1;
 	return (token);
 }
@@ -154,7 +156,7 @@ t_tk	*cut_direct(char *line, int *start, int line_nbr)
 	}
 	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, FALSE)) == 1)
 		lexical_error(line_nbr, i);
-	token = create_token(tk, line_nbr, *start, DIRECT);
+	token = create_token(tk, line_nbr, *start + 1, DIRECT);
 	*start = i - 1;
 	return (token);
 }

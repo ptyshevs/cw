@@ -21,7 +21,7 @@
 ** @return NULL if token type is not recognized, otherwise token (t_tk *)
 */
 
-t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
+static t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 {
 	if (line[*i] == '"')
 		return (cut_string(lines, i, line_nbr));
@@ -36,6 +36,8 @@ t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 	else if (line[*i] == '.')
 		return (cut_spec(line, i, *line_nbr));
 	else if (line[*i] == LABEL_CHAR)
+		return (cut_indirect_label(line, i, *line_nbr));
+	else if (is_indirect(line, *i))
 		return (cut_indirect(line, i, *line_nbr));
 	else if (is_label(line, *i, *line_nbr))
 		return (cut_label(line, i, *line_nbr));
@@ -48,7 +50,7 @@ t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 ** Passing list of lines by pointer to be able to process multiline strings
 */
 
-t_tk	*line_to_tk(t_list **lines, int *line_nbr)
+static t_tk	*line_to_tk(t_list **lines, int *line_nbr)
 {
 	char	*line;
 	t_tk	*tokens;

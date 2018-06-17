@@ -13,8 +13,8 @@
 #include "asm.h"
 
 /*
-** it starts from 'r', but is it a register? If it's not, then
- * it's an INSTRUCTION
+** it starts from 'r', but is it a register?
+** If it's not, then it's an INSTRUCTION
 */
 
 t_bool	is_register(char *line, int start)
@@ -59,4 +59,27 @@ t_bool	is_label(char *line, int start, int line_nbr)
 		i++;
 	}
 	return (FALSE);
+}
+
+/*
+** Check if token is an indirect value - starts from a number (or minus)
+*/
+
+t_bool	is_indirect(char *line, int start)
+{
+	int		i;
+
+	i = start;
+	if (line[i] == '-') // negative number is ok
+		i++;
+	while (line[i])
+	{
+		if (!ft_isdigit(line[i]))
+			break ;
+		else
+			i++;
+	}
+	if (line[start] == '-' ? i - start < 2 : i - start == 0)
+		return (FALSE);
+	return (TRUE);
 }

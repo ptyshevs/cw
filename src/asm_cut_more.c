@@ -63,31 +63,6 @@ t_tk	*cut_label(char *line, int *start, int line_nbr)
 }
 
 /*
-** Cut indirect label in format `:blablabla`
-*/
-
-t_tk	*cut_indirect(char *line, int *start, int line_nbr)
-{
-	t_tk	*token;
-	char	*tk;
-	int		i;
-
-	i = *start + 1;
-	while (line[i])
-	{
-		if (!ft_strchr(LABEL_CHARS, line[i]))
-			lexical_error(line_nbr, i + 1);
-		else if (ft_isspace(line[i]))
-			break ;
-		i++;
-	}
-	tk = ft_strtrunc(&(line[*start]), i - *start, FALSE);
-	token = create_token(tk, line_nbr, i, INDIRECT_LABEL);
-	*start = i - 1;
-	return (token);
-}
-
-/*
 ** Cut an instruction, hopefully
 */
 

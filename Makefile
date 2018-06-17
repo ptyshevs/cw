@@ -11,7 +11,8 @@ HEADERS = cw.h op.h asm.h
 INCDIR = includes
 INCLUDES = $(addprefix $(INCDIR)/, $(HEADERS))
 
-ASM_FILENAMES = asm asm_prerequisites asm_lex asm_io asm_cut asm_cut_more \
+ASM_FILENAMES = asm asm_prerequisites asm_lex asm_io \
+    asm_cut asm_cut_more asm_cut_indirect \
     asm_is_smth asm_tk asm_tk_helper asm_tk_validate asm_errors
 
 ASM_SRCDIR = src

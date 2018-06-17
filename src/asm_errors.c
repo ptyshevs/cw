@@ -44,3 +44,16 @@ void	instruction_error(char *instruction, int line, int chr)
 	"\"%s\"", line, chr, instruction);
 	exit(1);
 }
+
+/*
+** Wrapper around ft_dprintf to output formatted error and exit
+*/
+
+void	error(int exit_value, char *format, ...)
+{
+	va_list	va;
+
+	va_start(va, format);
+	ft_vdprintf(2, format, va);
+	exit(exit_value);
+}

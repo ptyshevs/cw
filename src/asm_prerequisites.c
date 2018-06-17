@@ -30,7 +30,7 @@ static void	asm_usage(void)
 ** Open file to read assembly from.
 */
 
-void	open_files(t_asm *a)
+void		open_files(t_asm *a)
 {
 	if ((a->fd_from = open(a->name, O_RDONLY)) == -1)
 		ft_panic(ft_sprintf("Can't read source file %s", a->name), 2, 1);
@@ -41,7 +41,7 @@ void	open_files(t_asm *a)
 ** Handle end of execution properly
 */
 
-void	wrap_up(t_asm *asms)
+void		wrap_up(t_asm *asms)
 {
 	t_list	*prev;
 
@@ -50,7 +50,7 @@ void	wrap_up(t_asm *asms)
 		prev = asms->lines;
 		asms->lines = asms->lines->next;
 		ft_memdel(&prev->content);
-		ft_memdel((void **) &prev);
+		ft_memdel((void **)&prev);
 	}
 	close(asms->fd_from);
 	close(asms->fd_to);
@@ -60,7 +60,7 @@ void	wrap_up(t_asm *asms)
 ** Parse CLI arguments
 */
 
-t_asm	parse_cli(int ac, char **av)
+t_asm		parse_cli(int ac, char **av)
 {
 	static t_asm	asms;
 	int				i;
@@ -71,9 +71,9 @@ t_asm	parse_cli(int ac, char **av)
 	while (++i < ac)
 	{
 		if (ft_strequ(av[i], "-a"))
-			asms.to_stdout = TRUE;
+			asms.flags |= DUMP_STDOUT;
 		else if (ft_strequ(av[i], "-d"))
-			asms.debug = TRUE;
+			asms.flags |= DEBUG;
 		else
 			asms.name = av[i];
 	}

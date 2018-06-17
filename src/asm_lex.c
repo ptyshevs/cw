@@ -23,7 +23,7 @@ t_list	*validate(t_asm *asms, t_list *lines)
 	t_list	*tokens;
 
 	tokens = tokenize(lines); // and lexical analysis on-the-fly
-	if (asms->debug)
+	if (asms->flags & DEBUG)
 		iter_tokens(tokens);
 	check_name_comment(tokens);
 	check_instructions(tokens); // bad instructions

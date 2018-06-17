@@ -24,10 +24,19 @@
 
 # define CHAR_SET "abcdefghijklmnopqrstuvwxyz_0123456789%,r:-"
 
+/*
+** Flags enum
+*/
+
+typedef enum	e_fl
+{
+	DUMP_STDOUT = 1,
+	DEBUG = 2
+}				t_fl;
+
 typedef struct	s_asm
 {
-	t_bool			to_stdout; // flag -a
-	t_bool			debug; // flag -d
+	t_fl			flags;
 
 	t_list			*lines;
 
@@ -105,6 +114,7 @@ t_tk	*cut_separator(char *line, const int *start, int line_nbr);
 t_tk	*cut_label(char *line, int *start, int line_nbr);
 t_tk	*cut_spec(char *line, int *start, int line_nbr);
 t_tk	*cut_indirect(char *line, int *start, int line_nbr);
+t_tk	*cut_indirect_label(char *line, int *start, int line_nbr);
 t_tk	*cut_instruction(char *line, int *start, int line_nbr);
 
 /*
@@ -113,6 +123,7 @@ t_tk	*cut_instruction(char *line, int *start, int line_nbr);
 
 t_bool	is_label(char *line, int start, int line_nbr);
 t_bool	is_register(char *line, int start);
+t_bool	is_indirect(char *line, int start);
 
 /*
 ** Validation
@@ -128,6 +139,8 @@ void	check_instructions(t_list *tokens);
 void	lexical_error(int line, int chr);
 void	syntax_error(char *token, char *type, int line, int chr);
 void	instruction_error(char *instruction, int line, int chr);
+void	error(int exit_value, char *format, ...);
+
 
 void	wrap_up(t_asm *asms);
 

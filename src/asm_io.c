@@ -17,7 +17,7 @@
 ** ignoring everything after COMMENT_CHAR
 */
 
-void	read_file(int fd_from, t_list **where)
+void		read_file(int fd_from, t_list **where)
 {
 	char	*iter;
 	char	*tmp;
@@ -49,20 +49,20 @@ static char	*change_extension(char *filename, char *from_ext, char *to_ext)
 	char	*new_filename;
 
 	if (!(pos = ft_strrstr(filename, from_ext)))
-		return(ft_strdup(to_ext));
+		return (ft_strdup(to_ext));
 	new_filename = ft_strnew(pos - filename + ft_slen(to_ext));
 	ft_strncpy(new_filename, filename, pos - filename);
 	ft_strcat(new_filename, to_ext);
 	return (new_filename);
 }
 
-void	write_file(t_asm *a, t_list *commands)
+void		write_file(t_asm *a, t_list *commands)
 {
 	char	*new_filename;
 
 	(void)commands;
 	new_filename = change_extension(a->name, ".s", ".cor");
-	if ((a->fd_to = open(new_filename, O_WRONLY|O_CREAT, 644)) == -1)
+	if ((a->fd_to = open(new_filename, O_WRONLY | O_CREAT, 644)) == -1)
 		ft_panic(ft_sprintf("Cant write champion to %s", new_filename), 2, 1);
 	write(a->fd_to, "whatever", 8);
 	ft_printf("Writing output program to %s\n", new_filename);
