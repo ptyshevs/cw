@@ -40,8 +40,8 @@ from Fuzzer import Fuzzer
 if __name__ == '__main__':
     fz = Fuzzer()
     fz.open_files()
+    fz.cor_fuzz_once()
     # fz.fuzz()
-    fz.cor_files.append(("traces/pdcesjoomhknyjyxqvjy/barriere.orig_cor", "traces/pdcesjoomhknyjyxqvjy/barriere.cor"))
-    fz.check_cor_files(fz.cor_files)
+    # fz.check_cor_files(fz.cor_files)
     print(fz.cor_files)
     fz.db.wrap_up()

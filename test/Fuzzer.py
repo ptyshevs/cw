@@ -38,17 +38,21 @@ class Fuzzer:
         self.cor_files = list()
         self.out_dir = 'traces'
         self.file_compiled_prefix = "Writing output program to "
-        self.m, self.l = self.modes[self.args['mode']]
+        self.m, self.l = self.modes[self.args['fuzz_mode']]
         if not os.path.exists(self.out_dir):
             os.makedirs(self.out_dir)
 
     def open_files(self):
         """Find all files with *.s extension in src_dir"""
-        for file in os.listdir(self.db.get('src_dir')):
-            if file.endswith(".s") and file not in self.files.keys():
-                full_path = self.db.get('src_dir') + "/" + file
-                with open(full_path) as f:
-                    self.files[full_path] = f.readlines()
+        for file in os.listdir(self.db.get('src_dir' if self.args['target'] == 'asm' else 'cw_dir')):
+            if self.args['target'] == 'asm' and file.endswith(".s") and file not in self.files.keys():
+                path = os.path.join(self.db.get('src_dir'), file)
+                with open(path) as f:
+                    self.files[path] = f.readlines()
+            elif self.args['target'] == 'corewar' and file.endswith(".cor"):
+                path = os.path.join(self.db.get('cw_dir'), file)
+                with open(path, 'rb') as f:
+                    self.files[path] = f.readlines()
 
     def asm_run(self, mod_filename):
         """Compare original asm output with your version"""
@@ -74,6 +78,42 @@ class Fuzzer:
         if mod_output.startswith(self.file_compiled_prefix) and orig_cor_fname:
             self.cor_files.append((mod_base + ".cor", mod_base + ".orig_cor"))
         return orig_output, mod_output
+
+    def cor_run(self, filename):
+        """Run corewar binaries"""
+        orig_command = "{} {}".format(self.db.get('true_cw'), filename)
+        my_command = "{} {}".format(self.db.get('my_cw'), filename)
+
+        try:
+            orig_output = subprocess.check_output(orig_command, shell=True, stderr=subprocess.STDOUT).decode('utf-8')
+        except subprocess.CalledProcessError as e:
+            orig_output = str(e.output, encoding='utf-8')
+        try:  # Same here
+            mod_output = subprocess.check_output(my_command, shell=True, stderr=subprocess.STDOUT).decode('ascii')
+        except subprocess.CalledProcessError as e:
+            mod_output = str(e.output, encoding='utf-8')
+        return orig_output, mod_output
+
+    def cor_fuzz_once(self):
+        filename, file = random.choice(list(self.files.items()))
+        file = self.mod_file(file, self.m, 'digits')
+        mod_dir, mod_filename = self.save_file(file, filename)
+        orig_out, mod_out = self.cor_run(mod_filename)
+        if orig_out != mod_out:
+            self.cnt_errors += 1
+            Fuzzer.diff_files(filename, mod_filename)
+            Fuzzer.save_output(orig_out, mod_out, mod_filename)
+            if self.args['v']:
+                print("Output differs for file {}".format(mod_filename))
+            else:
+                print("{}.{}".format(RED, NC), end='')
+        else:
+            if not (orig_out.startswith(self.file_compiled_prefix) and mod_out.startswith(self.file_compiled_prefix)):
+                shutil.rmtree(mod_dir)  # remove the whole directory, but only if the *.cor files weren't not generated
+            if self.args['v']:
+                print("Output matches the original version")
+            else:
+                print("{}.{}".format(GREEN, NC), end='')
 
     def fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
@@ -120,13 +160,13 @@ class Fuzzer:
                 out = str(e.output, encoding='utf-8')
             print(out)
 
-    def mod_file(self, file, m):
+    def mod_file(self, file, m, mode='spec'):
         """Modify file content by copying it."""
         mod_file = [line for line in file]
         for i in range(m):
             opname, op = random.choice(self.operations)
             n, k = self.select_random_location(mod_file)
-            op(mod_file, n, k, self.l)
+            op(mod_file, n, k, self.l, mode)
         return mod_file
 
     @staticmethod
@@ -170,7 +210,7 @@ class Fuzzer:
             raise ValueError("mode is not recognized:", mode)
 
     @staticmethod
-    def remove(file, n, k, l):
+    def remove(file, n, k, l, mode):
         """Remove k+l segment"""
         file[n] = file[n][:k] + file[n][k + l:]
 
@@ -251,7 +291,7 @@ class Fuzzer:
     @staticmethod
     def parse_args():
         """Parse CLI arguments"""
-        args = {'-u': False, 'n': 40, 'mode': 'easy', 'v': False}
+        args = {'-u': False, 'n': 40, 'fuzz_mode': 'easy', 'v': False, 'target': 'asm'}
         for i, arg in enumerate(sys.argv[1:]):
             if arg == '-u' or arg == '--update_paths':
                 args['-u'] = True
@@ -261,6 +301,11 @@ class Fuzzer:
                 args['mode'] = 'hard'
             elif arg == '-v' or arg == '--verbose':
                 args['v'] = True
+            elif arg == '-m' or arg == '--mode':
+                if sys.argv[i + 2] == 'asm' or sys.argv[i + 2] == 'corewar':
+                    args['target'] = sys.argv[i + 2]
+                else:
+                    raise ValueError("Unrecognized mode:", sys.argv[i + 2])
             elif arg == '-h':
                 Fuzzer.usage()
                 exit(0)
@@ -268,19 +313,30 @@ class Fuzzer:
 
     @staticmethod
     def usage():
-        print("usage: python3 asm_fuzzer.py [-u|--update_paths] [-n <n_tests>] [--hard] [-v|--verbose]")
+        """Display usage"""
+        print("usage: python3 asm_fuzzer.py [-u|--update_paths] [-n <n_tests>] [--hard] [-v|--verbose] [-m|--mode <asm|corewar>]")
         print("\nasm_fuzzer - test your asm compiler by randomly introducing changes to original files.\n")
-        print("  -u|--update_paths\tShow dialog to update paths to asm binaries")
+        print("  -u|--update_paths\tShow dialog to update paths to asm/corewar binaries")
         print("  -n\t\t\tAmount of tests to run")
         print("  -v|--verbose\t\tVerbose mode")
         print("  --hard\t\tFiles are modified more")
+        print("  mode\t\tSelect the fuzzing target. asm by default")
 
     def init_db(self):
+        """Initialize database"""
         db = Db()
-        if not db.get('my_asm') or self.args['-u']:
-            db.add_record('my_asm', input('Relative path to your asm:'))
-        if not db.get('true_asm') or self.args['-u']:
-            db.add_record('true_asm', input('Relative path to original asm:'))
-        if not db.get('src_dir') or self.args['-u']:
-            db.add_record('src_dir', input('Relative path to the directory with *.s files:'))
+        if self.args['target'] == 'asm':
+            if not db.get('my_asm') or self.args['-u']:
+                db.add_record('my_asm', input('Relative path to your asm:'))
+            if not db.get('true_asm') or self.args['-u']:
+                db.add_record('true_asm', input('Relative path to original asm:'))
+            if not db.get('src_dir') or self.args['-u']:
+                db.add_record('src_dir', input('Relative path to the directory with *.s files:'))
+        elif self.args['target'] == 'corewar':
+            if not db.get('my_cw') or self.args['-u']:
+                db.add_record('my_cw', input("Relative path to your corewar:"))
+            if not db.get('true_cw') or self.args['-u']:
+                db.add_record('true_cw', input("Relative path to original corewar:"))
+            if not db.get('cw_dir') or self.args['-u']:
+                db.add_record('cw_dir', input('Relative path to the directory with *.cor files:'))
         return db
