@@ -100,11 +100,11 @@ t_tk	*cut_instruction(char *line, int *start, int line_nbr)
 	i = *start;
 	while (line[i])
 	{
-		if (ft_isspace(line[i]) || line[i] == DIRECT_CHAR)
+		if (ft_isspace(line[i]) || ft_strchr("%,:", line[i]))
 			break ;
 		if (!ft_strchr(LABEL_CHARS, line[i]))
 		{
-			ft_dprintf(2, "[d] cut_instruction(%s)\n", &(line[*start]));
+//			ft_dprintf(2, "[d] cut_instruction(%s)\n", &(line[*start]));
 			lexical_error(line_nbr, i + 1);
 		}
 		i++;

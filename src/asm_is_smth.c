@@ -53,7 +53,7 @@ t_bool	is_label(char *line, int start, int line_nbr)
 			break ;
 		else if (!ft_strchr(LABEL_CHARS, line[i]))
 		{
-			ft_dprintf(2, "[d] is_label has found char not from a LABEL_CHARS: %c\n", line[i]);
+//			ft_dprintf(2, "[d] is_label has found char not from a LABEL_CHARS: %c\n", line[i]);
 			lexical_error(line_nbr, i + 1);
 		}
 		i++;

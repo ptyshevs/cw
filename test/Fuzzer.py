@@ -1,5 +1,6 @@
 from Db import Db
 import os
+import shutil
 import sys
 import subprocess
 import random
@@ -32,6 +33,7 @@ class Fuzzer:
         self.db = self.init_db()
         self.operations = [("insert", Fuzzer.insert), ("remove", Fuzzer.remove), ("replace", Fuzzer.replace)]
         self.modes = {'easy': (1, 1), 'moderate': (5, 5), 'hard': (8, 8)}
+        self.cnt_errors = 0
         self.files = dict()
         self.out_dir = 'traces'
         self.m, self.l = self.modes[self.args['mode']]
@@ -42,45 +44,68 @@ class Fuzzer:
         """Find all files with *.s extension in src_dir"""
         for file in os.listdir(self.db.get('src_dir')):
             if file.endswith(".s") and file not in self.files.keys():
-                with open(self.db.get('src_dir') + "/" + file) as f:
-                    self.files[file] = f.readlines()
+                full_path = self.db.get('src_dir') + "/" + file
+                with open(full_path) as f:
+                    self.files[full_path] = f.readlines()
 
     def asm_run(self, mod_filename):
         """Compare original asm output with your version"""
         orig_command = "{} {}".format(self.db.get('true_asm'), mod_filename)
         my_command = "{} {}".format(self.db.get('my_asm'), mod_filename)
         try:  # Normal execution
-            orig_output = subprocess.check_output(orig_command, shell=True, stderr=subprocess.STDOUT)
+            orig_output = subprocess.check_output(orig_command, shell=True, stderr=subprocess.STDOUT).decode('ascii')
         except subprocess.CalledProcessError as e:  # Error
             orig_output = str(e.output, encoding='utf-8')
         try:  # Same here
-            mod_output = subprocess.check_output(my_command, shell=True, stderr=subprocess.STDOUT)
+            mod_output = subprocess.check_output(my_command, shell=True, stderr=subprocess.STDOUT).decode('ascii')
         except subprocess.CalledProcessError as e:
             mod_output = str(e.output, encoding='utf-8')
         return orig_output, mod_output
 
+    @staticmethod
+    def diff_files(orig_filename, mod_filename):
+        """Save diff of modified file and the original in the traces"""
+        diff_filename = mod_filename[:-2] + ".diff"
+        try:
+            subprocess.check_output("diff {} {} > {}".format(orig_filename, mod_filename, diff_filename),
+                                    shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:  # if diff found discrepancy, it returns 1. Nothing special here
+            pass
+
+    @staticmethod
+    def save_out(orig_out, mod_out, mod_filename):
+        with open(mod_filename[:-2] + '.out', 'w+') as f:
+            f.write("Original output:\n*********************************\n{}*********************************\n".format(orig_out))
+            f.write("Your output:\n*********************************\n{}*********************************\n".format(mod_out))
+
     def fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
         file = self.mod_file(file, self.m)
-        mod_filename = self.save_file(file, filename)
+        mod_dir, mod_filename = self.save_file(file, filename)
         orig_out, mod_out = self.asm_run(mod_filename)
         if orig_out != mod_out:
+            self.cnt_errors += 1
+            Fuzzer.diff_files(filename, mod_filename)
+            Fuzzer.save_out(orig_out, mod_out, mod_filename)
             if self.args['v']:
                 print("Output differs for file {}".format(mod_filename))
             else:
                 print("{}.{}".format(RED, NC), end='')
         else:
-            os.remove(mod_filename)
+            shutil.rmtree(mod_dir)  # remove the whole directory
             if self.args['v']:
                 print("Output matches the original version")
             else:
                 print("{}.{}".format(GREEN, NC), end='')
 
     def fuzz(self):
+        self.cnt_errors = 0
         for i in range(self.args['n']):
             self.fuzz_once()
         if not self.args['v']:
             print("")
+        if self.cnt_errors != 0:
+            print("You can find all cases there haven't matched in traces directory")
 
     def mod_file(self, file, m):
         """Modify file content by copying it."""
@@ -181,14 +206,17 @@ class Fuzzer:
         """
         Generate filename
         :param file: file content
-        :param filename of the file
+        :param filename: of the file
+        :param i: test file index number
         :return: None
         """
-        new_filename = os.path.join(self.out_dir, os.path.basename(filename)[:-2] + ''.join(
-            [random.choice(string.ascii_lowercase) for _ in range(20)]) + '.s')
+        test_dir = ''.join([random.choice(string.ascii_lowercase) for _ in range(20)])
+        dir_path = os.path.join(self.out_dir, test_dir)
+        os.makedirs(dir_path)
+        new_filename = os.path.join(self.out_dir, test_dir, os.path.basename(filename)[:-2] + '.s')
         with open(new_filename, 'w+') as f:
             f.writelines(file)
-        return new_filename
+        return dir_path, new_filename
 
     @staticmethod
     def parse_args():

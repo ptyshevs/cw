@@ -79,8 +79,9 @@ t_tk	*cut_string(t_list **lines, int *start, int *line_nbr)
 	else
 		tmp = cut_substring(&(tmp[*start]), *lines);
 	if (!tmp)
-		ft_panic(ft_sprintf("This should not be happening! No closing bracket found for STRING token [%d:%d] %s\n",
-							*line_nbr, *start, &(((char *)(*lines)->content)[*start])), 2, 1);
+		lexical_error(*line_nbr, *start);
+//		ft_panic(ft_sprintf("This should not be happening! No closing bracket found for STRING token [%d:%d] %s\n",
+//							*line_nbr, *start, &(((char *)(*lines)->content)[*start])), 2, 1);
 	cnt_lines = ft_strcnt(tmp, '\n');
 	*line_nbr += cnt_lines;
 	pass_lines(lines, cnt_lines);

@@ -6,3 +6,4 @@ corewar
 *.s
 *.pcl
 __pycache__
+traces

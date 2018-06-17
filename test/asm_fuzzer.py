@@ -31,7 +31,8 @@ from Fuzzer import Fuzzer
 [*] Implement all 3 modes of file manipulation
 [*] Open all *.s files and store somewhere as originals
 [*] Add basic working mode
-[*] Add verbose mode
+[ ] Add diff comparison of compiling step
+[ ] Add comparison of generated *.cor files
 """
 
 
