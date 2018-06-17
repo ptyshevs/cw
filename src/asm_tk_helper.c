@@ -108,6 +108,8 @@ char	*tk_type_to_str(t_type type)
 		return ("DIRECT_LABEL");
 	else if (type == COMMAND)
 		return ("COMMAND");
+	else if (type == ENDLINE)
+		return ("ENDLINE");
 	else if (type == END)
 		return ("END");
 	else

@@ -33,7 +33,7 @@ t_tk	*cut_indirect_label(char *line, int *start, int line_nbr)
 		i++;
 	}
 	tk = ft_strtrunc(&(line[*start]), i - *start, FALSE);
-	token = create_token(tk, line_nbr, i, INDIRECT_LABEL);
+	token = create_token(tk, line_nbr, *start + 1, INDIRECT_LABEL);
 	*start = i - 1;
 	return (token);
 }
@@ -57,7 +57,7 @@ t_tk	*cut_indirect(char *line, int *start, int line_nbr)
 		i++;
 	}
 	tk = ft_strtrunc(&(line[*start]), i - *start, FALSE);
-	token = create_token(tk, line_nbr, i, INDIRECT);
+	token = create_token(tk, line_nbr, *start + 1, INDIRECT);
 	*start = i - 1;
 	return (token);
 }

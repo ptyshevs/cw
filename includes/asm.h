@@ -67,6 +67,7 @@ typedef enum	e_type
 	INDIRECT_LABEL,
 	DIRECT_LABEL,
 	COMMAND,
+	ENDLINE,
 	END
 }				t_type;
 

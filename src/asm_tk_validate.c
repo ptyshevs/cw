@@ -32,17 +32,27 @@ void	check_name_comment(t_list *tokens)
 
 	name_found = FALSE;
 	comment_found = FALSE;
+	tmp = NULL;
 	while (tokens)
 	{
 		tmp = tokens->content;
 		if (!(tmp->type == COMMAND))
 			syntax_error(tmp->tk, tk_type_to_str(tmp->type),
 						 tmp->line, tmp->chr);
-
+		tmp = tmp->next;
+		if (tmp->type != STRING)
+			syntax_error(tmp->tk, tk_type_to_str(tmp->type), tmp->line, tmp->chr);
+		if (ft_strequ(tmp->tk, NAME_CMD_STRING))
+			name_found = TRUE;
+		else
+			comment_found = TRUE;
 		if (name_found && comment_found)
 			break ;
 		tokens = tokens->next;
 	}
+	if (tmp->next->type != ENDLINE)
+		syntax_error(tmp->tk, tk_type_to_str(tmp->type), tmp->line, tmp->chr);
+
 }
 
 /*

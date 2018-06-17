@@ -28,8 +28,12 @@ void	lexical_error(int line, int chr)
 
 void	syntax_error(char *token, char *type, int line, int chr)
 {
-	ft_dprintf(1, "Syntax error at token [TOKEN][%03d:%03d] %s \"%s\"\n",
-		line, chr, type, token);
+	if (!ft_strequ(type, "ENDLINE"))
+		ft_dprintf(1, "Syntax error at token [TOKEN][%03d:%03d] %s \"%s\"\n",
+					line, chr, type, token);
+	else
+		ft_dprintf(1, "Syntax error at token [TOKEN][%03d:%03d] %s\n",
+					line, chr, type);
 	exit(1);
 }
 
