@@ -40,4 +40,5 @@ if __name__ == '__main__':
     fz = Fuzzer()
     fz.open_files()
     fz.fuzz()
+    print(fz.cor_files)
     fz.db.wrap_up()

@@ -35,7 +35,9 @@ class Fuzzer:
         self.modes = {'easy': (1, 1), 'moderate': (5, 5), 'hard': (8, 8)}
         self.cnt_errors = 0
         self.files = dict()
+        self.cor_files = list()
         self.out_dir = 'traces'
+        self.file_compiled_prefix = "Writing output program to "
         self.m, self.l = self.modes[self.args['mode']]
         if not os.path.exists(self.out_dir):
             os.makedirs(self.out_dir)
@@ -52,31 +54,26 @@ class Fuzzer:
         """Compare original asm output with your version"""
         orig_command = "{} {}".format(self.db.get('true_asm'), mod_filename)
         my_command = "{} {}".format(self.db.get('my_asm'), mod_filename)
+
+        mod_base = mod_filename[:-2]
+        orig_cor_fname = None
+
         try:  # Normal execution
             orig_output = subprocess.check_output(orig_command, shell=True, stderr=subprocess.STDOUT).decode('ascii')
         except subprocess.CalledProcessError as e:  # Error
             orig_output = str(e.output, encoding='utf-8')
+        if orig_output.startswith(self.file_compiled_prefix):
+            # Copy the original *.cor file, so it is not over-written for later comparison
+            orig_cor_fname = mod_base + ".cor"
+            cpy_command = "cp {0} {1}; rm {0}".format(orig_cor_fname, mod_base + ".orig_cor")
+            subprocess.check_output(cpy_command, shell=True, stderr=subprocess.STDOUT)
         try:  # Same here
             mod_output = subprocess.check_output(my_command, shell=True, stderr=subprocess.STDOUT).decode('ascii')
         except subprocess.CalledProcessError as e:
             mod_output = str(e.output, encoding='utf-8')
+        if mod_output.startswith(self.file_compiled_prefix) and orig_cor_fname:
+            self.cor_files.append((mod_base + ".cor", mod_base + ".orig_cor"))
         return orig_output, mod_output
-
-    @staticmethod
-    def diff_files(orig_filename, mod_filename):
-        """Save diff of modified file and the original in the traces"""
-        diff_filename = mod_filename[:-2] + ".diff"
-        try:
-            subprocess.check_output("diff {} {} > {}".format(orig_filename, mod_filename, diff_filename),
-                                    shell=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:  # if diff found discrepancy, it returns 1. Nothing special here
-            pass
-
-    @staticmethod
-    def save_out(orig_out, mod_out, mod_filename):
-        with open(mod_filename[:-2] + '.out', 'w+') as f:
-            f.write("Original output:\n*********************************\n{}*********************************\n".format(orig_out))
-            f.write("Your output:\n*********************************\n{}*********************************\n".format(mod_out))
 
     def fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
@@ -86,13 +83,14 @@ class Fuzzer:
         if orig_out != mod_out:
             self.cnt_errors += 1
             Fuzzer.diff_files(filename, mod_filename)
-            Fuzzer.save_out(orig_out, mod_out, mod_filename)
+            Fuzzer.save_output(orig_out, mod_out, mod_filename)
             if self.args['v']:
                 print("Output differs for file {}".format(mod_filename))
             else:
                 print("{}.{}".format(RED, NC), end='')
         else:
-            shutil.rmtree(mod_dir)  # remove the whole directory
+            if not (orig_out.startswith(self.file_compiled_prefix) and mod_out.startswith(self.file_compiled_prefix)):
+                shutil.rmtree(mod_dir)  # remove the whole directory, but only if the *.cor files weren't not generated
             if self.args['v']:
                 print("Output matches the original version")
             else:
@@ -191,7 +189,8 @@ class Fuzzer:
         file[n] = file[n][:k] + Fuzzer.gen_rand_string(mode, l) + file[n][k + l:]
 
     @staticmethod
-    def open_file(filename):
+    def open_file(filename: str) -> list:
+        """Open file and return its content"""
         with open(filename, 'r') as f:
             return f.readlines()
 
@@ -207,7 +206,6 @@ class Fuzzer:
         Generate filename
         :param file: file content
         :param filename: of the file
-        :param i: test file index number
         :return: None
         """
         test_dir = ''.join([random.choice(string.ascii_lowercase) for _ in range(20)])
@@ -217,6 +215,23 @@ class Fuzzer:
         with open(new_filename, 'w+') as f:
             f.writelines(file)
         return dir_path, new_filename
+
+    @staticmethod
+    def diff_files(orig_filename, mod_filename):
+        """Save diff of modified file and the original in the traces"""
+        diff_filename = mod_filename[:-2] + ".diff"
+        try:
+            subprocess.check_output("diff {} {} > {}".format(orig_filename, mod_filename, diff_filename),
+                                    shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:  # if diff found discrepancy, it returns 1. Nothing special here
+            pass
+
+    @staticmethod
+    def save_output(orig_out, mod_out, mod_filename):
+        """Save shell output. STDOUT is combined with STDERR"""
+        with open(mod_filename[:-2] + '.out', 'w+') as f:
+            f.write("Original output:\n*********************************\n{}*********************************\n".format(orig_out))
+            f.write("Your output:\n*********************************\n{}*********************************\n".format(mod_out))
 
     @staticmethod
     def parse_args():
