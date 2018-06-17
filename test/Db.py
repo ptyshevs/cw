@@ -22,3 +22,6 @@ class Db:
     def wrap_up(self):
         with open(self.dbname, 'wb') as f:
             pickle.dump(self.pcl, f)
+
+    def __repr__(self):
+        return "\n".join([str((k, v)) for k, v in list(self.pcl.items())])
