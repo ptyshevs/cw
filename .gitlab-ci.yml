@@ -26,6 +26,7 @@ fuzz_asm:
   script:
     - cd test && python3 cw_fuzzer.py -m asm
   artifacts:
+    when: on_failure
     paths:
       - test/traces
     expire_in: 1 week
