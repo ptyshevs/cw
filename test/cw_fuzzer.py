@@ -22,7 +22,6 @@ Thus, the severety of file modification depends on:
 Hence, it is easy to define different levels of "hardness", which would regulate k and l so to make changes larger or
 smaller.
 
-WARNING: only the output is compared, not the files generated (comes in the future releases)
 """
 from Fuzzer import Fuzzer
 """
@@ -41,5 +40,6 @@ if __name__ == '__main__':
     fz = Fuzzer()
     fz.open_files()
     fz.fuzz()
-    fz.check_cor_files(fz.cor_files)
+    if not fz.args['--no-compiled']:
+        fz.check_cor_files(fz.cor_files)
     fz.db.wrap_up()
