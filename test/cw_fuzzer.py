@@ -33,15 +33,13 @@ from Fuzzer import Fuzzer
 [*] Add basic working mode
 [*] Add diff comparison of compiling step
 [*] Add comparison of generated *.cor files
-[ ] Add VM fuzzing with *.cor files
+[*] Add VM fuzzing with *.cor files
 """
 
 
 if __name__ == '__main__':
     fz = Fuzzer()
     fz.open_files()
-    fz.cor_fuzz_once()
-    # fz.fuzz()
-    # fz.check_cor_files(fz.cor_files)
-    print(fz.cor_files)
+    fz.fuzz()
+    fz.check_cor_files(fz.cor_files)
     fz.db.wrap_up()

@@ -36,6 +36,7 @@ class Fuzzer:
         self.cnt_errors = 0
         self.files = dict()
         self.cor_files = list()
+        self.ext = ".s" if self.args['target'] == 'asm' else ".cor"
         self.out_dir = 'traces'
         self.file_compiled_prefix = "Writing output program to "
         self.m, self.l = self.modes[self.args['fuzz_mode']]
@@ -53,6 +54,9 @@ class Fuzzer:
                 path = os.path.join(self.db.get('cw_dir'), file)
                 with open(path, 'rb') as f:
                     self.files[path] = f.readlines()
+        if len(self.files) == 0:
+            print("No {} files found".format("*" + self.ext))
+            exit(1)
 
     def asm_run(self, mod_filename):
         """Compare original asm output with your version"""
@@ -96,13 +100,12 @@ class Fuzzer:
 
     def cor_fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
-        file = self.mod_file(file, self.m, 'digits')
+        file = self.mod_file(file, self.m, 'digits', tpe='bytes')
         mod_dir, mod_filename = self.save_file(file, filename)
         orig_out, mod_out = self.cor_run(mod_filename)
         if orig_out != mod_out:
             self.cnt_errors += 1
-            Fuzzer.diff_files(filename, mod_filename)
-            Fuzzer.save_output(orig_out, mod_out, mod_filename)
+            self.save_output(orig_out, mod_out, mod_filename)
             if self.args['v']:
                 print("Output differs for file {}".format(mod_filename))
             else:
@@ -117,13 +120,13 @@ class Fuzzer:
 
     def fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
-        file = self.mod_file(file, self.m)
+        file = self.mod_file(file, self.m, tpe='str')
         mod_dir, mod_filename = self.save_file(file, filename)
         orig_out, mod_out = self.asm_run(mod_filename)
         if orig_out != mod_out:
             self.cnt_errors += 1
             Fuzzer.diff_files(filename, mod_filename)
-            Fuzzer.save_output(orig_out, mod_out, mod_filename)
+            self.save_output(orig_out, mod_out, mod_filename)
             if self.args['v']:
                 print("Output differs for file {}".format(mod_filename))
             else:
@@ -140,7 +143,7 @@ class Fuzzer:
         """Fuzz the compilation step, storing all successfully compiled *.cor files"""
         self.cnt_errors = 0
         for i in range(self.args['n']):
-            self.fuzz_once()
+            self.fuzz_once() if self.args['target'] == 'asm' else self.cor_fuzz_once()
         if not self.args['v']:
             print("")
         if self.cnt_errors != 0:
@@ -160,13 +163,13 @@ class Fuzzer:
                 out = str(e.output, encoding='utf-8')
             print(out)
 
-    def mod_file(self, file, m, mode='spec'):
+    def mod_file(self, file, m, mode='spec', tpe='str'):
         """Modify file content by copying it."""
         mod_file = [line for line in file]
         for i in range(m):
             opname, op = random.choice(self.operations)
             n, k = self.select_random_location(mod_file)
-            op(mod_file, n, k, self.l, mode)
+            op(mod_file, n, k, self.l, mode, tpe)
         return mod_file
 
     @staticmethod
@@ -210,12 +213,12 @@ class Fuzzer:
             raise ValueError("mode is not recognized:", mode)
 
     @staticmethod
-    def remove(file, n, k, l, mode):
+    def remove(file, n, k, l, mode, type='str'):
         """Remove k+l segment"""
         file[n] = file[n][:k] + file[n][k + l:]
 
     @staticmethod
-    def insert(file, n, k, l, mode='spec'):
+    def insert(file, n, k, l, mode='spec', type='str'):
         """
             insert l random characters in k-th position
 
@@ -229,10 +232,11 @@ class Fuzzer:
         :param mode: Mode of operation
         :return: Nothing
         """
-        file[n] = file[n][:k + 1] + Fuzzer.gen_rand_string(mode, l) + file[n][k + 1:]
+        stub = Fuzzer.gen_rand_string(mode, l)
+        file[n] = file[n][:k + 1] + stub if type == 'str' else bytes(stub,  encoding='utf-8') + file[n][k + 1:]
 
     @staticmethod
-    def replace(file, n, k, l, mode='spec'):
+    def replace(file, n, k, l, mode='spec', type='str'):
         """
         Replace l characters, starting from k with random values
         :param file: file's content
@@ -241,7 +245,8 @@ class Fuzzer:
         :param l: length of changed segment
         :param mode: Mode of operation
         """
-        file[n] = file[n][:k] + Fuzzer.gen_rand_string(mode, l) + file[n][k + l:]
+        stub = Fuzzer.gen_rand_string(mode, l)
+        file[n] = file[n][:k] + stub if type == 'str' else bytes(stub, encoding='utf-8') + file[n][k + l:]
 
     @staticmethod
     def open_file(filename: str) -> list:
@@ -266,8 +271,9 @@ class Fuzzer:
         test_dir = ''.join([random.choice(string.ascii_lowercase) for _ in range(20)])
         dir_path = os.path.join(self.out_dir, test_dir)
         os.makedirs(dir_path)
-        new_filename = os.path.join(self.out_dir, test_dir, os.path.basename(filename)[:-2] + '.s')
-        with open(new_filename, 'w+') as f:
+        basename = os.path.basename(filename)[:-2 if self.args['target'] == 'asm' else -4]
+        new_filename = os.path.join(self.out_dir, test_dir, basename + self.ext)
+        with open(new_filename, 'w+' if self.args['target'] == 'asm' else 'wb+') as f:
             f.writelines(file)
         return dir_path, new_filename
 
@@ -281,10 +287,9 @@ class Fuzzer:
         except subprocess.CalledProcessError as e:  # if diff found discrepancy, it returns 1. Nothing special here
             pass
 
-    @staticmethod
-    def save_output(orig_out, mod_out, mod_filename):
+    def save_output(self, orig_out, mod_out, mod_filename):
         """Save shell output. STDOUT is combined with STDERR"""
-        with open(mod_filename[:-2] + '.out', 'w+') as f:
+        with open(mod_filename[:-2 if self.args['target'] == 'asm' else -4] + '.out', 'w+') as f:
             f.write("Original output:\n*********************************\n{}*********************************\n".format(orig_out))
             f.write("Your output:\n*********************************\n{}*********************************\n".format(mod_out))
 
@@ -314,13 +319,13 @@ class Fuzzer:
     @staticmethod
     def usage():
         """Display usage"""
-        print("usage: python3 asm_fuzzer.py [-u|--update_paths] [-n <n_tests>] [--hard] [-v|--verbose] [-m|--mode <asm|corewar>]")
+        print("usage: python3 cw_fuzzer.py [-u|--update_paths] [-n <n_tests>] [--hard] [-v|--verbose] [-m|--mode <asm|corewar>]")
         print("\nasm_fuzzer - test your asm compiler by randomly introducing changes to original files.\n")
-        print("  -u|--update_paths\tShow dialog to update paths to asm/corewar binaries")
         print("  -n\t\t\tAmount of tests to run")
-        print("  -v|--verbose\t\tVerbose mode")
+        print("  -m --mode\t\t\tSelect the fuzzing target. asm by default")
         print("  --hard\t\tFiles are modified more")
-        print("  mode\t\tSelect the fuzzing target. asm by default")
+        print("  -u|--update_paths\tShow dialog to update paths to asm/corewar binaries")
+        print("  -v --verbose\t\tVerbose mode")
 
     def init_db(self):
         """Initialize database"""
