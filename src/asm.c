@@ -27,6 +27,7 @@ int main(int ac, char **av)
 	read_file(asms.fd_from, &asms.lines);
 	tokens = validate(&asms, asms.lines);
 
+	write_file(&asms, tokens);
 //	parse_name_comment(&asms);
 //	ft_printf("name: %s\ncomment: %s\n", asms.name, asms.comment);
 	release_tokens(&tokens);

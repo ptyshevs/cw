@@ -60,8 +60,10 @@ void	write_file(t_asm *a, t_list *commands)
 {
 	char	*new_filename;
 
+	(void)commands;
 	new_filename = change_extension(a->name, ".s", ".cor");
-	if ((a->fd_to = open(new_filename, O_WRONLY|O_CREAT, 644)) == -1)
-		ft_panic(ft_sprintf("Cant write champion to %s", new_filename), 2, 1);
+//	if ((a->fd_to = open(new_filename, O_WRONLY|O_CREAT, 644)) == -1)
+//		ft_panic(ft_sprintf("Cant write champion to %s", new_filename), 2, 1);
+	ft_printf("Writing output program to %s\n", new_filename);
 	ft_strdel(&new_filename);
 }
