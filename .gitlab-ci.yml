@@ -33,12 +33,16 @@ fuzz_asm:
   only:
     - master
     - dev
-    - test
 
 fuzz_cw:
   stage: test
   script:
     - cd test && python3 cw_fuzzer.py -m corewar
+  artifacts:
+    when: on_failure
+    paths:
+      - test/traces
+    expire_in: 1 week
   only:
     - master
     - dev
