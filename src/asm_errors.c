@@ -18,7 +18,7 @@
 
 void	lexical_error(int line, int chr)
 {
-	ft_dprintf(2, "Lexical error at [%d:%d]\n", line, chr);
+	ft_dprintf(1, "Lexical error at [%d:%d]\n", line, chr);
 	exit(1);
 }
 
@@ -28,7 +28,7 @@ void	lexical_error(int line, int chr)
 
 void	syntax_error(char *token, char *type, int line, int chr)
 {
-	ft_dprintf(2, "Syntax error at token [TOKEN][%03d:%03d] %s \"%s\"\n",
+	ft_dprintf(1, "Syntax error at token [TOKEN][%03d:%03d] %s \"%s\"\n",
 		line, chr, type, token);
 	exit(1);
 }
@@ -40,7 +40,7 @@ void	syntax_error(char *token, char *type, int line, int chr)
 
 void	instruction_error(char *instruction, int line, int chr)
 {
-	ft_dprintf(2, "Invalid instruction at token [TOKEN][%03d:%03d] INSTRUCTION "
+	ft_dprintf(1, "Invalid instruction at token [TOKEN][%03d:%03d] INSTRUCTION "
 	"\"%s\"", line, chr, instruction);
 	exit(1);
 }

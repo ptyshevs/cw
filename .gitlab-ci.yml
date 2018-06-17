@@ -21,10 +21,28 @@ cw:
     - master
     - dev
 
-test:
+fuzz_asm:
   stage: test
   script:
-    - sh test/run.sh
+    - cd test && python3 cw_fuzzer.py -m asm
+  artifacts:
+    when: on_failure
+    paths:
+      - test/traces
+    expire_in: 1 week
+  only:
+    - master
+    - dev
+
+fuzz_cw:
+  stage: test
+  script:
+    - cd test && python3 cw_fuzzer.py -m corewar
+  artifacts:
+    when: on_failure
+    paths:
+      - test/traces
+    expire_in: 1 week
   only:
     - master
     - dev

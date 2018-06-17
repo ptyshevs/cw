@@ -4,3 +4,6 @@ asm
 corewar
 *.cor
 *.s
+*.pcl
+__pycache__
+traces

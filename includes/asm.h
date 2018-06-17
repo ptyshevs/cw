@@ -26,7 +26,8 @@
 
 typedef struct	s_asm
 {
-	t_bool			to_stdout;
+	t_bool			to_stdout; // flag -a
+	t_bool			debug; // flag -d
 
 	t_list			*lines;
 
@@ -76,6 +77,7 @@ typedef struct	s_tk
 t_asm	parse_cli(int ac, char **av);
 void	open_files(t_asm *a);
 void	read_file(int fd_from, t_list **where);
+void	write_file(t_asm *a, t_list *commands);
 
 /*
 ** Tokenize the file content
@@ -86,7 +88,7 @@ void	iter_tokens(t_list *tokens);
 void	release_tokens(t_list **atokens);
 char	*tk_type_to_str(t_type type);
 
-t_list	*validate(t_list *line);
+t_list	*validate(t_asm *asms, t_list *line);
 
 t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type);
 void	tk_append(t_tk **atokens, t_tk *tk);
@@ -111,7 +113,6 @@ t_tk	*cut_instruction(char *line, int *start, int line_nbr);
 
 t_bool	is_label(char *line, int start, int line_nbr);
 t_bool	is_register(char *line, int start);
-t_bool	is_instruction(char *line, int start, int line_nbr);
 
 /*
 ** Validation

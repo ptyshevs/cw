@@ -13,15 +13,21 @@
 #include "asm.h"
 
 
+/*
+** ASM-like compiler
+*/
 
 int main(int ac, char **av)
 {
 	t_asm	asms;
+	t_list	*tokens; // used on compilation step
+
 	asms = parse_cli(ac, av);
 	open_files(&asms);
 	read_file(asms.fd_from, &asms.lines);
-	t_list *tokens = validate(asms.lines);
+	tokens = validate(&asms, asms.lines);
 
+	write_file(&asms, tokens);
 //	parse_name_comment(&asms);
 //	ft_printf("name: %s\ncomment: %s\n", asms.name, asms.comment);
 	release_tokens(&tokens);
