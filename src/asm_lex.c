@@ -18,12 +18,13 @@
 ** @param content list of lines read from file
 */
 
-t_list	*validate(t_list *lines)
+t_list	*validate(t_asm *asms, t_list *lines)
 {
 	t_list	*tokens;
 
 	tokens = tokenize(lines); // and lexical analysis on-the-fly
-	iter_tokens(tokens);
+	if (asms->debug)
+		iter_tokens(tokens);
 	check_name_comment(tokens);
 	check_instructions(tokens); // bad instructions
 	// Check name and comment

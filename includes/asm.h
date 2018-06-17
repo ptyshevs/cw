@@ -26,7 +26,8 @@
 
 typedef struct	s_asm
 {
-	t_bool			to_stdout;
+	t_bool			to_stdout; // flag -a
+	t_bool			debug; // flag -d
 
 	t_list			*lines;
 
@@ -86,7 +87,7 @@ void	iter_tokens(t_list *tokens);
 void	release_tokens(t_list **atokens);
 char	*tk_type_to_str(t_type type);
 
-t_list	*validate(t_list *line);
+t_list	*validate(t_asm *asms, t_list *line);
 
 t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type);
 void	tk_append(t_tk **atokens, t_tk *tk);
