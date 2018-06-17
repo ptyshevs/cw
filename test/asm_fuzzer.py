@@ -31,14 +31,17 @@ from Fuzzer import Fuzzer
 [*] Implement all 3 modes of file manipulation
 [*] Open all *.s files and store somewhere as originals
 [*] Add basic working mode
-[ ] Add diff comparison of compiling step
-[ ] Add comparison of generated *.cor files
+[*] Add diff comparison of compiling step
+[*] Add comparison of generated *.cor files
+[ ] Add VM fuzzing with *.cor files
 """
 
 
 if __name__ == '__main__':
     fz = Fuzzer()
     fz.open_files()
-    fz.fuzz()
+    # fz.fuzz()
+    fz.cor_files.append(("traces/pdcesjoomhknyjyxqvjy/barriere.orig_cor", "traces/pdcesjoomhknyjyxqvjy/barriere.cor"))
+    fz.check_cor_files(fz.cor_files)
     print(fz.cor_files)
     fz.db.wrap_up()

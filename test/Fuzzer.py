@@ -97,6 +97,7 @@ class Fuzzer:
                 print("{}.{}".format(GREEN, NC), end='')
 
     def fuzz(self):
+        """Fuzz the compilation step, storing all successfully compiled *.cor files"""
         self.cnt_errors = 0
         for i in range(self.args['n']):
             self.fuzz_once()
@@ -104,6 +105,20 @@ class Fuzzer:
             print("")
         if self.cnt_errors != 0:
             print("You can find all cases there haven't matched in traces directory")
+
+    @staticmethod
+    def check_cor_files(cor_files: list):
+        """Compare all *.cor file pairs of format (*.orig_cor, *.mod_cor)"""
+        for orig, mod in cor_files:
+            orig_xxd, mod_xxd = orig[:-8] + '.orig_xxd', mod[:-3] + '.xxd'
+            diff_xxd = mod[:-3] + '.xxd_diff'
+            cmd = "xxd -g 2 {0} > {1}; xxd -g 2 {2} > {3}; diff {1} {3} > {4}; rm {1} {3}".format(
+                orig, orig_xxd, mod, mod_xxd, diff_xxd)
+            try:
+                out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).decode('utf-8')
+            except subprocess.CalledProcessError as e:
+                out = str(e.output, encoding='utf-8')
+            print(out)
 
     def mod_file(self, file, m):
         """Modify file content by copying it."""
