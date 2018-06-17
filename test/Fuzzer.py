@@ -29,6 +29,7 @@ class Fuzzer:
     spaces = [9, 10, 11, 12, 13, 32]
 
     def __init__(self):
+        self.failed = False
         self.args = self.parse_args()
         self.db = self.init_db()
         self.operations = [("insert", Fuzzer.insert), ("remove", Fuzzer.remove), ("replace", Fuzzer.replace)]
@@ -43,16 +44,27 @@ class Fuzzer:
         if not os.path.exists(self.out_dir):
             os.makedirs(self.out_dir)
 
-    def open_files(self):
+    def open_cor_files(self):
+        for file in os.listdir(self.db.get('src_dir')):
+            if file.endswith(".s"):
+                path = os.path.join(self.db.get('src_dir'), file)
+                compile_cmd = "{} {}".format(self.db.get('true_asm'), path)
+                try:
+                    subprocess.check_output(compile_cmd, shell=True, stderr=subprocess.STDOUT)
+                    with open(path[:-2] + self.ext, 'rb') as f:
+                        self.files[path] = f.readlines()
+                except subprocess.CalledProcessError:
+                    pass
+        if len(self.files) == 0:
+            print("No {} files found".format("*" + self.ext))
+            exit(1)
+
+    def open_asm_files(self):
         """Find all files with *.s extension in src_dir"""
-        for file in os.listdir(self.db.get('src_dir' if self.args['target'] == 'asm' else 'cw_dir')):
-            if self.args['target'] == 'asm' and file.endswith(".s") and file not in self.files.keys():
+        for file in os.listdir(self.db.get('src_dir')):
+            if file.endswith(".s") and file not in self.files.keys():
                 path = os.path.join(self.db.get('src_dir'), file)
                 with open(path) as f:
-                    self.files[path] = f.readlines()
-            elif self.args['target'] == 'corewar' and file.endswith(".cor"):
-                path = os.path.join(self.db.get('cw_dir'), file)
-                with open(path, 'rb') as f:
                     self.files[path] = f.readlines()
         if len(self.files) == 0:
             print("No {} files found".format("*" + self.ext))
@@ -104,6 +116,7 @@ class Fuzzer:
         mod_dir, mod_filename = self.save_file(file, filename)
         orig_out, mod_out = self.cor_run(mod_filename)
         if orig_out != mod_out:
+            self.failed = True
             self.cnt_errors += 1
             self.save_output(orig_out, mod_out, mod_filename)
             if self.args['v']:
@@ -124,6 +137,7 @@ class Fuzzer:
         mod_dir, mod_filename = self.save_file(file, filename)
         orig_out, mod_out = self.asm_run(mod_filename)
         if orig_out != mod_out:
+            self.failed = True
             self.cnt_errors += 1
             Fuzzer.diff_files(filename, mod_filename)
             self.save_output(orig_out, mod_out, mod_filename)
@@ -271,7 +285,7 @@ class Fuzzer:
         test_dir = ''.join([random.choice(string.ascii_lowercase) for _ in range(20)])
         dir_path = os.path.join(self.out_dir, test_dir)
         os.makedirs(dir_path)
-        basename = os.path.basename(filename)[:-2 if self.args['target'] == 'asm' else -4]
+        basename = os.path.basename(filename)[:-2]
         new_filename = os.path.join(self.out_dir, test_dir, basename + self.ext)
         with open(new_filename, 'w+' if self.args['target'] == 'asm' else 'wb+') as f:
             f.writelines(file)
@@ -339,13 +353,12 @@ class Fuzzer:
                 db.add_record('my_asm', input('Relative path to your asm:'))
             if not db.get('true_asm') or self.args['-u']:
                 db.add_record('true_asm', input('Relative path to original asm:'))
-            if not db.get('src_dir') or self.args['-u']:
-                db.add_record('src_dir', input('Relative path to the directory with *.s files:'))
         elif self.args['target'] == 'corewar':
             if not db.get('my_cw') or self.args['-u']:
                 db.add_record('my_cw', input("Relative path to your corewar:"))
             if not db.get('true_cw') or self.args['-u']:
                 db.add_record('true_cw', input("Relative path to original corewar:"))
-            if not db.get('cw_dir') or self.args['-u']:
-                db.add_record('cw_dir', input('Relative path to the directory with *.cor files:'))
+
+        if not db.get('src_dir') or self.args['-u']:
+            db.add_record('src_dir', input('Relative path to the directory with *.s files:'))
         return db

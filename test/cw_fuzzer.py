@@ -38,8 +38,9 @@ from Fuzzer import Fuzzer
 
 if __name__ == '__main__':
     fz = Fuzzer()
-    fz.open_files()
+    fz.open_asm_files() if fz.args['target'] == 'asm' else fz.open_cor_files()
     fz.fuzz()
     if not fz.args['--no-compiled']:
         fz.check_cor_files(fz.cor_files)
     fz.db.wrap_up()
+    exit(0 if not fz.failed else 1)
