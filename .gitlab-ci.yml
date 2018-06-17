@@ -24,7 +24,7 @@ cw:
 fuzz_asm:
   stage: test
   script:
-    - python3 test/cw_fuzzer.py -m asm -db test/db.pcl
+    - cd test && python3 cw_fuzzer.py -m asm
   only:
     - master
     - dev
@@ -33,7 +33,7 @@ fuzz_asm:
 fuzz_cw:
   stage: test
   script:
-    - python3 test/cw_fuzzer.py -m corewar -db test/db.pcl
+    - cd test && python3 cw_fuzzer.py -m corewar
   only:
     - master
     - dev
