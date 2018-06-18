@@ -33,9 +33,28 @@ void	parameter_count_error(t_tk *instr)
 	exit(1);
 }
 
+/*
+** END token is found when processing an instruction
+*/
+
 void	unexpected_eof_error(void)
 {
 	ft_printf("Syntax error - unexpected end of input "
 				"(Perhaps you forgot to end with a newline ?)\n");
+	exit(1);
+}
+
+/*
+** Duplicate .name or .comment error
+** t_bool as a return value just to make the compiler satisfied (used in
+** ternary expression)
+*/
+
+t_bool	duplicate_error(t_tk *cmd)
+{
+	if (ft_strequ(cmd->tk, NAME_CMD_STRING))
+		syntax_error(cmd->tk, "COMMAND_NAME", cmd->line, cmd->chr);
+	else
+		syntax_error(cmd->tk, "COMMAND_COMMENT", cmd->line, cmd->chr);
 	exit(1);
 }

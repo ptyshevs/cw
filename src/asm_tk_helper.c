@@ -88,4 +88,5 @@ void	release_tokens(t_list **atokens)
 		}
 		ft_memdel((void **)&prev);
 	}
+	*atokens = NULL;
 }
