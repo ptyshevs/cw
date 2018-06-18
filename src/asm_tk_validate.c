@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "asm.h"
+
 /*
 **  Main file for different validating routines
 */
@@ -24,7 +25,7 @@
 ** syntax error is rised.
 */
 
-void	check_name_comment(t_asm *asms, t_list *tokens)
+void			check_name_comment(t_asm *asms, t_list *tokens)
 {
 	t_tk	*tmp;
 
@@ -34,7 +35,7 @@ void	check_name_comment(t_asm *asms, t_list *tokens)
 		tmp = tokens->content;
 		if (!(tmp->type == COMMAND))
 			syntax_error(tmp->tk, tk_type_to_str(tmp->type),
-						 tmp->line, tmp->chr);
+						tmp->line, tmp->chr);
 		if (tmp->next && tmp->next->type != STRING)
 			syntax_error(tmp->next->tk, tk_type_to_str(tmp->next->type),
 						tmp->next->line, tmp->next->chr);
@@ -57,26 +58,30 @@ void	check_name_comment(t_asm *asms, t_list *tokens)
 
 static void		check_arg_amount(t_tk *instr)
 {
-	const t_op	*op;
-	t_tk		*tmp;
-	int			cnt;
+	const t_op		*op;
+	t_tk			*tmp;
+	unsigned int	cnt;
 
 	tmp = instr;
-	if (tmp->next->type == END || tmp->next->type == ENDLINE)
-		syntax_error_tk(tmp->next);
-	
-	if (!(op = find_instruction(tmp)))
-		return ;
+	op = find_instruction(tmp);
 	cnt = 0;
 	while ((tmp = tmp->next))
 	{
-		if (is_parameter(tmp->type))
-			cnt++;
-		if ((tmp = tmp->next)->type != SEPARATOR)
+		if (tmp->type == ENDLINE)
 			syntax_error_tk(tmp);
-		if (cnt > op->nargs)
-			parameter_error(instr, tmp, cnt);
+		is_parameter(tmp->type) ? cnt += 1 : syntax_error_tk(tmp);
+		if (op && cnt > op->nargs)
+			parameter_error(instr, tmp, cnt - 1);
+		tmp = tmp->next;
+		if (tmp->type == ENDLINE || tmp->type == END)
+			break ;
+		if ((tmp->type != SEPARATOR))
+			syntax_error_tk(tmp);
 	}
+	if (op && cnt < op->nargs)
+		parameter_count_error(instr);
+	else if (tmp->type == END) // if there is a segfault, its here
+		unexpected_eof_error();
 }
 
 /*
@@ -102,7 +107,7 @@ static t_bool	is_valid_instruction(t_tk *tmp)
 ** @param tokens List of tokenized lines
 */
 
-void	check_instructions(t_list *tokens)
+void			check_instructions(t_list *tokens)
 {
 	t_tk	*tmp;
 

@@ -65,17 +65,6 @@ void	instruction_error(char *instruction, int line, int chr)
 }
 
 /*
-** Invalid parameter error
-*/
-
-void	parameter_error(t_tk *instr, t_tk *param, int pos)
-{
-	ft_dprintf(1, "Invalid parameter %d type %s for instruction %s\n",
-		pos, tk_type_to_lstr(param->type), instr->tk);
-	exit(1);
-}
-
-/*
 ** Wrapper around ft_dprintf to output formatted error and exit
 */
 

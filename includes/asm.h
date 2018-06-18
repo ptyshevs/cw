@@ -138,6 +138,8 @@ void		syntax_error_tk(t_tk *tk);
 void		syntax_error(char *token, char *type, int line, int chr);
 void		instruction_error(char *instruction, int line, int chr);
 void		parameter_error(t_tk *instr, t_tk *param, int pos);
+void		parameter_count_error(t_tk *instr);
+void		unexpected_eof_error(void);
 void		error(int exit_value, char *format, ...);
 
 /*

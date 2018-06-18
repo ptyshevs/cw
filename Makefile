@@ -13,8 +13,8 @@ INCLUDES = $(addprefix $(INCDIR)/, $(HEADERS))
 
 ASM_FILENAMES = asm asm_prerequisites asm_lex asm_io \
     asm_cut asm_cut_more asm_cut_indirect \
-    asm_is_smth asm_tk asm_tk_helper asm_tk_validate asm_errors \
-    asm_instr asm_tk_stringify
+    asm_is_smth asm_tk asm_tk_helper asm_tk_validate \
+    asm_instr asm_tk_stringify asm_errors asm_errors_more
 
 ASM_SRCDIR = src
 ASM_SOURCES = $(patsubst %, $(ASM_SRCDIR)/%.c, $(ASM_FILENAMES))
