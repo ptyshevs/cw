@@ -4,7 +4,7 @@ variables:
 image: python:alpine
 
 before_script:
-  - apt-get update -y && apt-get upgrade -y && install -y gcc make
+  - apk update  && apk add make gcc
 
 stages:
   - build
