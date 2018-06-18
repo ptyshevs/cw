@@ -1,11 +1,6 @@
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
-image: python:alpine
-
-before_script:
-  - apk update  && apk add make gcc libc-dev
-
 stages:
   - build
   - test
