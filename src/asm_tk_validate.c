@@ -144,6 +144,7 @@ void			check_instructions(t_list *tokens)
 				if (!is_valid_instruction(tmp))
 					instruction_error(tmp->tk, tmp->line, tmp->chr);
 				check_arg_type(tmp);
+//				rec_instr_size(tmp);
 			}
 			tmp = tmp->next;
 		}
