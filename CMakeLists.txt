@@ -8,7 +8,7 @@ set(CW_SRC src/corewar.c)
 set(ASM_SRC src/asm.c src/asm_prerequisites.c src/asm_lex.c src/asm_io.c
         src/asm_cut.c src/asm_cut_more.c src/asm_cut_indirect.c src/asm_tk.c
         src/asm_is_smth.c src/asm_instr.c src/asm_tk_stringify.c
-        src/asm_tk_helper.c src/asm_tk_validate.c
+        src/asm_tk_helper.c src/asm_tk_validate.c src/asm_label_deref.c
         src/asm_errors.c src/asm_errors_more.c)
 add_subdirectory(libft)
 

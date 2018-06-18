@@ -73,6 +73,7 @@ typedef struct	s_tk
 	int				line;
 	int				chr;
 	unsigned int	size;
+	unsigned int	codage;
 	struct s_tk		*next;
 }				t_tk;
 
@@ -129,6 +130,11 @@ void		check_name_comment(t_asm *asms, t_list *tokens);
 void		check_instructions(t_list *tokens);
 const t_op	*find_instruction(t_tk *instr);
 
+/*
+** Label dereferencing and size calculation
+*/
+
+void	rec_instr_size(t_tk *instr);
 
 /*
 ** Errors

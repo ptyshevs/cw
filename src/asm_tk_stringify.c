@@ -70,10 +70,16 @@ static void	show_tokens(t_tk *tokens)
 	{
 		ft_printf("%s [", tokens->tk);
 		ft_printf("%s", tk_type_to_str(tokens->type));
-		ft_printf("][%d:%d]-> ", tokens->line, tokens->chr);
+		if (tokens->type == INSTRUCTION)
+			ft_printf(tokens->next ? "][%d:%d] [%d]-> " : "][%d:%d] [%d]",
+					tokens->line, tokens->chr, tokens->size);
+		else
+			ft_printf(tokens->next ? "][%d:%d]-> " : "][%d:%d]",
+					tokens->line, tokens->chr);
+			
 		tokens = tokens->next;
 	}
-	ft_printf("NULL\n");
+	ft_printf("\n");
 }
 
 /*

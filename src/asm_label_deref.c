@@ -18,5 +18,24 @@
 
 void	rec_instr_size(t_tk *instr)
 {
-	(void)instr;
+	t_tk	*tmp;
+	
+	instr->size = 1;
+	if (find_instruction(instr)->codage)
+		instr->size += REG_CODE;
+	tmp = instr;
+	while ((tmp = tmp->next)) // what if tmp doesn't exist? Segfault
+	{
+		instr->size += tmp->size;
+		tmp = tmp->next;
+	}
+}
+
+/*
+ * Calculate codage and collect it in the valiable
+ */
+
+void	rec_codage(t_tk *instr)
+{
+	
 }
