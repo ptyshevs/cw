@@ -77,14 +77,14 @@ typedef struct		header_s
 
 typedef struct	s_op
 {
-	char			*name;
-	unsigned int	nargs;
-	unsigned int	args[16];
-	unsigned int	op;
-	unsigned int	cycles;
-	char			*description;
-	unsigned int	codage;
-	unsigned int	carry;
+	char				*name;
+	unsigned int		nargs;
+	unsigned int		args[3];
+	unsigned int		op;
+	unsigned int		cycles;
+	char				*description;
+	unsigned int		codage;
+	unsigned int		carry;
 }				t_op;
 
 static const t_op	op_tab[17] =

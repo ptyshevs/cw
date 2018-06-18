@@ -85,6 +85,28 @@ static void		check_arg_amount(t_tk *instr)
 }
 
 /*
+** Validate type of the arguments
+*/
+
+static void		check_arg_type(t_tk *instr)
+{
+	t_tk		*tmp;
+	const t_op	*op;
+	int			i;
+
+	tmp = instr;
+	op = find_instruction(tmp);
+	i = 0;
+	while (i < op->nargs && (tmp = tmp->next))
+	{
+		if (!(tmp->size & op->args[i]))
+			parameter_error(instr, tmp, i);
+		tmp = tmp->next;
+		i++;
+	}
+}
+
+/*
 ** Check if the instruction is in the instruction set
 */
 
@@ -121,6 +143,7 @@ void			check_instructions(t_list *tokens)
 				check_arg_amount(tmp);
 				if (!is_valid_instruction(tmp))
 					instruction_error(tmp->tk, tmp->line, tmp->chr);
+				check_arg_type(tmp);
 			}
 			tmp = tmp->next;
 		}

@@ -68,11 +68,12 @@ typedef enum	e_type
 
 typedef struct	s_tk
 {
-	char		*tk;
-	t_type		type;
-	int			line;
-	int			chr;
-	struct s_tk	*next;
+	char			*tk;
+	t_type			type;
+	int				line;
+	int				chr;
+	unsigned int	size;
+	struct s_tk		*next;
 }				t_tk;
 
 /*
