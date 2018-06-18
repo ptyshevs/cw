@@ -90,9 +90,9 @@ static void		check_arg_amount(t_tk *instr)
 
 static void		check_arg_type(t_tk *instr)
 {
-	t_tk		*tmp;
-	const t_op	*op;
-	int			i;
+	t_tk			*tmp;
+	const t_op		*op;
+	unsigned int	i;
 
 	tmp = instr;
 	op = find_instruction(tmp);
