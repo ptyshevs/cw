@@ -9,6 +9,10 @@ asm:
   stage: build
   script:
     - make asm
+  artifacts:
+    paths:
+      - libft/libft.a
+      - asm
   only:
     - master
     - dev
@@ -17,6 +21,10 @@ cw:
   stage: build
   script:
     - make corewar
+  artifacts:
+    paths:
+      - libft/libft.a
+      - corewar
   only:
     - master
     - dev
