@@ -40,7 +40,7 @@ When you consider the feature finished, you have two options.
 1. The first one is to merge changes by yourself locally and push the
    merge commit to the repo:   
   1.1 `git checkout dev`   
-  1.2 `git merge feature_name`   
+  1.2 `git merge feature_name --no-ff`   
 You are the one responsible for resolving any conflict emerged. Try to be reasonable so not to disrupt,   
 or even worse, damage the work of other contributors. The short guide is below.
 

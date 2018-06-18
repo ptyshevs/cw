@@ -64,7 +64,6 @@ t_list	*validate(t_asm *asms, t_list *lines)
 	check_duplicates(tokens);
 	if (asms->flags & DEBUG)
 		iter_tokens(tokens);
-	ft_printf("%s %s\n", asms->name, asms->comment);
 	check_instructions(tokens); // bad instructions
 	// Check name and comment
 //	int skip_n_lines = filter_name_comment(tokens);

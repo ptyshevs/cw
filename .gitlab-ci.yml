@@ -1,6 +1,8 @@
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
+image: python:alpine
+
 stages:
   - build
   - test
