@@ -24,35 +24,31 @@
 ** syntax error is rised.
 */
 
-void	check_name_comment(t_list *tokens)
+void	check_name_comment(t_asm *asms, t_list *tokens)
 {
-	t_bool	name_found;
-	t_bool	comment_found;
 	t_tk	*tmp;
 
-	name_found = FALSE;
-	comment_found = FALSE;
 	tmp = NULL;
-	while (tokens)
+	while (tokens && (tmp = tokens->content))
 	{
 		tmp = tokens->content;
 		if (!(tmp->type == COMMAND))
 			syntax_error(tmp->tk, tk_type_to_str(tmp->type),
 						 tmp->line, tmp->chr);
-		tmp = tmp->next;
-		if (tmp->type != STRING)
-			syntax_error(tmp->tk, tk_type_to_str(tmp->type), tmp->line, tmp->chr);
+		if (tmp->next && tmp->next->type != STRING)
+			syntax_error(tmp->next->tk, tk_type_to_str(tmp->next->type),
+						tmp->next->line, tmp->next->chr);
 		if (ft_strequ(tmp->tk, NAME_CMD_STRING))
-			name_found = TRUE;
+			asms->name = tmp->next->tk;
 		else
-			comment_found = TRUE;
-		if (name_found && comment_found)
+			asms->comment = tmp->next->tk;
+		if (asms->name && asms->comment)
 			break ;
 		tokens = tokens->next;
 	}
-	if (tmp->next->type != ENDLINE)
+	tmp = tmp->next->next; // if there is a segfault, it is here
+	if (tmp && tmp->type != ENDLINE)
 		syntax_error(tmp->tk, tk_type_to_str(tmp->type), tmp->line, tmp->chr);
-
 }
 
 /*

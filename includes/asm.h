@@ -130,7 +130,7 @@ t_bool	is_indirect(char *line, int start);
 ** Validation
 */
 
-void	check_name_comment(t_list *tokens);
+void	check_name_comment(t_asm *asms, t_list *tokens);
 void	check_instructions(t_list *tokens);
 
 /*

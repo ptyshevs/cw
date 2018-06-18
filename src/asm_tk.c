@@ -50,7 +50,7 @@ static t_tk	*token_dispatcher(char *line, t_list **lines, int *i, int *line_nbr)
 ** Passing list of lines by pointer to be able to process multiline strings
 */
 
-static t_tk	*line_to_tk(t_list **lines, int *line_nbr)
+static t_tk	*line_to_tk(t_list **lines, int *line_nbr, t_bool *end_placed)
 {
 	char	*line;
 	t_tk	*tokens;
@@ -75,6 +75,8 @@ static t_tk	*line_to_tk(t_list **lines, int *line_nbr)
 	if (tokens)
 	{
 		token = create_token(NULL, *line_nbr, i + 1, (*lines)->next ? ENDLINE: END);
+		if (token->type == END)
+			*end_placed = TRUE;
 		tk_append(&tokens, token);
 	}
 	return (tokens);
@@ -89,17 +91,25 @@ t_list	*tokenize(t_list *lines)
 {
 	t_list	*tokens;
 	t_tk	*tk;
+	t_bool	end_placed;
 	int		line_count;
 
+	end_placed = FALSE;
 	tokens = NULL;
 	line_count = 0;
 	while (lines && ++line_count)
 	{
-		tk = line_to_tk(&lines, &line_count);
+		tk = line_to_tk(&lines, &line_count, &end_placed);
 		if (tk)
 			ft_lstappend(&tokens, ft_lstnew(tk, sizeof(t_tk)));
 		ft_memdel((void **)&tk);
 		lines = lines->next;
+	}
+	if (!end_placed)
+	{
+		tk = create_token(NULL, line_count, 1, END);
+		ft_lstappend(&tokens, ft_lstnew(tk, sizeof(t_tk)));
+		ft_memdel((void **)&tk);
 	}
 	return (tokens);
 }

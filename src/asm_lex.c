@@ -25,7 +25,9 @@ t_list	*validate(t_asm *asms, t_list *lines)
 	tokens = tokenize(lines); // and lexical analysis on-the-fly
 	if (asms->flags & DEBUG)
 		iter_tokens(tokens);
-	check_name_comment(tokens);
+	check_name_comment(asms, tokens);
+	ft_printf("%s %s\n", asms->name, asms->comment);
+
 	check_instructions(tokens); // bad instructions
 	// Check name and comment
 //	int skip_n_lines = filter_name_comment(tokens);

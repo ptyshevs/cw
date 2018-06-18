@@ -59,3 +59,5 @@ If "memory was not allocated" error shows up while releasing string associated
 with t_tk token, this is likely due to the fact that `ft_strtrunc()` haven't
 allocated memory for it, but passed it as-is. This can cause very intricate bugs
 later, especially when releasing memory associated with the list of lines and tokens.
+
+Token of type INSTRUCTION must have at least one argument after it.
