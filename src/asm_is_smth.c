@@ -83,3 +83,14 @@ t_bool	is_indirect(char *line, int start)
 		return (FALSE);
 	return (TRUE);
 }
+
+/*
+** Check if the token type provided is a valid parameter type
+*/
+
+t_bool	is_parameter(t_type type)
+{
+	return (t_bool)(type == INDIRECT || type == INDIRECT_LABEL ||
+				type == DIRECT || type == DIRECT_LABEL ||
+				type == REGISTER);
+}

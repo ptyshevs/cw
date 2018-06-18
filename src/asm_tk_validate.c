@@ -52,6 +52,34 @@ void	check_name_comment(t_asm *asms, t_list *tokens)
 }
 
 /*
+** Validate the number of arguments
+*/
+
+static void		check_arg_amount(t_tk *instr)
+{
+	const t_op	*op;
+	t_tk		*tmp;
+	int			cnt;
+
+	tmp = instr;
+	if (tmp->next->type == END || tmp->next->type == ENDLINE)
+		syntax_error_tk(tmp->next);
+	
+	if (!(op = find_instruction(tmp)))
+		return ;
+	cnt = 0;
+	while ((tmp = tmp->next))
+	{
+		if (is_parameter(tmp->type))
+			cnt++;
+		if ((tmp = tmp->next)->type != SEPARATOR)
+			syntax_error_tk(tmp);
+		if (cnt > op->nargs)
+			parameter_error(instr, tmp, cnt);
+	}
+}
+
+/*
 ** Check if the instruction is in the instruction set
 */
 
@@ -70,8 +98,8 @@ static t_bool	is_valid_instruction(t_tk *tmp)
 }
 
 /*
-**  Check if tokens of type INSTRUCTION are of a valid type
-** @param tokens
+**  Check if tokens of type INSTRUCTION are of a valid type and have right args
+** @param tokens List of tokenized lines
 */
 
 void	check_instructions(t_list *tokens)
@@ -83,8 +111,12 @@ void	check_instructions(t_list *tokens)
 		tmp = tokens->content;
 		while (tmp)
 		{
-			if (tmp->type == INSTRUCTION && !is_valid_instruction(tmp))
-				instruction_error(tmp->tk, tmp->line, tmp->chr);
+			if (tmp->type == INSTRUCTION)
+			{
+				check_arg_amount(tmp);
+				if (!is_valid_instruction(tmp))
+					instruction_error(tmp->tk, tmp->line, tmp->chr);
+			}
 			tmp = tmp->next;
 		}
 		tokens = tokens->next;

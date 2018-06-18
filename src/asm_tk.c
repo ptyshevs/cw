@@ -54,7 +54,7 @@ static t_tk	*line_to_tk(t_list **lines, int *line_nbr, t_bool *end_placed)
 {
 	char	*line;
 	t_tk	*tokens;
-	t_tk	*token;
+	t_tk	*tk;
 	int		i;
 
 	tokens = NULL;
@@ -66,19 +66,16 @@ static t_tk	*line_to_tk(t_list **lines, int *line_nbr, t_bool *end_placed)
 			i++;
 		if (!line[i] || line[i] == COMMENT_CHAR) // consider another comment symbol ';'
 			break ;
-		token = token_dispatcher(line, lines, &i, line_nbr);
+		tk = token_dispatcher(line, lines, &i, line_nbr);
 		line = (*lines)->content; // need to jump after multiline STRING processing
-		if (token)
-			tk_append(&tokens, token);
+		if (tk)
+			tk_append(&tokens, tk);
 		i += line[i] ? 1 : 0; // so you don't miss nul-terminator
-	}
+	} // sorry for shit-code below. It's norm that made me do this
+	*end_placed = tokens && !(*lines)->next ? TRUE : *end_placed;
 	if (tokens)
-	{
-		token = create_token(NULL, *line_nbr, i + 1, (*lines)->next ? ENDLINE: END);
-		if (token->type == END)
-			*end_placed = TRUE;
-		tk_append(&tokens, token);
-	}
+		tk_append(&tokens, create_token(NULL, *line_nbr, i + 1, (*lines)->next ?
+																ENDLINE: END));
 	return (tokens);
 }
 
