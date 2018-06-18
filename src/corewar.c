@@ -39,7 +39,7 @@ int		usage()
 
 t_bool	check_av(char **argv)
 {
-	(void)av;
+	(void)argv;
 	return (TRUE);
 }
 
