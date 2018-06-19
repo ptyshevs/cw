@@ -66,8 +66,5 @@ t_list	*validate(t_asm *asms, t_list *lines)
 	label_deref(tokens);
 	if (asms->flags & DEBUG)
 		iter_tokens(tokens);
-	// Check name and comment
-//	int skip_n_lines = filter_name_comment(tokens);
-//	filter_bad_tokens(tokens, skip_n_lines);
 	return (tokens);
 }

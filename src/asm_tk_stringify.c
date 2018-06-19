@@ -23,9 +23,9 @@ char	*tk_type_to_str(t_type type)
 	else if (type == STRING || type == COMMAND)
 		return (type == STRING ? "STRING" : "COMMAND");
 	else if (type == INDIRECT || type == INDIRECT_LABEL)
-		return (type == INDIRECT ? "INDIRECT" : "INDIRECT LABEL");
+		return (type == INDIRECT ? "INDIRECT" : "INDIRECT_LABEL");
 	else if (type == DIRECT || type == DIRECT_LABEL)
-		return (type == DIRECT ? "DIRECT" : "DIRECT LABEL");
+		return (type == DIRECT ? "DIRECT" : "DIRECT_LABEL");
 	else if (type == REGISTER || type == LABEL)
 		return (type == REGISTER ? "REGISTER" : "LABEL");
 	else if (type == SEPARATOR)

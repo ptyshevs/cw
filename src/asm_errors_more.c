@@ -58,3 +58,15 @@ t_bool	duplicate_error(t_tk *cmd)
 		syntax_error(cmd->tk, "COMMAND_COMMENT", cmd->line, cmd->chr);
 	exit(1);
 }
+
+/*
+** Label <label> wasn't found in the list of tokens
+*/
+
+void	label_error(t_tk *tk, char *label)
+{
+	ft_printf("No such label %.*s while attempting to dereference token "
+	"[TOKEN][%03d:%03d] %s \"%s\"\n", ft_slen(label) - 1, label,
+		tk->line, tk->chr, tk_type_to_str(tk->type), tk->tk);
+	exit(1);
+}

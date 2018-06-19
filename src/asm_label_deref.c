@@ -26,7 +26,7 @@
 void	rec_instr_size(t_tk *instr, const t_op *op)
 {
 	t_tk		*tmp;
-	
+
 	instr->size = REG_CODE;
 	op = find_instruction(instr);
 	if (op->codage)
@@ -68,10 +68,10 @@ void	rec_codage(t_tk *instr, const t_op *op)
 ** Find label instruction offset
 */
 
-int	find_label(t_list *tokens, char *label)
+int		find_label(t_list *tokens, t_tk *label_param, char *label)
 {
-	t_tk			*tk;
-	int	size;
+	t_tk	*tk;
+	int		size;
 
 	size = 0;
 	while (tokens)
@@ -87,7 +87,7 @@ int	find_label(t_list *tokens, char *label)
 		}
 		tokens = tokens->next;
 	}
-	ft_dprintf(2, "Label %s not found\n", label);
+	label_error(label_param, label);
 	return (size);
 }
 
@@ -103,7 +103,7 @@ void	replace_label(t_list *tokens, t_tk *label_param, int cum_size)
 
 	to_label_format = ft_strjoin(label_param->tk +
 						(label_param->type == DIRECT_LABEL ? 2 : 1), ":");
-	size_to = find_label(tokens, to_label_format);
+	size_to = find_label(tokens, label_param, to_label_format);
 	ft_strdel(&to_label_format);
 	ft_strdel(&label_param->tk);
 	if (label_param->type == DIRECT_LABEL)
