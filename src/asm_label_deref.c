@@ -43,7 +43,7 @@ void	rec_instr_size(t_tk *instr, const t_op *op)
 ** Calculate codage and collect it in the valiable
 */
 
-void	rec_codage(t_tk *instr, t_op *op)
+void	rec_codage(t_tk *instr, const t_op *op)
 {
 	t_tk	*tmp;
 
@@ -62,5 +62,86 @@ void	rec_codage(t_tk *instr, t_op *op)
 		tmp = tmp->next; // skip separator
 	}
 	instr->codage <<= 2;
-	ft_printf("Instruction: %s | Codage: %02X\n", instr->tk, instr->codage);
+}
+
+/*
+** Find label instruction offset
+*/
+
+int	find_label(t_list *tokens, char *label)
+{
+	t_tk			*tk;
+	int	size;
+
+	size = 0;
+	while (tokens)
+	{
+		tk = tokens->content;
+		while (tk)
+		{
+			if (tk->type == LABEL && ft_strequ(tk->tk, label))
+				return (size);
+			if (tk->type == INSTRUCTION)
+				size += tk->size;
+			tk = tk->next;
+		}
+		tokens = tokens->next;
+	}
+	ft_dprintf(2, "Label %s not found\n", label);
+	return (size);
+}
+
+/*
+** Replace label with its direct-indirect value
+*/
+
+void	replace_label(t_list *tokens, t_tk *label_param, int cum_size)
+{
+	int		size_to;
+	char	*to_label_format;
+	char	*value;
+
+	to_label_format = ft_strjoin(label_param->tk +
+						(label_param->type == DIRECT_LABEL ? 2 : 1), ":");
+	size_to = find_label(tokens, to_label_format);
+	ft_strdel(&to_label_format);
+	ft_strdel(&label_param->tk);
+	if (label_param->type == DIRECT_LABEL)
+		value = ft_sprintf("%%%d", size_to - cum_size);
+	else
+		value = ft_sprintf("%d", size_to - cum_size);
+	label_param->tk = value;
+	label_param->type = label_param->type == DIRECT_LABEL ? DIRECT : INDIRECT;
+}
+
+/*
+** Store counter of total byte offset and resolve any label encountered by
+** replacing it with a value
+*/
+
+void	label_deref(t_list *tokens)
+{
+	t_list			*tmp;
+	t_tk			*tk;
+	int				cum_size;
+	t_tk			*instr;
+
+	cum_size = 0;
+	tmp = tokens;
+	while (tmp)
+	{
+		instr = NULL;
+		tk = tmp->content;
+		while (tk)
+		{
+			if (tk->type == DIRECT_LABEL || tk->type == INDIRECT_LABEL)
+				replace_label(tokens, tk, cum_size);
+			if (tk->type == INSTRUCTION)
+				instr = tk;
+			if (tk->type == ENDLINE && instr)
+				cum_size += instr->size;
+			tk = tk->next;
+		}
+		tmp = tmp->next;
+	}
 }
