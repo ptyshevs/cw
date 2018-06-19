@@ -51,6 +51,18 @@ void	check_duplicates(t_list *tokens)
 }
 
 /*
+** Check bot name and comment lengths
+*/
+
+void	check_lengths(t_asm *asms)
+{
+	if (ft_slen(asms->name) - 2 > PROG_NAME_LENGTH)
+		error(1, "Champion name too long (Max length %d)\n", PROG_NAME_LENGTH);
+	else if (ft_slen(asms->comment) - 2 > COMMENT_LENGTH)
+		error(1, "Champion comment too long (Max length %d)\n", COMMENT_LENGTH);
+}
+
+/*
 ** Validate the file content
 ** @param content list of lines read from file
 */
@@ -64,6 +76,7 @@ t_list	*validate(t_asm *asms, t_list *lines)
 	check_duplicates(tokens);
 	check_instructions(tokens); // bad instructions
 	label_deref(tokens);
+	check_lengths(asms);
 	if (asms->flags & DEBUG)
 		iter_tokens(tokens);
 	return (tokens);
