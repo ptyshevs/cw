@@ -134,7 +134,8 @@ const t_op	*find_instruction(t_tk *instr);
 ** Label dereferencing and size calculation
 */
 
-void	rec_instr_size(t_tk *instr);
+void	rec_instr_size(t_tk *instr, const t_op *op);
+void	rec_codage(t_tk *instr, t_op *op);
 
 /*
 ** Errors

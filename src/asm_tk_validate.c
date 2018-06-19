@@ -56,14 +56,12 @@ void			check_name_comment(t_asm *asms, t_list *tokens)
 ** Validate the number of arguments
 */
 
-static void		check_arg_amount(t_tk *instr)
+static void		check_arg_amount(t_tk *instr, const t_op *op)
 {
-	const t_op		*op;
 	t_tk			*tmp;
 	unsigned int	cnt;
 
 	tmp = instr;
-	op = find_instruction(tmp);
 	cnt = 0;
 	while ((tmp = tmp->next))
 	{
@@ -88,14 +86,12 @@ static void		check_arg_amount(t_tk *instr)
 ** Validate type of the arguments
 */
 
-static void		check_arg_type(t_tk *instr)
+static void		check_arg_type(t_tk *instr, const t_op *op)
 {
 	t_tk			*tmp;
-	const t_op		*op;
 	unsigned int	i;
 
 	tmp = instr;
-	op = find_instruction(tmp);
 	i = 0;
 	while (i < op->nargs && (tmp = tmp->next))
 	{
@@ -110,18 +106,9 @@ static void		check_arg_type(t_tk *instr)
 ** Check if the instruction is in the instruction set
 */
 
-static t_bool	is_valid_instruction(t_tk *tmp)
+static t_bool	is_valid_instruction(const t_op *op)
 {
-	int	i;
-
-	i = 0;
-	while (op_tab[i].name)
-	{
-		if (ft_strequ(op_tab[i].name, tmp->tk))
-			return (TRUE);
-		i++;
-	}
-	return (FALSE);
+	return (t_bool)(op != NULL);
 }
 
 /*
@@ -131,7 +118,8 @@ static t_bool	is_valid_instruction(t_tk *tmp)
 
 void			check_instructions(t_list *tokens)
 {
-	t_tk	*tmp;
+	t_tk		*tmp;
+	const t_op	*op;
 
 	while (tokens)
 	{
@@ -140,12 +128,13 @@ void			check_instructions(t_list *tokens)
 		{
 			if (tmp->type == INSTRUCTION)
 			{
-				check_arg_amount(tmp);
-				if (!is_valid_instruction(tmp))
+				op = find_instruction(tmp);
+				check_arg_amount(tmp, op);
+				if (!is_valid_instruction(op))
 					instruction_error(tmp->tk, tmp->line, tmp->chr);
-				check_arg_type(tmp);
-				rec_instr_size(tmp);
-				rec_codage(tmp);
+				check_arg_type(tmp, op);
+				rec_instr_size(tmp, op);
+				rec_codage(tmp, op);
 			}
 			tmp = tmp->next;
 		}
