@@ -86,8 +86,7 @@ void		open_files(t_asm *a);
 void		read_file(int fd_from, t_list **where);
 void		write_file(t_asm *a, t_list *commands);
 
-void		write_magic(int fd_to);
-void		write_name_comment_size(int fd_to, t_asm *asms);
+void		header(int fd_to, t_asm *asms);
 void		write_executable_code(int fd_to, t_list *tokens);
 
 /*

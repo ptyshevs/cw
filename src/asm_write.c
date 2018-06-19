@@ -10,13 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_strnum.h>
 #include "asm.h"
 
 /*
 ** Convert decimal number to stringified hex version
 */
 
-t_line		*dec_to_hex(int n, unsigned int width)
+void	write_dec_to_hex(int fd_to, int n, unsigned int width)
 {
 	t_line			*str;
 	unsigned int	i;
@@ -25,61 +26,37 @@ t_line		*dec_to_hex(int n, unsigned int width)
 	str->len = width;
 	str->str = ft_memalloc(str->len);
 	i = width;
-	while (n)
+	while (n && i > 0)
 	{
 		str->str[i-- - 1] = (t_uc)(n & 0xFF);
 		n >>= 8;
 	}
 	while (i > 0)
 		str->str[i-- - 1] = 0;
-	return (str);
-}
-
-/*
-** Write magic to file
-*/
-
-void	write_magic(int fd_to)
-{
-	t_line	*magic;
-
-	magic = dec_to_hex(COREWAR_EXEC_MAGIC, 4);
-	write(fd_to, magic->str, magic->len);
-	ft_memdel((void **)&magic->str);
-	ft_memdel((void **)&magic);
-}
-
-/*
-** Write bot size to file
-*/
-
-void	write_bot_size(int fd_to, int n)
-{
-	t_line	*size;
-
-	size = dec_to_hex(n, 4);
-	write(fd_to, size->str, size->len);
-	clean_t_line(&size);
+	write(fd_to, str->str, width);
+	clean_t_line(&str);
 }
 
 /*
 ** Write bot name to file
 */
 
-void	write_name_comment_size(int fd_to, t_asm *asms)
+void	header(int fd_to, t_asm *asms)
 {
 	size_t			i;
 	static char		block[COMMENT_LENGTH];
 
+	write_dec_to_hex(fd_to, COREWAR_EXEC_MAGIC, 4); // magic
+	// bot name
 	i = ft_slen(asms->name) - 2;
 	write(fd_to, asms->name + 1, i);
 	write(fd_to, block, PROG_NAME_LENGTH - i);
 	write(fd_to, block, 4); // Padding before bot size
-	write_bot_size(fd_to, asms->cum_size);
-	i = ft_slen(asms->comment) - 2;
+	write_dec_to_hex(fd_to, asms->cum_size, 4); // bot size
+	i = ft_slen(asms->comment) - 2; // comment
 	write(fd_to, asms->comment + 1, i);
 	write(fd_to, block, COMMENT_LENGTH - i);
-	write(fd_to, block, 4);
+	write(fd_to, block, 4); // padding before executable code
 }
 
 /*
@@ -88,8 +65,20 @@ void	write_name_comment_size(int fd_to, t_asm *asms)
 
 void	write_instruction(int fd_to, t_tk *instr)
 {
-	(void)fd_to;
-	(void)instr;
+	int			nbr;
+	const t_op	*op;
+
+	op = find_instruction(instr);
+	write_dec_to_hex(fd_to, op->op, 1);
+	if (instr->codage)
+		write_dec_to_hex(fd_to, instr->codage, 1);
+	while ((instr = instr->next))
+	{
+		nbr = ft_atoi(instr->type == REGISTER || instr->type == DIRECT ?
+				instr->tk + 1 : instr->tk);
+		write_dec_to_hex(fd_to, nbr, instr->type == DIRECT ? op->label_size : instr->size);
+		instr = instr->next;
+	}
 }
 
 
