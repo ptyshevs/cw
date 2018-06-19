@@ -26,7 +26,9 @@ int main(int ac, char **av)
 	open_files(&asms);
 	read_file(asms.fd_from, &asms.lines);
 	tokens = validate(&asms, asms.lines);
-//	write_file(&asms, tokens);
+	if (asms.flags & DEBUG)
+		iter_tokens(tokens);
+	write_file(&asms, tokens);
 	release_tokens(&tokens);
 	wrap_up(&asms);
 }

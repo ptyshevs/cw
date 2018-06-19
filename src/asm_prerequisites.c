@@ -34,7 +34,7 @@ void		open_files(t_asm *a)
 {
 	if ((a->fd_from = open(a->name, O_RDONLY)) == -1)
 		ft_panic(ft_sprintf("Can't read source file %s", a->name), 2, 1);
-	a->name = NULL; // need for using gnl later
+	a->filename = a->name;
 }
 
 /*
@@ -53,7 +53,6 @@ void		wrap_up(t_asm *asms)
 		ft_memdel((void **)&prev);
 	}
 	close(asms->fd_from);
-	close(asms->fd_to);
 }
 
 /*

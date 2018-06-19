@@ -52,6 +52,7 @@ void	check_duplicates(t_list *tokens)
 
 /*
 ** Check bot name and comment lengths
+** ft_slen(...) - 2 because fields contain double-quotes
 */
 
 void	check_lengths(t_asm *asms)
@@ -75,9 +76,7 @@ t_list	*validate(t_asm *asms, t_list *lines)
 	check_name_comment(asms, tokens);
 	check_duplicates(tokens);
 	check_instructions(tokens); // bad instructions
-	label_deref(tokens);
+	label_deref(asms, tokens);
 	check_lengths(asms);
-	if (asms->flags & DEBUG)
-		iter_tokens(tokens);
 	return (tokens);
 }

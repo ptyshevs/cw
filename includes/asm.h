@@ -40,9 +40,9 @@ typedef struct	s_asm
 
 	char			*name;
 	char			*comment;
-
+	unsigned int	cum_size;
 	int				fd_from;
-	int				fd_to;
+	char			*filename;
 }				t_asm;
 
 /*
@@ -85,6 +85,10 @@ t_asm		parse_cli(int ac, char **av);
 void		open_files(t_asm *a);
 void		read_file(int fd_from, t_list **where);
 void		write_file(t_asm *a, t_list *commands);
+
+void		write_magic(int fd_to);
+void		write_name_comment_size(int fd_to, t_asm *asms);
+void		write_executable_code(int fd_to, t_list *tokens);
 
 /*
 ** Tokenize the file content
@@ -136,7 +140,7 @@ const t_op	*find_instruction(t_tk *instr);
 
 void	rec_instr_size(t_tk *instr, const t_op *op);
 void	rec_codage(t_tk *instr, const t_op *op);
-void	label_deref(t_list *tokens);
+void	label_deref(t_asm *asms, t_list *tokens);
 
 /*
 ** Errors

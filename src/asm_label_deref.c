@@ -119,14 +119,13 @@ void	replace_label(t_list *tokens, t_tk *label_param, int cum_size)
 ** replacing it with a value
 */
 
-void	label_deref(t_list *tokens)
+void	label_deref(t_asm *asms, t_list *tokens)
 {
-	t_list			*tmp;
-	t_tk			*tk;
-	int				cum_size;
-	t_tk			*instr;
+	t_list				*tmp;
+	t_tk				*tk;
+	static unsigned int	cum_size = 0;
+	t_tk				*instr;
 
-	cum_size = 0;
 	tmp = tokens;
 	while (tmp)
 	{
@@ -136,12 +135,15 @@ void	label_deref(t_list *tokens)
 		{
 			if (tk->type == DIRECT_LABEL || tk->type == INDIRECT_LABEL)
 				replace_label(tokens, tk, cum_size);
-			if (tk->type == INSTRUCTION)
+			else if (tk->type == INSTRUCTION)
 				instr = tk;
-			if (tk->type == ENDLINE && instr)
+			else if (tk->type == ENDLINE && instr)
 				cum_size += instr->size;
+			else if (tk->type == END && cum_size == 0)
+				syntax_error_tk(tk);
 			tk = tk->next;
 		}
 		tmp = tmp->next;
 	}
+	asms->cum_size = cum_size;
 }

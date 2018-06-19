@@ -112,5 +112,5 @@ static const t_op	op_tab[17] =
 		"long load index", 1, 1, 2},
 	{"lfork", 1, {T_DIR}, 15, 1000, "long fork", 0, 1, 2},
 	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0, 4},
-	{0, 0, {0}, 0, 0, 0, 0, 0}
+	{0, 0, {0}, 0, 0, 0, 0, 0, 0}
 };

@@ -56,15 +56,22 @@ static char	*change_extension(char *filename, char *from_ext, char *to_ext)
 	return (new_filename);
 }
 
-void		write_file(t_asm *a, t_list *commands)
+/*
+** Create *.cor file
+*/
+
+void		write_file(t_asm *a, t_list *tokens)
 {
 	char	*new_filename;
+	int		fd_to;
 
-	(void)commands;
-	new_filename = change_extension(a->name, ".s", ".cor");
-	if ((a->fd_to = open(new_filename, O_WRONLY | O_CREAT, 644)) == -1)
+	new_filename = change_extension(a->filename, ".s", ".cor");
+	if ((fd_to = open(new_filename, O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
 		ft_panic(ft_sprintf("Cant write champion to %s", new_filename), 2, 1);
-	write(a->fd_to, "whatever", 8);
+	write_magic(fd_to);
+	write_name_comment_size(fd_to, a);
+	write_executable_code(fd_to, tokens);
 	ft_printf("Writing output program to %s\n", new_filename);
 	ft_strdel(&new_filename);
+	close(fd_to);
 }
