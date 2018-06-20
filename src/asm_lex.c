@@ -61,6 +61,8 @@ void	check_lengths(t_asm *asms)
 		error(1, "Champion name too long (Max length %d)\n", PROG_NAME_LENGTH);
 	else if (ft_slen(asms->comment) - 2 > COMMENT_LENGTH)
 		error(1, "Champion comment too long (Max length %d)\n", COMMENT_LENGTH);
+	else if (asms->cum_size > CHAMP_MAX_SIZE)
+		error(1, "Champion size is too big (Max size %d)\n", CHAMP_MAX_SIZE);
 }
 
 /*
@@ -76,8 +78,6 @@ t_list	*validate(t_asm *asms, t_list *lines)
 	check_name_comment(asms, tokens);
 	check_duplicates(tokens);
 	check_instructions(tokens); // bad instructions
-//	if (asms->flags & DEBUG)
-//		iter_tokens(tokens);
 	label_deref(asms, tokens);
 	check_lengths(asms);
 	return (tokens);

@@ -34,6 +34,12 @@ void		read_file(int fd_from, t_list **where)
 			ft_lstappend(where, ft_lstnew(tmp, ft_slen(tmp) + 1));
 			ft_strdel(&tmp);
 		}
+		else if ((tmp = ft_strchr(iter, ';')))
+		{
+			tmp = ft_strtrunc(iter, tmp - iter, FALSE);
+			ft_lstappend(where, ft_lstnew(tmp, ft_slen(tmp) + 1));
+			ft_strdel(&tmp);
+		}
 		else
 			ft_lstappend(where, ft_lstnew(iter, ft_slen(iter) + 1));
 	}
