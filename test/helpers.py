@@ -2,7 +2,6 @@ import subprocess
 import random
 import string
 
-operations = [("insert", insert), ("remove", remove), ("replace", replace)]
 
 specs = ";\"'#$%^&*()[],-.=>?\|/\\}{"
 spaces = [9, 10, 11, 12, 13, 32]
@@ -37,8 +36,8 @@ def gen_rand_string(mode, length):
         return s + ''.join([random.choice(string.digits) for _ in range(length if len(s) == 0 else length - 1)])
     elif mode == 'label':
         s = ''.join([random.choice(string.ascii_lowercase) for _ in range(length - 1)])
-        if random.randint(0, 9) == 0:  # convert to uppercase
-            i = random.randrange(0, length - 1)
+        if len(s) and random.randint(0, 9) == 0:  # convert to uppercase
+            i = random.randrange(0, length - 1) if length - 1 > 0 else 0
             s = s[:i] + s[i].upper() + s[i + 1:]
         if random.randint(0, 4) < 4:
             return s + ':'
@@ -98,6 +97,10 @@ def open_file(filename: str) -> list:
 
 def select_random_location(file: list):
     """Find a new random position (n, k) in a file, where n - line, and k - position in a line"""
-    n = random.randrange(0, len(file))
+    n = random.randrange(0, len(file)) if len(file) > 0 else 0
     k = random.randrange(0, len(file[n])) if len(file[n]) > 0 else 0
     return n, k
+
+
+modes = ['digits', 'label', 'bizarre', 'spec', 'spaces']
+operations = [("insert", insert), ("remove", remove), ("replace", replace)]

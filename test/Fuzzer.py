@@ -28,7 +28,6 @@ NC = '\033[0m'
 class Fuzzer:
 
     def __init__(self):
-        self.failed = False
         self.args = self.parse_args()
         self.db = self.init_db()
         self.modes = {'easy': (1, 1), 'moderate': (5, 5), 'hard': (8, 8)}
@@ -74,11 +73,11 @@ class Fuzzer:
         orig_cor = file_base + ".orig_cor"
         cor = file_base + ".cor"
 
-        orig_ret, orig_out = self.run_command("{} {}".format(self.db.get('true_asm'), mod_filename))
+        orig_ret, orig_out = helpers.run_command("{} {}".format(self.db.get('true_asm'), mod_filename))
         if orig_out.startswith(self.file_compiled_prefix):
             # Copy the original *.cor file, so it is not over-written for later comparison
-            self.rename_file(cor, orig_cor)
-        mod_ret, mod_out = self.run_command("{} {}".format(self.db.get('my_asm'), mod_filename))
+            helpers.rename_file(cor, orig_cor)
+        mod_ret, mod_out = helpers.run_command("{} {}".format(self.db.get('my_asm'), mod_filename))
         if os.path.exists(cor) and os.path.exists(orig_cor):  # save *.cor and *.orig_cor files for binaries diff
             self.cor_files.append((cor, orig_cor))
         return {'ret': orig_ret, 'out': orig_out, 'file': orig_cor}, {'ret': mod_ret, 'out': mod_out, 'file': cor}
@@ -88,52 +87,44 @@ class Fuzzer:
         orig_command = "{} {}".format(self.db.get('true_cw'), filename)
         my_command = "{} {}".format(self.db.get('my_cw'), filename)
 
-        orig_ret, orig_out = self.run_command(orig_command)
-        mod_ret, mod_out = self.run_command(my_command)
+        orig_ret, orig_out = helpers.run_command(orig_command)
+        mod_ret, mod_out = helpers.run_command(my_command)
         return {'ret': orig_ret, 'out': orig_out}, {'ret': mod_ret, 'out': mod_out}
+
+    def log(self, message, good_outcome: bool):
+        if not self.args['v']:
+            print("{}.{}".format(GREEN if good_outcome else RED, NC), end='')
+        else:
+            print(message)
 
     def cor_fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
         file = self.mod_file(file, self.m, 'digits', tpe='bytes')
         mod_dir, mod_filename = self.save_file(file, filename)
         orig, mod = self.cor_run(mod_filename)
-        if orig['out'] != mod['out']:
-            self.failed = True
+        if (orig['ret'] == 0 or orig['ret'] == -1) and orig['out'] != mod['out']:
             self.cnt_errors += 1
             self.save_output(orig['out'], mod['out'], mod_filename)
-            if self.args['v']:
-                print("Output differs for file {}".format(mod_filename))
-            else:
-                print("{}.{}".format(RED, NC), end='')
+            self.log("Output differs for file {}".format(mod_filename), False)
         else:
             if not (orig['out'].startswith(self.file_compiled_prefix) and mod['out'].startswith(self.file_compiled_prefix)):
                 shutil.rmtree(mod_dir)  # remove the whole directory, but only if the *.cor files weren't not generated
-            if self.args['v']:
-                print("Output matches the original version")
-            else:
-                print("{}.{}".format(GREEN, NC), end='')
+            self.log("Output matches the original version", True)
 
     def asm_fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
         file = self.mod_file(file, self.m, tpe='str')
         mod_dir, mod_filename = self.save_file(file, filename)
         orig, mod = self.asm_run(mod_filename)
-        if orig['out'] != mod['out']:
-            self.failed = True
+        if (orig['ret'] == 0 or orig['ret'] == -1) and orig['out'] != mod['out']:
             self.cnt_errors += 1
             Fuzzer.diff_files(filename, mod_filename)
             self.save_output(orig['out'], mod['out'], mod_filename)
-            if self.args['v']:
-                print("Output differs for file {}".format(mod_filename))
-            else:
-                print("{}.{}".format(RED, NC), end='')
+            self.log("Output differs for file {}".format(mod_filename), False)
         else:
             if not (os.path.exists(orig['file']) and os.path.exists(mod['file'])):
                 shutil.rmtree(mod_dir)  # remove the whole directory, but only if the *.cor files weren't not generated
-            if self.args['v']:
-                print("Output matches the original version")
-            else:
-                print("{}.{}".format(GREEN, NC), end='')
+            self.log("Output matches the original version", True)
 
     def fuzz(self):
         """Fuzz the compilation step, storing all successfully compiled *.cor files"""
