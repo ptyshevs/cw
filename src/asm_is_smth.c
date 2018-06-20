@@ -43,7 +43,7 @@ t_bool	is_label(char *line, int start, int line_nbr)
 	int		i;
 
 	if (line[start] == LABEL_CHAR)
-		return (FALSE); // Indirect label (starts with `:`)
+		return (FALSE);
 	i = start;
 	while (line[i])
 	{
@@ -53,10 +53,7 @@ t_bool	is_label(char *line, int start, int line_nbr)
 				line[i] == SEPARATOR_CHAR)
 			break ;
 		else if (!ft_strchr(LABEL_CHARS, line[i]))
-		{
-//			ft_dprintf(2, "[d] is_label has found char not from a LABEL_CHARS: %c\n", line[i]);
 			lexical_error(line_nbr, i + 1);
-		}
 		i++;
 	}
 	return (FALSE);
@@ -71,7 +68,7 @@ t_bool	is_indirect(char *line, int start)
 	int		i;
 
 	i = start;
-	if (line[i] == '-') // negative number is ok
+	if (line[i] == '-')
 		i++;
 	while (line[i])
 	{

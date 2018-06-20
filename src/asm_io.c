@@ -96,7 +96,7 @@ static void	dump_instruction(int offset, t_tk *instr)
 ** Output to STDOUT instead of writing to file
 */
 
-void	dump_to_stdout(t_asm *asms, t_list *tokens)
+void		dump_to_stdout(t_asm *asms, t_list *tokens)
 {
 	t_tk	*tk;
 	int		offset;

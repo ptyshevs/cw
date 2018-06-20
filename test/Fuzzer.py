@@ -116,7 +116,7 @@ class Fuzzer:
         file = self.mod_file(file, self.m, tpe='str')
         mod_dir, mod_filename = self.save_file(file, filename)
         orig, mod = self.asm_run(mod_filename)
-        if (orig['ret'] == 0 or orig['ret'] == -1) and orig['out'] != mod['out']:
+        if (orig['ret'] == 0 or orig['ret'] == -1) and orig['out'] != mod['out'] and not "Champion size is too big" in mod['out']:
             self.cnt_errors += 1
             Fuzzer.diff_files(filename, mod_filename)
             self.save_output(orig['out'], mod['out'], mod_filename)

@@ -12,15 +12,14 @@
 
 #include "asm.h"
 
-
 /*
 ** ASM-like compiler
 */
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_asm	asms;
-	t_list	*tokens; // used on compilation step
+	t_list	*tokens;
 
 	asms = parse_cli(ac, av);
 	open_files(&asms);

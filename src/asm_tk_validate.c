@@ -47,7 +47,7 @@ void			check_name_comment(t_asm *asms, t_list *tokens)
 			break ;
 		tokens = tokens->next;
 	}
-	tmp = tmp->next->next; // if there is a segfault, it is here
+	tmp = tmp ? tmp->next->next : tmp;
 	if (tmp && tmp->type != ENDLINE)
 		syntax_error(tmp->tk, tk_type_to_str(tmp->type), tmp->line, tmp->chr);
 }
@@ -78,7 +78,7 @@ static void		check_arg_amount(t_tk *instr, const t_op *op)
 	}
 	if (op && cnt < op->nargs)
 		parameter_count_error(instr);
-	else if (tmp->type == END) // if there is a segfault, its here
+	else if (tmp && tmp->type == END)
 		unexpected_eof_error();
 }
 

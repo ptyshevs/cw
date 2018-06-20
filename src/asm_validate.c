@@ -35,7 +35,7 @@ void	check_duplicates(t_list *tokens)
 			if (tmp->type == COMMAND)
 			{
 				if (n_c_i[2])
-					return (release_tokens(&prev->next)); // returing void function, yeah
+					return (release_tokens(&prev->next));
 				if (ft_strequ(tmp->tk, NAME_CMD_STRING))
 					n_c_i[0] = !n_c_i[0] ? TRUE : duplicate_error(tmp);
 				else
@@ -74,10 +74,10 @@ t_list	*validate(t_asm *asms, t_list *lines)
 {
 	t_list	*tokens;
 
-	tokens = tokenize(lines); // and lexical analysis on-the-fly
+	tokens = tokenize(lines);
 	check_name_comment(asms, tokens);
 	check_duplicates(tokens);
-	check_instructions(tokens); // bad instructions
+	check_instructions(tokens);
 	label_deref(asms, tokens);
 	check_lengths(asms);
 	return (tokens);

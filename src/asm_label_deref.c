@@ -32,7 +32,7 @@ void	rec_instr_size(t_tk *instr, const t_op *op)
 	if (op->codage)
 		instr->size += REG_CODE;
 	tmp = instr;
-	while ((tmp = tmp->next)) // what if tmp doesn't exist? Segfault
+	while ((tmp = tmp->next))
 	{
 		if (tmp->type == INDIRECT_LABEL || tmp->type == INDIRECT)
 			instr->size += 2;
@@ -65,7 +65,7 @@ void	rec_codage(t_tk *instr, const t_op *op)
 		else if (tmp->size == T_DIR)
 			instr->codage += DIR_CODE;
 		args_read++;
-		tmp = tmp->next; // skip separator
+		tmp = tmp->next;
 	}
 	instr->codage <<= 2 * (4 - args_read);
 }

@@ -64,18 +64,18 @@ static t_tk	*line_to_tk(t_list **lines, int *line_nbr, t_bool *end_placed)
 	{
 		while (line[i] && ft_isspace(line[i]))
 			i++;
-		if (!line[i] || line[i] == COMMENT_CHAR || line[i] == ';') // consider another comment symbol ';'
+		if (!line[i] || line[i] == COMMENT_CHAR || line[i] == ';')
 			break ;
 		tk = token_dispatcher(line, lines, &i, line_nbr);
-		line = (*lines)->content; // need to jump after multiline STRING processing
+		line = (*lines)->content;
 		if (tk)
 			tk_append(&tokens, tk);
-		i += line[i] ? 1 : 0; // so you don't miss nul-terminator
-	} // sorry for shit-code below. It's norm that made me do this
+		i += line[i] ? 1 : 0;
+	}
 	*end_placed = tokens && !(*lines)->next ? TRUE : *end_placed;
 	if (tokens)
 		tk_append(&tokens, create_token(NULL, *line_nbr, i + 1, (*lines)->next ?
-																ENDLINE: END));
+																ENDLINE : END));
 	return (tokens);
 }
 
@@ -84,7 +84,7 @@ static t_tk	*line_to_tk(t_list **lines, int *line_nbr, t_bool *end_placed)
 ** lexicon on-the-fly.
 */
 
-t_list	*tokenize(t_list *lines)
+t_list		*tokenize(t_list *lines)
 {
 	t_list	*tokens;
 	t_tk	*tk;

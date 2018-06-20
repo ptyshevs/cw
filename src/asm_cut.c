@@ -49,10 +49,8 @@ static char	*cut_substring(char *start, t_list *lines)
 		ft_strdel(&tmp);
 		lines = lines->next;
 	}
-	if (!lines) // Non enclosing double-quote
+	if (!lines)
 		return (NULL);
-	// find closing double-quote
-	// calculate distance to it
 	len = ft_strchr(lines->content, '"') - (char *)lines->content;
 	another = ft_strtrunc(lines->content, len + 1, FALSE);
 	tmp = collect;
@@ -66,9 +64,9 @@ static char	*cut_substring(char *start, t_list *lines)
 ** Cut string token, from <start>.
 **
 ** Start should be index of the opening double quote.
- */
+*/
 
-t_tk	*cut_string(t_list **lines, int *start, int *line_nbr)
+t_tk		*cut_string(t_list **lines, int *start, int *line_nbr)
 {
 	int		cnt_lines;
 	char	*tmp;
@@ -81,8 +79,7 @@ t_tk	*cut_string(t_list **lines, int *start, int *line_nbr)
 	else
 		tmp = cut_substring(&(tmp[*start]), *lines);
 	if (!tmp)
-//		lexical_error(*line_nbr, *start);
-		error(1, "This should not be happening! No closing bracket found for STRING token [%d:%d] %s\n",
+		error(1, "No closing bracket found for STRING token [%d:%d] %s\n",
 				*line_nbr, *start, &(((char *)(*lines)->content)[*start]));
 	cnt_lines = ft_strcnt(tmp, '\n');
 	*line_nbr += cnt_lines;
@@ -102,7 +99,7 @@ t_tk	*cut_string(t_list **lines, int *start, int *line_nbr)
 ** Cut direct label
 */
 
-t_tk	*cut_direct_label(char *line, int *start, int line_nbr)
+t_tk		*cut_direct_label(char *line, int *start, int line_nbr)
 {
 	t_tk	*token;
 	char	*tk;
@@ -131,19 +128,17 @@ t_tk	*cut_direct_label(char *line, int *start, int line_nbr)
 ** @return New token of DIRECT type
 */
 
-t_tk	*cut_direct(char *line, int *start, int line_nbr)
+t_tk		*cut_direct(char *line, int *start, int line_nbr)
 {
 	t_tk	*token;
 	char	*tk;
 	int		i;
-	t_bool	is_first_char;
 
 	i = *start;
-	is_first_char = TRUE;
 	while (line[++i])
 	{
-		if (is_first_char && line[i] == '-')
-			;
+		if (i == *start + 1 && line[i] == '-')
+			continue;
 		else if (ft_isspace(line[i]) || line[i] == SEPARATOR_CHAR)
 			break ;
 		else if (!ft_isdigit(line[i]))
@@ -152,7 +147,6 @@ t_tk	*cut_direct(char *line, int *start, int line_nbr)
 				lexical_error(line_nbr, i + 1);
 			break ;
 		}
-		is_first_char = FALSE;
 	}
 	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, FALSE)) == 1)
 		lexical_error(line_nbr, i);

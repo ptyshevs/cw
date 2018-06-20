@@ -46,16 +46,16 @@ void	write_header(int fd_to, t_asm *asms)
 	size_t			i;
 	static char		block[COMMENT_LENGTH];
 
-	write_dec_to_hex(fd_to, COREWAR_EXEC_MAGIC, 4); // magic
-	i = ft_slen(asms->name) - 2; // bot name
+	write_dec_to_hex(fd_to, COREWAR_EXEC_MAGIC, 4);
+	i = ft_slen(asms->name) - 2;
 	write(fd_to, asms->name + 1, i);
 	write(fd_to, block, PROG_NAME_LENGTH - i);
-	write(fd_to, block, 4); // Padding before bot size
-	write_dec_to_hex(fd_to, asms->cum_size, 4); // bot size
-	i = ft_slen(asms->comment) - 2; // comment
+	write(fd_to, block, 4);
+	write_dec_to_hex(fd_to, asms->cum_size, 4);
+	i = ft_slen(asms->comment) - 2;
 	write(fd_to, asms->comment + 1, i);
 	write(fd_to, block, COMMENT_LENGTH - i);
-	write(fd_to, block, 4); // padding before executable code
+	write(fd_to, block, 4);
 }
 
 /*
@@ -80,7 +80,6 @@ void	write_instruction(int fd_to, t_tk *instr)
 		instr = instr->next;
 	}
 }
-
 
 /*
 ** Write all instructions and their arguments to file

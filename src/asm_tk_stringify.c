@@ -16,7 +16,7 @@
 ** Convert token t_type to static string
 */
 
-char	*tk_type_to_str(t_type type)
+char		*tk_type_to_str(t_type type)
 {
 	if (type == NONE || type == INSTRUCTION)
 		return (type == NONE ? "NONE" : "INSTRUCTION");
@@ -40,7 +40,7 @@ char	*tk_type_to_str(t_type type)
 ** Convert token t_type to static lowercase string
 */
 
-char	*tk_type_to_lstr(t_type type)
+char		*tk_type_to_lstr(t_type type)
 {
 	if (type == NONE || type == INSTRUCTION)
 		return (type == NONE ? "none" : "instruction");
@@ -76,7 +76,6 @@ static void	show_tokens(t_tk *tokens)
 		else
 			ft_printf(tokens->next ? "][%d:%d]-> " : "][%d:%d]",
 					tokens->line, tokens->chr);
-			
 		tokens = tokens->next;
 	}
 	ft_printf("\n");
@@ -87,7 +86,7 @@ static void	show_tokens(t_tk *tokens)
 ** content of each is another list of tokens of the corresponding line.
 */
 
-void	iter_tokens(t_list *tokens)
+void		iter_tokens(t_list *tokens)
 {
 	while (tokens)
 	{
