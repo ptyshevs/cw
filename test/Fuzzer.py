@@ -5,6 +5,7 @@ import sys
 import subprocess
 import random
 import string
+import helpers
 
 BLACK = '\033[0;30m'
 RED = '\033[0;31m'
@@ -25,14 +26,11 @@ WHITE = '\033[1;37m'
 NC = '\033[0m'
 
 class Fuzzer:
-    specs = ";\"'#$%^&*()[],-.=>?\|/\\}{"
-    spaces = [9, 10, 11, 12, 13, 32]
 
     def __init__(self):
         self.failed = False
         self.args = self.parse_args()
         self.db = self.init_db()
-        self.operations = [("insert", Fuzzer.insert), ("remove", Fuzzer.remove), ("replace", Fuzzer.replace)]
         self.modes = {'easy': (1, 1), 'moderate': (5, 5), 'hard': (8, 8)}
         self.cnt_errors = 0
         self.files = dict()
@@ -72,81 +70,65 @@ class Fuzzer:
 
     def asm_run(self, mod_filename):
         """Compare original asm output with your version"""
-        orig_command = "{} {}".format(self.db.get('true_asm'), mod_filename)
-        my_command = "{} {}".format(self.db.get('my_asm'), mod_filename)
+        file_base = mod_filename[:-2]
+        orig_cor = file_base + ".orig_cor"
+        cor = file_base + ".cor"
 
-        mod_base = mod_filename[:-2]
-        orig_cor_fname = None
-
-        try:  # Normal execution
-            orig_output = subprocess.check_output(orig_command, shell=True, stderr=subprocess.STDOUT).decode('ascii')
-        except subprocess.CalledProcessError as e:  # Error
-            orig_output = str(e.output, encoding='utf-8')
-        if orig_output.startswith(self.file_compiled_prefix):
+        orig_ret, orig_out = self.run_command("{} {}".format(self.db.get('true_asm'), mod_filename))
+        if orig_out.startswith(self.file_compiled_prefix):
             # Copy the original *.cor file, so it is not over-written for later comparison
-            orig_cor_fname = mod_base + ".cor"
-            cpy_command = "cp {0} {1}; rm {0}".format(orig_cor_fname, mod_base + ".orig_cor")
-            subprocess.check_output(cpy_command, shell=True, stderr=subprocess.STDOUT)
-        try:  # Same here
-            mod_output = subprocess.check_output(my_command, shell=True, stderr=subprocess.STDOUT).decode('ascii')
-        except subprocess.CalledProcessError as e:
-            mod_output = str(e.output, encoding='utf-8')
-        if mod_output.startswith(self.file_compiled_prefix) and orig_cor_fname:
-            self.cor_files.append((mod_base + ".cor", mod_base + ".orig_cor"))
-        return orig_output, mod_output
+            self.rename_file(cor, orig_cor)
+        mod_ret, mod_out = self.run_command("{} {}".format(self.db.get('my_asm'), mod_filename))
+        if os.path.exists(cor) and os.path.exists(orig_cor):  # save *.cor and *.orig_cor files for binaries diff
+            self.cor_files.append((cor, orig_cor))
+        return {'ret': orig_ret, 'out': orig_out, 'file': orig_cor}, {'ret': mod_ret, 'out': mod_out, 'file': cor}
 
     def cor_run(self, filename):
         """Run corewar binaries"""
         orig_command = "{} {}".format(self.db.get('true_cw'), filename)
         my_command = "{} {}".format(self.db.get('my_cw'), filename)
 
-        try:
-            orig_output = subprocess.check_output(orig_command, shell=True, stderr=subprocess.STDOUT).decode('utf-8')
-        except subprocess.CalledProcessError as e:
-            orig_output = str(e.output, encoding='utf-8')
-        try:  # Same here
-            mod_output = subprocess.check_output(my_command, shell=True, stderr=subprocess.STDOUT).decode('ascii')
-        except subprocess.CalledProcessError as e:
-            mod_output = str(e.output, encoding='utf-8')
-        return orig_output, mod_output
+        orig_ret, orig_out = self.run_command(orig_command)
+        mod_ret, mod_out = self.run_command(my_command)
+        return {'ret': orig_ret, 'out': orig_out}, {'ret': mod_ret, 'out': mod_out}
 
     def cor_fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
         file = self.mod_file(file, self.m, 'digits', tpe='bytes')
         mod_dir, mod_filename = self.save_file(file, filename)
-        orig_out, mod_out = self.cor_run(mod_filename)
-        if orig_out != mod_out:
+        orig, mod = self.cor_run(mod_filename)
+        if orig['out'] != mod['out']:
             self.failed = True
             self.cnt_errors += 1
-            self.save_output(orig_out, mod_out, mod_filename)
+            self.save_output(orig['out'], mod['out'], mod_filename)
             if self.args['v']:
                 print("Output differs for file {}".format(mod_filename))
             else:
                 print("{}.{}".format(RED, NC), end='')
         else:
-            if not (orig_out.startswith(self.file_compiled_prefix) and mod_out.startswith(self.file_compiled_prefix)):
+            if not (orig['out'].startswith(self.file_compiled_prefix) and mod['out'].startswith(self.file_compiled_prefix)):
                 shutil.rmtree(mod_dir)  # remove the whole directory, but only if the *.cor files weren't not generated
             if self.args['v']:
                 print("Output matches the original version")
             else:
                 print("{}.{}".format(GREEN, NC), end='')
 
-    def fuzz_once(self):
+    def asm_fuzz_once(self):
         filename, file = random.choice(list(self.files.items()))
         file = self.mod_file(file, self.m, tpe='str')
         mod_dir, mod_filename = self.save_file(file, filename)
-        orig_out, mod_out = self.asm_run(mod_filename)
-        if orig_out != mod_out:
+        orig, mod = self.asm_run(mod_filename)
+        if orig['out'] != mod['out']:
             self.failed = True
             self.cnt_errors += 1
             Fuzzer.diff_files(filename, mod_filename)
-            self.save_output(orig_out, mod_out, mod_filename)
+            self.save_output(orig['out'], mod['out'], mod_filename)
             if self.args['v']:
                 print("Output differs for file {}".format(mod_filename))
             else:
                 print("{}.{}".format(RED, NC), end='')
         else:
-            if not (orig_out.startswith(self.file_compiled_prefix) and mod_out.startswith(self.file_compiled_prefix)):
+            if not (os.path.exists(orig['file']) and os.path.exists(mod['file'])):
                 shutil.rmtree(mod_dir)  # remove the whole directory, but only if the *.cor files weren't not generated
             if self.args['v']:
                 print("Output matches the original version")
@@ -157,7 +139,7 @@ class Fuzzer:
         """Fuzz the compilation step, storing all successfully compiled *.cor files"""
         self.cnt_errors = 0
         for i in range(self.args['n']):
-            self.fuzz_once() if self.args['target'] == 'asm' else self.cor_fuzz_once()
+            self.asm_fuzz_once() if self.args['target'] == 'asm' else self.cor_fuzz_once()
         if not self.args['v']:
             print("")
         if self.cnt_errors != 0:
@@ -177,103 +159,16 @@ class Fuzzer:
                 out = str(e.output, encoding='utf-8')
             print(out)
 
-    def mod_file(self, file, m, mode='spec', tpe='str'):
+    def mod_file(self, file, m, mode=None, tpe='str'):
         """Modify file content by copying it."""
         mod_file = [line for line in file]
         for i in range(m):
-            opname, op = random.choice(self.operations)
-            n, k = self.select_random_location(mod_file)
+            if mode is None:
+                mode = random.choice(helpers.modes)
+            opname, op = random.choice(helpers.operations)
+            n, k = helpers.select_random_location(mod_file)
             op(mod_file, n, k, self.l, mode, tpe)
         return mod_file
-
-    @staticmethod
-    def gen_rand_string(mode, length):
-        """
-        Generate random string. Available modes:
-        1) "digits" - Digits only, with optional sign at the beginning
-        2) "label" - Label-like (lowercase and with `:` in random places)
-        3) "bizarre" - Non-sense (complete Unicode charset)
-        4) "spec" - Start or end with a special character
-        5) "spaces" - string containing spaces only
-        :param mode: mode of operation
-        :param length: length of the desired string
-        :return: The random string
-        """
-        if mode == 'digits':
-            s = ''
-            if random.randint(0, 2) == 0:  # one third of all digit strings would contain a sign
-                s = '+' if random.randint(0, 1) == 1 else '-'
-            return s + ''.join([random.choice(string.digits) for _ in range(length if len(s) == 0 else length - 1)])
-        elif mode == 'label':
-            s = ''.join([random.choice(string.ascii_lowercase) for _ in range(length - 1)])
-            if random.randint(0, 9) == 0:  # convert to uppercase
-                i = random.randrange(0, length - 1)
-                s = s[:i] + s[i].upper() + s[i + 1:]
-            if random.randint(0, 4) < 4:
-                return s + ':'
-            else:
-                i = random.randrange(0, length)
-                return s[:i] + ':' + s[i:]
-        elif mode == 'bizarre':
-            return ''.join([chr(random.randint(0, 30000)) for _ in range(length)])
-        elif mode == 'spec':
-            i = random.randint(0, 1)  # beginning or end
-            spec = random.choice(Fuzzer.specs) if random.randint(0, 1) else random.choice(string.ascii_letters)
-            s = ''.join([random.choice(string.ascii_lowercase) for _ in range(length - 1)])
-            return spec + s if i else s + spec
-        elif mode == 'spaces':
-            return ''.join([chr(random.choice(Fuzzer.spaces)) for _ in range(length)])
-        else:
-            raise ValueError("mode is not recognized:", mode)
-
-    @staticmethod
-    def remove(file, n, k, l, mode, type='str'):
-        """Remove k+l segment"""
-        file[n] = file[n][:k] + file[n][k + l:]
-
-    @staticmethod
-    def insert(file, n, k, l, mode='spec', type='str'):
-        """
-            insert l random characters in k-th position
-
-            There are two :
-            1) Add complete nonsense from almost whole UTF-8 charset
-            2) Add english chars
-        :param file: file's content
-        :param n: random line selected
-        :param k: random position on the line
-        :param l: length of changed segment
-        :param mode: Mode of operation
-        :return: Nothing
-        """
-        stub = Fuzzer.gen_rand_string(mode, l)
-        file[n] = file[n][:k + 1] + stub if type == 'str' else bytes(stub,  encoding='utf-8') + file[n][k + 1:]
-
-    @staticmethod
-    def replace(file, n, k, l, mode='spec', type='str'):
-        """
-        Replace l characters, starting from k with random values
-        :param file: file's content
-        :param n: random line selected
-        :param k: random position on the line
-        :param l: length of changed segment
-        :param mode: Mode of operation
-        """
-        stub = Fuzzer.gen_rand_string(mode, l)
-        file[n] = file[n][:k] + stub if type == 'str' else bytes(stub, encoding='utf-8') + file[n][k + l:]
-
-    @staticmethod
-    def open_file(filename: str) -> list:
-        """Open file and return its content"""
-        with open(filename, 'r') as f:
-            return f.readlines()
-
-    @staticmethod
-    def select_random_location(file: list):
-        """Find a new random position (n, k) in a file, where n - line, and k - position in a line"""
-        n = random.randrange(0, len(file))
-        k = random.randrange(0, len(file[n])) if len(file[n]) > 0 else 0
-        return n, k
 
     def save_file(self, file, filename):
         """
