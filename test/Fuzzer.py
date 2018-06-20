@@ -131,24 +131,31 @@ class Fuzzer:
         self.cnt_errors = 0
         for i in range(self.args['n']):
             self.asm_fuzz_once() if self.args['target'] == 'asm' else self.cor_fuzz_once()
+            if i > 0 and i % 80 == 0 and not self.args['v']:
+                print("")
         if not self.args['v']:
             print("")
         if self.cnt_errors != 0:
             print("You can find all cases there haven't matched in traces directory")
 
-    @staticmethod
-    def check_cor_files(cor_files: list):
+    def check_cor_files(self):
         """Compare all *.cor file pairs of format (*.orig_cor, *.mod_cor)"""
-        for orig, mod in cor_files:
-            orig_xxd, mod_xxd = orig[:-8] + '.orig_xxd', mod[:-3] + '.xxd'
-            diff_xxd = mod[:-3] + '.xxd_diff'
-            cmd = "xxd -g 2 {0} > {1}; xxd -g 2 {2} > {3}; diff {1} {3} > {4}; rm {1} {3}".format(
+        i = 0
+        for mod, orig in self.cor_files:
+            orig_xxd, mod_xxd = orig[:-3] + 'xxd', mod[:-3] + 'xxd'
+            diff_xxd = mod[:-3] + 'xxd_diff'
+            cmd = "xxd -g 2 {0} > {1}; xxd -g 2 {2} > {3}; diff {1} {3} > {4}; rm -rf {1} {3}".format(
                 orig, orig_xxd, mod, mod_xxd, diff_xxd)
-            try:
-                out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).decode('utf-8')
-            except subprocess.CalledProcessError as e:
-                out = str(e.output, encoding='utf-8')
-            print(out)
+            ret, out = helpers.run_command(cmd)
+            if ret != 0:
+                self.log("Compiled version differs for {}".format(mod), False)
+            else:
+                self.log("Compiled binaries match", True)
+                path, file = os.path.split(mod)
+                shutil.rmtree(path)
+            if i > 0 and i % 80 == 0 and not self.args['v']:
+                print('')
+            i += 1
 
     def mod_file(self, file, m, mode=None, tpe='str'):
         """Modify file content by copying it."""
@@ -173,7 +180,7 @@ class Fuzzer:
         os.makedirs(dir_path)
         basename = os.path.basename(filename)[:-2]
         new_filename = os.path.join(self.out_dir, test_dir, basename + self.ext)
-        with open(new_filename, 'w+' if self.args['target'] == 'asm' else 'wb+') as f:
+        with open(new_filename, 'w+' if self.args['target'] == 'asm' else 'wb+', encoding='utf-8') as f:
             f.writelines(file)
         return dir_path, new_filename
 
@@ -195,7 +202,7 @@ class Fuzzer:
 
     def parse_args(self):
         """Parse CLI arguments"""
-        args = {'-u': False, 'n': 40, 'fuzz_mode': 'easy', 'v': False, 'target': 'asm', '--no-compiled': True,
+        args = {'-u': False, 'n': 40, 'fuzz_mode': 'easy', 'v': False, 'target': 'asm', '--no-compiled': False,
                 'db': 'db.pcl'}
         for i, arg in enumerate(sys.argv[1:]):
             if arg == '-u' or arg == '--update_paths':

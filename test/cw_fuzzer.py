@@ -38,8 +38,14 @@ from Fuzzer import Fuzzer
 if __name__ == '__main__':
     fz = Fuzzer()
     fz.open_asm_files() if fz.args['target'] == 'asm' else fz.open_cor_files()
+    print("Check compilation:")
     fz.fuzz()
     if not fz.args['--no-compiled']:
-        fz.check_cor_files(fz.cor_files)
+        if fz.cor_files:
+            print("Check compiled binaries:")
+            fz.check_cor_files()
+            print("")
+        else:
+            print("No binaries were successfully compiled in this session")
     fz.db.wrap_up()
     exit(0 if fz.cnt_errors == 0 else 1)

@@ -76,6 +76,8 @@ t_list	*validate(t_asm *asms, t_list *lines)
 	check_name_comment(asms, tokens);
 	check_duplicates(tokens);
 	check_instructions(tokens); // bad instructions
+//	if (asms->flags & DEBUG)
+//		iter_tokens(tokens);
 	label_deref(asms, tokens);
 	check_lengths(asms);
 	return (tokens);

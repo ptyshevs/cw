@@ -64,7 +64,7 @@ static t_tk	*line_to_tk(t_list **lines, int *line_nbr, t_bool *end_placed)
 	{
 		while (line[i] && ft_isspace(line[i]))
 			i++;
-		if (!line[i] || line[i] == COMMENT_CHAR) // consider another comment symbol ';'
+		if (!line[i] || line[i] == COMMENT_CHAR || line[i] == ';') // consider another comment symbol ';'
 			break ;
 		tk = token_dispatcher(line, lines, &i, line_nbr);
 		line = (*lines)->content; // need to jump after multiline STRING processing

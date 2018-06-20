@@ -49,7 +49,8 @@ t_bool	is_label(char *line, int start, int line_nbr)
 	{
 		if (line[i] == LABEL_CHAR)
 			return (TRUE);
-		else if (ft_isspace(line[i]) || line[i] == DIRECT_CHAR)
+		else if (ft_isspace(line[i]) || line[i] == DIRECT_CHAR ||
+				line[i] == SEPARATOR_CHAR)
 			break ;
 		else if (!ft_strchr(LABEL_CHARS, line[i]))
 		{
@@ -74,6 +75,8 @@ t_bool	is_indirect(char *line, int start)
 		i++;
 	while (line[i])
 	{
+		if (line[i] == LABEL_CHAR)
+			return (FALSE);
 		if (!ft_isdigit(line[i]))
 			break ;
 		else
