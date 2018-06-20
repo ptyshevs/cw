@@ -86,8 +86,9 @@ void		open_files(t_asm *a);
 void		read_file(int fd_from, t_list **where);
 void		write_file(t_asm *a, t_list *commands);
 
-void		header(int fd_to, t_asm *asms);
+void		write_header(int fd_to, t_asm *asms);
 void		write_executable_code(int fd_to, t_list *tokens);
+void		dump_to_stdout(t_asm *asms, t_list *tokens);
 
 /*
 ** Tokenize the file content

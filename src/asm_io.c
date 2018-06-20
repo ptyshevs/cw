@@ -74,9 +74,50 @@ void		write_file(t_asm *a, t_list *tokens)
 	new_filename = change_extension(a->filename, ".s", ".cor");
 	if ((fd_to = open(new_filename, O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
 		ft_panic(ft_sprintf("Cant write champion to %s", new_filename), 2, 1);
-	header(fd_to, a);
+	write_header(fd_to, a);
 	write_executable_code(fd_to, tokens);
 	ft_printf("Writing output program to %s\n", new_filename);
 	ft_strdel(&new_filename);
 	close(fd_to);
+}
+
+static void	dump_instruction(int offset, t_tk *instr)
+{
+	ft_printf("%d\t(%-3d) :\t%s ", offset, instr->size, instr->tk);
+	while ((instr = instr->next))
+	{
+		ft_printf(instr->next->type != ENDLINE ? "\t%s\t" : "\t%s", instr->tk);
+		instr = instr->next;
+	}
+	ft_printf("\n");
+}
+
+/*
+** Output to STDOUT instead of writing to file
+*/
+
+void	dump_to_stdout(t_asm *asms, t_list *tokens)
+{
+	t_tk	*tk;
+	int		offset;
+
+	ft_printf("Dumping annotated program on standard output\n");
+	ft_printf("Program size : %d bytes\n", asms->cum_size);
+	ft_printf("Name : %s\n", asms->name);
+	ft_printf("Comment : %s\n", asms->comment);
+	offset = 0;
+	while (tokens)
+	{
+		tk = tokens->content;
+		while (tk)
+		{
+			if (tk->type == INSTRUCTION)
+			{
+				dump_instruction(offset, tk);
+				offset += tk->size;
+			}
+			tk = tk->next;
+		}
+		tokens = tokens->next;
+	}
 }

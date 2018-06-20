@@ -20,7 +20,7 @@
 static void	asm_usage(void)
 {
 	ft_dprintf(2, "Usage: ./asm [-d] [-a] <sourcefile.s>\n");
-	ft_dprintf(2, "\td : output debug information\n");
+	ft_dprintf(2, "\t-d : output debug information\n");
 	ft_dprintf(2, "\t-a : Instead of creating a .cor file, outputs a stripped "
 	"and annotated version of the code to the standard output\n");
 	exit(1);
@@ -74,6 +74,8 @@ t_asm		parse_cli(int ac, char **av)
 			asms.flags |= DUMP_STDOUT;
 		else if (ft_strequ(av[i], "-d"))
 			asms.flags |= DEBUG;
+		else if (ft_strequ(av[i], "-h"))
+			asm_usage();
 		else
 			asms.name = av[i];
 	}

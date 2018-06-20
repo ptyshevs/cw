@@ -41,7 +41,7 @@ void	write_dec_to_hex(int fd_to, int n, unsigned int width)
 ** Write header to file
 */
 
-void	header(int fd_to, t_asm *asms)
+void	write_header(int fd_to, t_asm *asms)
 {
 	size_t			i;
 	static char		block[COMMENT_LENGTH];

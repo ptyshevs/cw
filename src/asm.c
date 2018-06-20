@@ -28,7 +28,10 @@ int main(int ac, char **av)
 	tokens = validate(&asms, asms.lines);
 	if (asms.flags & DEBUG)
 		iter_tokens(tokens);
-	write_file(&asms, tokens);
+	if (asms.flags & DUMP_STDOUT)
+		dump_to_stdout(&asms, tokens);
+	else
+		write_file(&asms, tokens);
 	release_tokens(&tokens);
 	wrap_up(&asms);
 }
