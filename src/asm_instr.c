@@ -23,10 +23,10 @@ const t_op	*find_instruction(t_tk *instr)
 	int		i;
 
 	i = 0;
-	while (op_tab[i].name)
+	while (g_op_tab[i].name)
 	{
-		if (ft_strequ(op_tab[i].name, instr->tk))
-			return (&op_tab[i]);
+		if (ft_strequ(g_op_tab[i].name, instr->tk))
+			return (&g_op_tab[i]);
 		i++;
 	}
 	return (NULL);
