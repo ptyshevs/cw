@@ -38,7 +38,7 @@ void	write_dec_to_hex(int fd_to, int n, unsigned int width)
 }
 
 /*
-** Write bot name to file
+** Write header to file
 */
 
 void	header(int fd_to, t_asm *asms)
@@ -47,8 +47,7 @@ void	header(int fd_to, t_asm *asms)
 	static char		block[COMMENT_LENGTH];
 
 	write_dec_to_hex(fd_to, COREWAR_EXEC_MAGIC, 4); // magic
-	// bot name
-	i = ft_slen(asms->name) - 2;
+	i = ft_slen(asms->name) - 2; // bot name
 	write(fd_to, asms->name + 1, i);
 	write(fd_to, block, PROG_NAME_LENGTH - i);
 	write(fd_to, block, 4); // Padding before bot size
@@ -76,7 +75,8 @@ void	write_instruction(int fd_to, t_tk *instr)
 	{
 		nbr = ft_atoi(instr->type == REGISTER || instr->type == DIRECT ?
 				instr->tk + 1 : instr->tk);
-		write_dec_to_hex(fd_to, nbr, instr->type == DIRECT ? op->label_size : instr->size);
+		write_dec_to_hex(fd_to, nbr, instr->type == DIRECT ?
+									op->label_size : instr->size);
 		instr = instr->next;
 	}
 }

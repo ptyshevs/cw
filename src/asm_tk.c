@@ -93,7 +93,7 @@ t_list	*tokenize(t_list *lines)
 
 	end_placed = FALSE;
 	tokens = NULL;
-	line_count = 0;
+	line_count = lines ? 0 : 1;
 	while (lines && ++line_count)
 	{
 		tk = line_to_tk(&lines, &line_count, &end_placed);

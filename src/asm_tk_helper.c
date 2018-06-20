@@ -58,7 +58,7 @@ t_tk	*create_token(char *tk, int line_pos, int chr_pos, t_type type)
 	else if (type == DIRECT || type == DIRECT_LABEL)
 		token->size = T_DIR;
 	else if (type == INDIRECT || type == INDIRECT_LABEL)
-		token->size = T_IND;
+		token->size = T_DIR;
 	return (token);
 }
 

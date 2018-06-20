@@ -95,7 +95,9 @@ static void		check_arg_type(t_tk *instr, const t_op *op)
 	i = 0;
 	while (i < op->nargs && (tmp = tmp->next))
 	{
-		if (!(tmp->size & op->args[i]))
+		if (!(tmp->size & op->args[i] ||
+				((tmp->type == INDIRECT || tmp->type == INDIRECT_LABEL) &&
+				op->args[i] & T_IND)))
 			parameter_error(instr, tmp, i);
 		tmp = tmp->next;
 		i++;
