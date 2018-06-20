@@ -32,7 +32,7 @@ cw:
 fuzz_asm:
   stage: test
   script:
-    - cd test && python3 cw_fuzzer.py -m asm
+    - cd test && python3 cw_fuzzer.py -m asm -n 1000 --hard
   artifacts:
     when: on_failure
     paths:
