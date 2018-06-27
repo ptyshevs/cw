@@ -10,49 +10,67 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
 #include "cw.h"
 
-int		usage()
+void	create_map(t_bot *bot, int bot_num)
 {
-	write(1, "Usage: ./corewar [-d N -s N -v N | -b --stealth | -n --stealth] [-a] <champion1.cor> <...>\n"
-		"-a        : Prints output from 'aff' (Default is to hide it)\n"
-"#### TEXT OUTPUT MODE ##########################################################\n"
-    "-d N      : Dumps memory after N cycles then exits\n"
-    "-s N      : Runs N cycles, dumps memory, pauses, then repeats\n"
-    "-v N      : Verbosity levels, can be added together to enable several\n"
-    "- 0	   : Show only essentials\n"
-    "- 1	   : Show lives\n"
-    "- 2	   : Show cycles\n"
-    "- 4	   : Show operations (Params are NOT litteral ...)\n"
-    "- 8	   : Show deaths\n"
-    "- 16	   : Show PC movements (Except for jumps)\n"
-"#### BINARY OUTPUT MODE ########################################################\n"
-    "-b        : Binary output mode for corewar.42.fr\n"
-    "--stealth : Hides the real contents of the memory\n"
-"#### NCURSES OUTPUT MODE #######################################################\n"
-    "-n        : Ncurses output mode\n"
-    "--stealth : Hides the real contents of the memory\n"
-"################################################################################\n", 1161);
-	return (0);
-}
+	t_map	*map;
+	int		to_place;
+	unsigned int		i;
+	int		k;
 
-t_bool	check_av(char **argv)
-{
-	(void)argv;
-	return (TRUE);
+	(void)bot;
+	k = 0;
+	map = ft_memalloc(sizeof(t_map));
+	to_place = MEM_SIZE / bot_num;
+	ft_printf("%d\n", bot_num);
+	int m = 0;
+	while (m < bot_num)
+	{
+		i = 0;
+		ft_printf("k: %d\n", k);
+		k = to_place * m++;
+		while (i < bot->size)
+			map->map[k++] = bot->code[i++];
+		ft_printf("%s: %p->%p\n", bot->name, bot, bot->next);
+		bot = bot->next;
+	}
+	k = 0;
+	while (k < MEM_SIZE)
+	{
+		ft_printf("%d|", map->map[k]);
+		if (k && k % 64 == 0)
+			ft_printf("\n");
+		k++;
+	}	
+	ft_printf("\n");
 }
 
 int		main(int ac, char **av)
 {
+	t_bot	*bot;
+	int		i;
+	t_bot	*check;
+
+	bot = init_bot();
+	i = 1;
 	if (ac == 1)
 		return (usage());
-	if (!check_av(av))
+	check = bot;
+	while (av[i])
 	{
-		write(1, "Can't read source file\n", 23);
-		return (1);
+		if (ft_strcmp(av[i], "-n") == 0)
+			ft_panic("Flag detected!\n", 2, 1);
+		if (open(av[i], O_RDONLY) == -1)
+			ft_panic("Can't read source file\n", 2, 1);
+		else
+		{
+			bot->id = i;
+			complete_file(av[i], bot);
+			av[i + 1] ? bot = creat_new_bot(bot) : 0;
+		}
+		i++;
 	}
-	(void)av;
-	ft_printf("it's alive!\n");
+	create_map(check, i - 1);
 	return (0);
 }
