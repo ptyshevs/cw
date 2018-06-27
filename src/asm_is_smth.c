@@ -42,7 +42,7 @@ t_bool	is_label(char *line, int start, int line_nbr)
 {
 	int		i;
 
-	if (line[start] == LABEL_CHAR)
+	if (line[start] == LABEL_CHAR || line[start] == '.' || line[start] == '-')
 		return (FALSE);
 	i = start;
 	while (line[i])
