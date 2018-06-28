@@ -58,7 +58,14 @@ typedef struct	s_proc
 ** File processing
 */
 
-t_line			*read_n_bytes(char *filename, int fd, unsigned int n);
+unsigned int	bytes_to_uint(const t_uc *bytes, int n);
+t_line			*read_n_bytes(const char *filename, int fd, unsigned int n);
+
+unsigned int	parse_magic(char *filename, int fd);
+char			*parse_name(char *filename, int fd);
+unsigned int	parse_size(char *filename, int fd);
+char			*parse_comment(char *filename, int fd);
+void			parse_padding(char *filename, int fd);
 
 
 unsigned char	*read_file(char *file_name);
@@ -108,5 +115,6 @@ void	read_bot(t_map *map, char *filename, unsigned int id);
 */
 
 void	invalid_header(char *filename);
+void	size_error(char *filename);
 
 #endif
