@@ -31,15 +31,17 @@ void		show_usage(void)
 ** Display main info about each bot
 */
 
-void	show_bots(t_bot *bots)
+void	show_bots(t_bot **bots, unsigned int num_bots)
 {
-	while (bots)
+	unsigned int	i;
+
+	i = 0;
+	while (i < 0)
 	{
-		ft_printf("Name: %s\n", bots->header->prog_name);
+		ft_printf("Name: %s\n", bots[i]->header->prog_name);
 		ft_printf("Comment: %s\n", bots->header->comment);
 		ft_printf("Size: %d\n", bots->header->prog_size);
 		ft_printf("Id: %d\n", bots->id);
-		bots = bots->next;
 	}
 }
 
@@ -52,10 +54,11 @@ void	logging(char *brief, char *standard, char *elaborate)
 	static	t_verbosity	verbosity = v_standard;
 	static	int			fd = 1;
 
-	if ((unsigned long)brief == 42U)
+	if ((unsigned long)brief == 42U && verbosity == v_none)
 	{
 		verbosity = (t_verbosity)standard;
 		fd = (int)elaborate;
+		return ;
 	}
 	if (verbosity == v_brief && brief)
 		ft_dprintf(fd, "%s\n", brief);

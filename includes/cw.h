@@ -23,22 +23,26 @@
 # include "ft_tell.h"
 # include <fcntl.h>
 
+typedef struct	s_bot
+{
+	unsigned char	*code;
+	unsigned int	id;
+	t_header		*header;
+}				t_bot;
+
+
 typedef struct	s_map
 {
-	unsigned char map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
+	unsigned char	map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
+	unsigned int	num_players;
+	int				verbosity;
+	t_bot			bots[MAX_PLAYERS];
 }				t_map;
 
 /*
 **
 */
 
-typedef struct	s_bot
-{
-	unsigned char	*code;
-	unsigned int	id;
-	t_header		*header;
-	struct s_bot	*next;
-}				t_bot;
 /*
 ** Process - the same as caret
 */
@@ -72,6 +76,7 @@ unsigned int	check_size(unsigned char *size);
 
 typedef enum	e_verbosity
 {
+	v_none,
 	v_brief,
 	v_standard,
 	v_elaborate
