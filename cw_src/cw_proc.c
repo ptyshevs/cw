@@ -53,8 +53,8 @@ void	add_proc(t_proc **ahead, t_proc *pr)
 
 void	init_procs(t_map *map)
 {
-	t_proc *pr;
-	int		m;
+	t_proc	*pr;
+	t_uint	m;
 
 	m = 0;
 	while (m < map->n_bots)

@@ -21,7 +21,7 @@ void	inhabit_map(t_map *map)
 	t_uint		to_place;
 	t_uint		i;
 	t_uint		k;
-	int			m;
+	t_uint		m;
 
 	to_place = MEM_SIZE / map->n_bots;
 	m = 0;

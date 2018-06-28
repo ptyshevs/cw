@@ -12,6 +12,11 @@
 
 #include "cw.h"
 
+void	update_proc(t_map *map, t_proc *pr)
+{
+	ft_printf("%02X\n", map->map[pr->pc]);
+}
+
 /*
 ** Virtual Arena
 */
@@ -31,6 +36,6 @@ int		main(int ac, char **av)
 		show_map(&map);
 	}
 	show_procs(map.procs);
-
+	update_proc(&map, map.procs);
 	return (0);
 }

@@ -65,7 +65,7 @@ typedef struct	s_map
 {
 	unsigned char	map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
 
-	unsigned int	n_bots;
+	t_uint			n_bots;
 	t_bot			*bots[MAX_PLAYERS];
 
 	unsigned int	n_proc;
