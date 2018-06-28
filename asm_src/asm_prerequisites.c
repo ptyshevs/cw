@@ -33,7 +33,7 @@ static void	asm_usage(void)
 void		open_files(t_asm *a)
 {
 	if ((a->fd_from = open(a->name, O_RDONLY)) == -1)
-		ft_panic(1, "Can't read source file %s", a->name);
+		ft_panic(1, "Can't read source file %s\n", a->name);
 	a->filename = ft_strdup(a->name);
 	a->name = NULL;
 }

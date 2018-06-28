@@ -90,3 +90,27 @@ void	release_tokens(t_list **atokens)
 	}
 	*atokens = NULL;
 }
+
+/*
+** Check if line that contains COMMENT_CHAR or STRANGE_CHAR has this char inside
+** double-quotes. If not, we discard comment completely. If it is, it's part of
+** the string.
+*/
+
+t_bool		is_inside_string(char *line)
+{
+	char	*open_quote;
+	char	*hash;
+	char	*strange;
+	char	*comment;
+
+	if(!(open_quote = ft_strchr(line, '"')))
+		return (FALSE);
+	hash = ft_strchr(line, COMMENT_CHAR);
+	strange = ft_strchr(line, STRANGE_CHAR);
+	if (hash && strange)
+		comment = hash < strange ? hash : strange;
+	else
+		comment = hash ? hash : strange;
+	return (t_bool)(comment > open_quote);
+}

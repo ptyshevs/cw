@@ -25,8 +25,8 @@ t_tk	*cut_indirect_label(char *line, int *start, int line_nbr)
 	i = *start + 1;
 	while (line[i])
 	{
-		if (ft_isspace(line[i]) ||
-				line[i] == SEPARATOR_CHAR || line[i] == DIRECT_CHAR)
+		if (ft_isspace(line[i]) || line[i] == SEPARATOR_CHAR ||
+				line[i] == DIRECT_CHAR || line[i] == LABEL_CHAR)
 			break ;
 		else if (!ft_strchr(LABEL_CHARS, line[i]))
 			lexical_error(line_nbr, i + 1);

@@ -119,6 +119,8 @@ t_tk			*cut_instruction(char *line, int *start, int line_nbr);
 ** Checks
 */
 
+t_bool			is_inside_string(char *line);
+
 t_bool			is_label(char *line, int start, int line_nbr);
 t_bool			is_register(char *line, int start);
 t_bool			is_indirect(char *line, int start);

@@ -21,20 +21,13 @@ void		read_file(int fd_from, t_list **where)
 {
 	char	*iter;
 	char	*tmp;
-	size_t	len;
 
 	iter = NULL;
 	while (ft_sgnl(fd_from, &iter) > 0)
 	{
-		if ((tmp = ft_strchr(iter, COMMENT_CHAR)))
-		{
-			len = tmp - iter;
-			tmp = ft_strnew(len);
-			ft_strncpy(tmp, iter, len);
-			ft_lstappend(where, ft_lstnew(tmp, ft_slen(tmp) + 1));
-			ft_strdel(&tmp);
-		}
-		else if ((tmp = ft_strchr(iter, ';')))
+		if (!(tmp = ft_strchr(iter, COMMENT_CHAR)))
+			tmp = ft_strchr(iter, STRANGE_CHAR);
+		if (tmp && !is_inside_string(iter))
 		{
 			tmp = ft_strtrunc(iter, tmp - iter, FALSE);
 			ft_lstappend(where, ft_lstnew(tmp, ft_slen(tmp) + 1));
