@@ -12,6 +12,7 @@
 
 #include "cw.h"
 
+
 /*
 ** Virtual Arena
 */
@@ -20,12 +21,15 @@ int		main(int ac, char **av)
 {
 	static t_map	map;
 
-	map.log_to = 2;
+	map.log.level = v_none;
+	map.log.to = 1;
 	parse_cli(&map, ac, av);
-	logging((char *)42, (map.v ? (char *)(t_vrb)map.v : (char *)v_standard),
-			(char *)1);
-	show_bots(map.bots, map.num_players);
 	inhabit_map(&map);
-	show_map(&map);
+	init_procs(&map);
+	if (map.log.level > v_none)
+	{
+		show_bots(map.bots, map.n_bots);
+		show_map(&map);
+	}
 	return (0);
 }

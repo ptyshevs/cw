@@ -77,10 +77,10 @@ void			read_bot(t_map *map, char *filename, int id, t_bool id_frm_cli)
 	int		i;
 	t_bot	*bot;
 
-	if (map->num_players == MAX_PLAYERS)
+	if (map->n_bots == MAX_PLAYERS)
 		ft_panic(1, "Too many champions\n");
 	i = 0;
-	while ((unsigned int)i < map->num_players)
+	while ((unsigned int)i < map->n_bots)
 	{
 		if (map->bots[i]->id == id)
 		{
@@ -96,9 +96,9 @@ void			read_bot(t_map *map, char *filename, int id, t_bool id_frm_cli)
 		i++;
 	}
 	bot = create_new_bot(filename, id);
-	log_this(map->log_to, "Bot %s [%d] was created\n",
+	log_this(map, "Bot %s [%d] was created\n",
 			bot->header->name, bot->id);
-	map->bots[map->num_players++] = bot;
+	map->bots[map->n_bots++] = bot;
 }
 
 /*

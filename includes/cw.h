@@ -23,25 +23,15 @@
 # include "ft_tell.h"
 # include <fcntl.h>
 
+typedef unsigned int t_uint;
+
 typedef struct	s_bot
 {
-	int				start_pos;
+	unsigned int	start_pos;
 	unsigned char	*code;
 	int				id;
 	t_header		*header;
 }				t_bot;
-
-
-typedef struct	s_map
-{
-	unsigned char	map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
-	unsigned int	num_players;
-	int				v;  // verbosity level
-	int				log_to;
-	t_bool			viz; // n-curses mode is ON?
-	t_bot			*bots[MAX_PLAYERS];
-}				t_map;
-
 
 /*
 ** Process - the same as caret
@@ -54,11 +44,8 @@ typedef struct	s_proc
 	unsigned int	id; // Number of the player that have created it
 	unsigned int	reg[REG_NUMBER]; // register
 	t_bool			alive;
+	struct s_proc	*next;
 }				t_proc;
-
-/*
-** Logging and debugging
-*/
 
 typedef enum	e_vrb
 {
@@ -68,8 +55,35 @@ typedef enum	e_vrb
 	v_elaborate
 }				t_vrb;
 
-void	logging(char *brief, char *standard, char *elaborate);
-void	log_this(int fd, char *message, ...);
+
+
+typedef struct	s_log
+{
+	t_vrb		level;
+	int			to;
+}				t_log;
+
+typedef struct	s_map
+{
+	unsigned char	map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
+
+	unsigned int	n_bots;
+	t_bot			*bots[MAX_PLAYERS];
+
+	unsigned int	n_proc;
+	t_proc			*procs;
+
+	t_log			log;
+	t_bool			viz; // n-curses mode is ON?
+}				t_map;
+
+/*
+** Logging and debugging
+*/
+
+
+void	logging(t_log *log, char *brief, char *full);
+void	log_this(t_log *log, char *message, ...);
 
 /*
 ** Display information
@@ -103,6 +117,12 @@ void			clean_bot(t_bot **abot);
 */
 
 void	inhabit_map(t_map *map);
+
+/*
+** Operations on proc
+*/
+
+void	init_procs(t_map *map);
 
 /*
 ** Errors

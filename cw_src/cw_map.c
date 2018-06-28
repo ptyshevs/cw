@@ -18,14 +18,14 @@
 
 void	inhabit_map(t_map *map)
 {
-	int				to_place;
-	unsigned int	i;
-	int				k;
-	int				m;
+	t_uint		to_place;
+	t_uint		i;
+	t_uint		k;
+	int			m;
 
-	to_place = MEM_SIZE / map->num_players;
+	to_place = MEM_SIZE / map->n_bots;
 	m = 0;
-	while (m < map->num_players)
+	while (m < map->n_bots)
 	{
 		i = 0;
 		k = to_place * m;
