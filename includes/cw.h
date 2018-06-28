@@ -27,7 +27,7 @@ typedef struct	s_bot
 {
 	int				start_pos;
 	unsigned char	*code;
-	unsigned int	id;
+	int				id;
 	t_header		*header;
 }				t_bot;
 
@@ -37,6 +37,7 @@ typedef struct	s_map
 	unsigned char	map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
 	unsigned int	num_players;
 	int				v;  // verbosity level
+	int				log_to;
 	t_bool			viz; // n-curses mode is ON?
 	t_bot			*bots[MAX_PLAYERS];
 }				t_map;
@@ -68,6 +69,7 @@ typedef enum	e_vrb
 }				t_vrb;
 
 void	logging(char *brief, char *standard, char *elaborate);
+void	log_this(int fd, char *message, ...);
 
 /*
 ** Display information
@@ -83,7 +85,7 @@ void	show_map(t_map *map);
 
 void			parse_cli(t_map *map, int ac, char **av);
 void			read_bot(t_map *map, char *filename,
-						unsigned int id, t_bool id_frm_cli);
+						int id, t_bool id_frm_cli);
 
 unsigned int	bytes_to_uint(const t_uc *bytes, unsigned int n);
 t_line			*read_n_bytes(const char *filename, int fd, unsigned int n);
@@ -94,8 +96,13 @@ unsigned int	parse_size(char *filename, int fd);
 char			*parse_comment(char *filename, int fd);
 void			parse_padding(char *filename, int fd);
 
-t_bot			*create_new_bot(char *filename, unsigned int id);
 void			clean_bot(t_bot **abot);
+
+/*
+** Operations on map
+*/
+
+void	inhabit_map(t_map *map);
 
 /*
 ** Errors

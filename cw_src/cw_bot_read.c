@@ -16,7 +16,7 @@
 ** Read executable code
 */
 
-t_uc	*read_code(char *filename, int fd, unsigned int size)
+t_uc			*read_code(char *filename, int fd, unsigned int size)
 {
 	t_line	*code;
 	t_uc	*code_only;
@@ -33,7 +33,7 @@ t_uc	*read_code(char *filename, int fd, unsigned int size)
 ** Read and validate header
 */
 
-t_header	*read_header(char *filename, int fd)
+t_header		*read_header(char *filename, int fd)
 {
 	t_header		*header;
 	char			*tmp;
@@ -54,7 +54,7 @@ t_header	*read_header(char *filename, int fd)
 ** Create new bot by reading file and validating each section
 */
 
-t_bot			*create_new_bot(char *filename, unsigned int id)
+static t_bot	*create_new_bot(char *filename, int id)
 {
 	t_bot	*bot;
 	int		fd;
@@ -72,7 +72,7 @@ t_bot			*create_new_bot(char *filename, unsigned int id)
 ** Read bot with a provided <id> from <filename> to array of bots in <map>
 */
 
-void	read_bot(t_map *map, char *filename, unsigned int id, t_bool id_frm_cli)
+void			read_bot(t_map *map, char *filename, int id, t_bool id_frm_cli)
 {
 	int		i;
 	t_bot	*bot;
@@ -96,6 +96,8 @@ void	read_bot(t_map *map, char *filename, unsigned int id, t_bool id_frm_cli)
 		i++;
 	}
 	bot = create_new_bot(filename, id);
+	log_this(map->log_to, "Bot %s [%d] was created\n",
+			bot->header->name, bot->id);
 	map->bots[map->num_players++] = bot;
 }
 
@@ -103,7 +105,7 @@ void	read_bot(t_map *map, char *filename, unsigned int id, t_bool id_frm_cli)
 ** Release memory allocated for t_bot structure
 */
 
-void	clean_bot(t_bot **abot)
+void			clean_bot(t_bot **abot)
 {
 	ft_memdel((void **)(*abot)->header);
 	ft_memdel((void **)(*abot)->code);

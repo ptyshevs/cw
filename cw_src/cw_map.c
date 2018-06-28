@@ -1,31 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   corewar.c                                          :+:      :+:    :+:   */
+/*   cw_map.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/09 13:25:34 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/06/09 13:25:56 by ptyshevs         ###   ########.fr       */
+/*   Created: 2018/06/28 20:36:14 by ptyshevs          #+#    #+#             */
+/*   Updated: 2018/06/28 20:36:26 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cw.h"
 
 /*
-** Virtual Arena
+** Inhabit map with bots
 */
 
-int		main(int ac, char **av)
+void	inhabit_map(t_map *map)
 {
-	static t_map	map;
+	int				to_place;
+	unsigned int	i;
+	int				k;
+	int				m;
 
-	map.log_to = 2;
-	parse_cli(&map, ac, av);
-	logging((char *)42, (map.v ? (char *)(t_vrb)map.v : (char *)v_standard),
-			(char *)1);
-	show_bots(map.bots, map.num_players);
-	inhabit_map(&map);
-	show_map(&map);
-	return (0);
+	to_place = MEM_SIZE / map->num_players;
+	m = 0;
+	while (m < map->num_players)
+	{
+		i = 0;
+		k = to_place * m;
+		map->bots[m]->start_pos = k;
+		while (i < map->bots[m]->header->size)
+			map->map[k++] = map->bots[m]->code[i++];
+		m++;
+	}
 }

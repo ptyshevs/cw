@@ -76,29 +76,3 @@ void	show_map(t_map *map)
 			ft_printf("\n");
 	}
 }
-
-/*
-** Log message either to stdout (default behavior) or to fd
-*/
-
-void	logging(char *brief, char *standard, char *elaborate)
-{
-	static	t_vrb	verbosity = v_none;
-	static	int		fd = 1;
-
-	if ((unsigned long)brief == 42U && verbosity == v_none)
-	{
-		verbosity = (t_vrb)standard;
-		fd = (int)elaborate;
-		return ;
-	}
-	if (verbosity == v_brief && brief)
-		ft_dprintf(fd, "%s\n", brief);
-	else if (verbosity == v_standard && standard)
-		ft_dprintf(fd, "%s\n", standard);
-	else if (verbosity == v_elaborate && elaborate)
-		ft_dprintf(fd, "%s\n", elaborate);
-	else
-		ft_panic(1, "Unrecognized verbosity level (%d) or arguments:"
-		"\n%s\n%s\n%s\n", verbosity, brief, standard, elaborate);
-}

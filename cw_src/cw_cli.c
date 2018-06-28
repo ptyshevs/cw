@@ -39,7 +39,7 @@ static void	parse_id(t_map *map, int ac, char **av, int i)
 		ft_panic(1, "Id specified is not a number: %s\n", av[i + 1]);
 	if (i + 2 >= ac)
 		ft_panic(1, "Unexpected end of arguments after specifying id\n");
-	read_bot(map, av[i + 2], (unsigned int)ft_atoi(av[i + 1]), TRUE);
+	read_bot(map, av[i + 2], ft_atoi(av[i + 1]), TRUE);
 }
 
 /*
@@ -48,8 +48,8 @@ static void	parse_id(t_map *map, int ac, char **av, int i)
 
 void		parse_cli(t_map *map, int ac, char **av)
 {
-	int				i;
-	unsigned int	cur_id;
+	int		i;
+	int		cur_id;
 
 	if (ac == (cur_id = 1))
 		show_usage();
@@ -68,6 +68,6 @@ void		parse_cli(t_map *map, int ac, char **av)
 		else if (ft_strequ(av[i], "-z"))
 			map->viz = TRUE;
 		else
-			read_bot(map, av[i], cur_id++, FALSE);
+			read_bot(map, av[i], -cur_id++, FALSE);
 	}
 }
