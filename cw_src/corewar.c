@@ -30,9 +30,9 @@ void	create_map(t_bot *bot, int bot_num)
 		i = 0;
 		ft_printf("k: %d\n", k);
 		k = to_place * m++;
-		while (i < bot->header->prog_size)
+		while (i < bot->header->size)
 			map->map[k++] = bot->code[i++];
-		ft_printf("%s: %p->%p\n", bot->header->prog_name, bot);
+		ft_printf("%s: %p->%p\n", bot->header->name, bot);
 	}
 	k = 0;
 	while (k < MEM_SIZE)
@@ -61,12 +61,10 @@ void	read_bot(t_map *map, char *filename, unsigned int id)
 	{
 		if (map->bots[fd]->id == id)
 			ft_panic(1, "Bot with such id already exists: %s\n",
-					 map->bots[fd]->header->prog_name);
+					 map->bots[fd]->header->name);
 		fd++;
 	}
-	if ((fd = open(filename, O_RDONLY)) == -1) // now fd is file descriptor
-		ft_panic(1, "Can't read source file %s\n", filename);
-	bot = create_new_bot(fd, id);
+	bot = create_new_bot(filename, id);
 	map->bots[map->num_players++] = bot;
 }
 

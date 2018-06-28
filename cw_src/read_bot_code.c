@@ -39,7 +39,7 @@ unsigned char	*find_code(unsigned char *file, int file_size, t_bot * bot)
 	while (i < 3185)
 		code[j++] = file[i++];
 	j = 0;
-	while (j < bot->header->prog_size)
+	while (j < bot->header->size)
 		ft_printf("%d|", code[j++]);
 	ft_printf("\n");
 	return (code);

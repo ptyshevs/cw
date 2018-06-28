@@ -39,13 +39,12 @@ void	show_bots(t_bot **bots, unsigned int num_bots)
 {
 	unsigned int	i;
 
+	ft_printf("Format: Bot <index> [id|size]: comment\n");
 	i = 0;
 	while (i < num_bots)
 	{
-		ft_printf("Name: %s\n", bots[i]->header->prog_name);
-		ft_printf("Comment: %s\n", bots[i]->header->comment);
-		ft_printf("Size: %d\n", bots[i]->header->prog_size);
-		ft_printf("Id: %d\n", bots[i]->id);
+		ft_printf("Bot %s [%d|%u]: %s\n", bots[i]->header->name,
+		bots[i]->id, bots[i]->header->size, bots[i]->header->comment);
 		i++;
 	}
 }

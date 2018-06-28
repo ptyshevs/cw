@@ -35,14 +35,11 @@ typedef struct	s_map
 {
 	unsigned char	map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
 	unsigned int	num_players;
-	int				v;
-	t_bool			viz;
+	int				v;  // verbosity level
+	t_bool			viz; // n-curses mode is ON?
 	t_bot			*bots[MAX_PLAYERS];
 }				t_map;
 
-/*
-**
-*/
 
 /*
 ** Process - the same as caret
@@ -57,11 +54,18 @@ typedef struct	s_proc
 	t_bool			alive;
 }				t_proc;
 
+/*
+** File processing
+*/
+
+t_line			*read_n_bytes(int fd, unsigned int n);
+
+
 unsigned char	*read_file(char *file_name);
 void			complete_file(char *file_name, t_bot *bot);
 char			*find_comment(const unsigned char *file);
 char			*check_comment(const char *comment);
-t_bot			*create_new_bot(int fd, unsigned int id);
+t_bot			*create_new_bot(char *filename, unsigned int id);
 t_bot			*init_bot(void);
 unsigned int	check_magic(unsigned char *magic);
 unsigned char	*find_magic(unsigned char *file);
@@ -89,8 +93,8 @@ void	logging(char *brief, char *standard, char *elaborate);
 ** Display information
 */
 
-void			show_usage(void);
-void			show_bots(t_bot **bots, unsigned int num_bots);
+void	show_usage(void);
+void	show_bots(t_bot **bots, unsigned int num_bots);
 
 /*
 ** CLI parsing and bot reading
@@ -98,5 +102,11 @@ void			show_bots(t_bot **bots, unsigned int num_bots);
 
 void	parse_cli(t_map *map, int ac, char **av);
 void	read_bot(t_map *map, char *filename, unsigned int id);
+
+/*
+** Errors
+*/
+
+void	invalid_header(char *filename);
 
 #endif

@@ -13,28 +13,25 @@
 #include "cw.h"
 #include "op.h"
 
-t_bot			*init_bot(void)
-{
-	t_bot			*bot;
+/*
+** Read <n> bytes from <fd>
+*/
 
-	bot = ft_memalloc(sizeof(t_bot));
-	bot->header = ft_memalloc(sizeof(t_header));
-	return (bot);
+t_line	*read_n_bytes(int fd, unsigned int n)
+{
+	t_line	*res;
+	ssize_t	nread;
+
+	res = init_line();
+	res->str = ft_memalloc(n + 1);
+	if ((nread = read(fd, res->str, n)) == - 1)
+		ft_panic(1, "Error reading file\n");
+	else if (nread < n)
+		ft_panic(1, "File has ended unexpectedly\n");
+	res->len = n;
+	return (res);
 }
 
-unsigned int	check_magic(unsigned char *magic)
-{
-	unsigned int	nbr;
-	int				i;
-
-	nbr = 0;
-	i = 0;
-	while (i < 4)
-		nbr = (nbr << 8) + magic[i++];
-	if (nbr != COREWAR_EXEC_MAGIC)
-		ft_panic(1, "Magic is bad");
-	return (nbr);
-}
 
 unsigned char	*find_magic(unsigned char *file)
 {

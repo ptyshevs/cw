@@ -12,34 +12,65 @@
 
 #include "cw.h"
 
-unsigned char	*read_file(char *file_name)
-{
-	unsigned char	*content;
-	int				fd;
-	size_t			filesize;
+/*
+** Read executable code
+*/
 
-	fd = open(file_name, O_RDONLY);
-	filesize = (size_t)lseek(fd, 0, SEEK_END);
-	lseek(fd, 0, SEEK_SET);
-	content = ft_memalloc(filesize);
-	ft_printf("read returned %d\n", read(fd, content, filesize));
-	return (content);
+unsigned char	*read_code(char *filename, int fd)
+{
+	(void)filename;
+	(void)fd;
+	return (NULL);
 }
 
-void			complete_file(char *file_name, t_bot *bot)
-{
-	unsigned char	*file;
 
-	file = read_file(file_name);
-	bot->header->magic = check_magic(find_magic(file));
-	ft_printf("magic is %0X\n", bot->header->magic);
-	ft_strcpy(bot->header->prog_name, check_name(find_name(file)));
-	ft_printf("name is %s\n", bot->header->prog_name);
-	bot->header->prog_size = check_size(find_size(file));
-	ft_printf("size is %d\n", bot->header->prog_size);
-	ft_strcpy(bot->header->comment, check_comment(find_comment(file)));
-	ft_printf("comment is %s\n", bot->header->comment);
-	bot->code = find_code(file, bot->header->prog_size, bot);
+/*
+** Read 4 bytes of magic, validate the cumulative number
+*/
+
+unsigned int	parse_magic(char *filename, int fd)
+{
+	t_line			*magic;
+	unsigned int	nbr;
+	int				i;
+
+	magic = read_n_bytes(fd, 4);
+	nbr = 0;
+	i = 0;
+	while (i < 4)
+		nbr = (nbr << 8) + magic->str[i++];
+	if (nbr != COREWAR_EXEC_MAGIC)
+		invalid_header(filename);
+	clean_t_line(&magic);
+	return (nbr);
+}
+
+/*
+** Parse bot name, which length is defined by PROG_NAME_LENGTH
+*/
+
+char	*parse_name(char *filename, int fd)
+{
+	(void)filename;
+	(void)fd;
+	return (NULL);
+}
+
+
+/*
+** Read and validate header
+*/
+
+t_header	*read_header(char *filename, int fd)
+{
+	t_header		*header;
+
+	header = ft_memalloc(sizeof(t_header));
+	header->magic = parse_magic(filename, fd);
+	ft_strcpy(header->name, parse_name(filename, fd));
+//	header->size = check_size(find_size(file));
+//	ft_strcpy(header->comment, check_comment(find_comment(file)));
+	return (header);
 }
 
 char			*find_comment(const unsigned char *file)
@@ -81,13 +112,16 @@ char			*check_comment(const char *comment)
 ** Create new bot alongside with validating successfully opened file
 */
 
-t_bot			*create_new_bot(int fd, unsigned int id)
+t_bot			*create_new_bot(char *filename, unsigned int id)
 {
 	t_bot	*bot;
+	int		fd;
 
-	(void)fd;
+	if ((fd = open(filename, O_RDONLY)) == -1) // now fd is file descriptor
+		ft_panic(1, "Can't read source file %s\n", filename);
 	bot = ft_memalloc(sizeof(t_bot));
 	bot->id = id;
-	bot->header = ft_memalloc(sizeof(t_header));
+	bot->header = read_header(filename, fd);
+	bot->code = read_code(filename, fd);
 	return (bot);
 }
