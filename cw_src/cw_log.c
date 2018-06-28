@@ -16,28 +16,28 @@
 ** Log message either to stdout (default behavior) or to fd
 */
 
-void	logging(t_log *log, char *brief, char *full)
+void	logging(t_log log, char *brief, char *full)
 {
-	if (log->level == v_brief && brief)
-		ft_dprintf(log->to, "%s\n", brief);
-	else if (log->level == v_elaborate && full)
-		ft_dprintf(log->to, "%s\n", full);
+	if (log.level == v_brief && brief)
+		ft_dprintf(log.to, "%s\n", brief);
+	else if (log.level == v_elaborate && full)
+		ft_dprintf(log.to, "%s\n", full);
 	else
-		ft_panic(1, "Unrecognized log->level level (%d) or arguments:"
-		"\n%s\n%s\n%s\n", log->level, brief, full);
+		ft_panic(1, "Unrecognized log.level level (%d) or arguments:"
+		"\n%s\n%s\n%s\n", log.level, brief, full);
 }
 
 /*
 ** Log something to <fd>
 */
 
-void	log_this(t_log *log, char *message, ...)
+void	log_this(t_log log, char *message, ...)
 {
 	va_list	ap;
 
-	if (log->level > 0)
+	if (log.level > 0)
 	{
 		va_start(ap, message);
-		ft_vdprintf(log->to, message, ap);
+		ft_vdprintf(log.to, message, ap);
 	}
 }

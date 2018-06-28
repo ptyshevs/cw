@@ -51,10 +51,8 @@ typedef enum	e_vrb
 {
 	v_none,
 	v_brief,
-	v_standard,
-	v_elaborate
+	v_full
 }				t_vrb;
-
 
 
 typedef struct	s_log
@@ -73,6 +71,8 @@ typedef struct	s_map
 	unsigned int	n_proc;
 	t_proc			*procs;
 
+	int				cycles;
+
 	t_log			log;
 	t_bool			viz; // n-curses mode is ON?
 }				t_map;
@@ -82,8 +82,8 @@ typedef struct	s_map
 */
 
 
-void	logging(t_log *log, char *brief, char *full);
-void	log_this(t_log *log, char *message, ...);
+void	logging(t_log log, char *brief, char *full);
+void	log_this(t_log log, char *message, ...);
 
 /*
 ** Display information

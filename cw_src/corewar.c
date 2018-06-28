@@ -12,7 +12,6 @@
 
 #include "cw.h"
 
-
 /*
 ** Virtual Arena
 */
