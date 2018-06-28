@@ -46,29 +46,6 @@ void	create_map(t_bot *bot, int bot_num)
 }
 
 /*
-** Read bot with a provided <id> from <filename> to array of bots in <map>
-*/
-
-void	read_bot(t_map *map, char *filename, unsigned int id)
-{
-	int		fd;
-	t_bot	*bot;
-
-	if (map->num_players == MAX_PLAYERS)
-		ft_panic(1, "Too many champions\n");
-	fd = 0; // using fd as counter
-	while ((unsigned int) fd < map->num_players)
-	{
-		if (map->bots[fd]->id == id)
-			ft_panic(1, "Bot with such id already exists: %s\n",
-					 map->bots[fd]->header->name);
-		fd++;
-	}
-	bot = create_new_bot(filename, id);
-	map->bots[map->num_players++] = bot;
-}
-
-/*
 ** Virtual Arena
 */
 

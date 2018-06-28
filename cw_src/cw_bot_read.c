@@ -24,8 +24,7 @@ t_uc	*read_code(char *filename, int fd, unsigned int size)
 	code = read_n_bytes(filename, fd, size);
 	code_only = code->str;
 	ft_memdel((void **)&code);
-	ssize_t tmp;
-	if ((tmp = read(fd, code_only, 10000)) != 0)
+	if (read(fd, code_only, 1) != 0)
 		size_error(filename);
 	return (code_only);
 }
@@ -52,7 +51,7 @@ t_header	*read_header(char *filename, int fd)
 }
 
 /*
-** Create new bot alongside with validating successfully opened file
+** Create new bot by reading file and validating each section
 */
 
 t_bot			*create_new_bot(char *filename, unsigned int id)
@@ -67,4 +66,43 @@ t_bot			*create_new_bot(char *filename, unsigned int id)
 	bot->header = read_header(filename, fd);
 	bot->code = read_code(filename, fd, bot->header->size);
 	return (bot);
+}
+
+/*
+** Read bot with a provided <id> from <filename> to array of bots in <map>
+*/
+
+void	read_bot(t_map *map, char *filename, unsigned int id, t_bool id_frm_cli)
+{
+	int		i;
+	t_bot	*bot;
+
+	if (map->num_players == MAX_PLAYERS)
+		ft_panic(1, "Too many champions\n");
+	i = 0;
+	while ((unsigned int)i < map->num_players)
+	{
+		if (map->bots[i]->id == id && id_frm_cli)
+			ft_panic(1, "Bot with such id already exists: %s\n",
+					map->bots[i]->header->name);
+		else
+		{
+			id++;
+			i = 0;
+		}
+		i++;
+	}
+	bot = create_new_bot(filename, id);
+	map->bots[map->num_players++] = bot;
+}
+
+/*
+** Release memory allocated for t_bot structure
+*/
+
+void	clean_bot(t_bot **abot)
+{
+	ft_memdel((void **)(*abot)->header);
+	ft_memdel((void **)(*abot)->code);
+	ft_memdel((void **)abot);
 }

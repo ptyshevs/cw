@@ -22,7 +22,7 @@ unsigned int	parse_magic(char *filename, int fd)
 	unsigned int	nbr;
 
 	magic = read_n_bytes(filename, fd, 4);
-	nbr = bytes_to_uint(magic->str, (int)magic->len);
+	nbr = bytes_to_uint(magic->str, (unsigned int)magic->len);
 	if (nbr != COREWAR_EXEC_MAGIC)
 		invalid_header(filename);
 	clean_t_line(&magic);

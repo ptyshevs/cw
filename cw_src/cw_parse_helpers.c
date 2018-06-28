@@ -10,14 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_math.h"
 #include "cw.h"
 
 /*
 ** Collect first <n> bytes from <bytes> into a single number
 */
 
-unsigned int	bytes_to_uint(const t_uc *bytes, int n)
+unsigned int	bytes_to_uint(const t_uc *bytes, unsigned int n)
 {
 	unsigned int	i;
 	unsigned int	nbr;
