@@ -58,7 +58,7 @@ typedef struct	s_proc
 ** File processing
 */
 
-t_line			*read_n_bytes(int fd, unsigned int n);
+t_line			*read_n_bytes(char *filename, int fd, unsigned int n);
 
 
 unsigned char	*read_file(char *file_name);

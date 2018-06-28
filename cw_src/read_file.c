@@ -23,6 +23,22 @@ unsigned char	*read_code(char *filename, int fd)
 	return (NULL);
 }
 
+/*
+** Collect first <n> bytes from <bytes> into a single number
+*/
+
+unsigned int	bytes_to_uint(t_uc *bytes, int n)
+{
+	int				i;
+	unsigned int	nbr;
+
+	nbr = 0;
+	i = 0;
+	while (i < n)
+		nbr = (nbr << 8) + bytes[i++];
+	return (nbr);
+}
+
 
 /*
 ** Read 4 bytes of magic, validate the cumulative number
@@ -32,13 +48,9 @@ unsigned int	parse_magic(char *filename, int fd)
 {
 	t_line			*magic;
 	unsigned int	nbr;
-	int				i;
 
-	magic = read_n_bytes(fd, 4);
-	nbr = 0;
-	i = 0;
-	while (i < 4)
-		nbr = (nbr << 8) + magic->str[i++];
+	magic = read_n_bytes(filename, fd, 4);
+	nbr = bytes_to_uint(magic->str, (int)magic->len);
 	if (nbr != COREWAR_EXEC_MAGIC)
 		invalid_header(filename);
 	clean_t_line(&magic);
@@ -51,11 +63,60 @@ unsigned int	parse_magic(char *filename, int fd)
 
 char	*parse_name(char *filename, int fd)
 {
-	(void)filename;
-	(void)fd;
-	return (NULL);
+	t_line	*name;
+	t_uc	*ret;
+
+	name = read_n_bytes(filename, fd, PROG_NAME_LENGTH);
+	ret = name->str;
+	ft_memdel((void **)&name);
+	return ((char *)ret);
 }
 
+/*
+** Parse bot comment, which length is defined by COMMENT_LENGTH
+*/
+
+char	*parse_comment(char *filename, int fd)
+{
+	t_line	*comment;
+	t_uc	*ret;
+
+	comment = read_n_bytes(filename, fd, PROG_NAME_LENGTH);
+	ret = comment->str;
+	ft_memdel((void **)&comment);
+	return ((char *)ret);
+}
+
+/*
+** Parse bot size, which takes 4 bytes
+*/
+
+unsigned int	parse_size(char *filename, int fd)
+{
+	t_line			*size;
+	unsigned int	nbr;
+
+	size = read_n_bytes(filename, fd, 4);
+	if ((nbr = bytes_to_uint(size->str, 4)) > CHAMP_MAX_SIZE)
+		ft_panic(1, "Champion size is too big (%u)\n", nbr);
+	clean_t_line(&size);
+	return (nbr);
+}
+
+/*
+** Parse padding, which takes 4 bytes and evaluates to 0
+*/
+
+void			parse_padding(char *filename, int fd)
+{
+	t_line			*pad;
+	unsigned int	nbr;
+
+	pad = read_n_bytes(filename, fd, 4);
+	if ((nbr = bytes_to_uint(pad->str, 4)) != 0)
+		ft_panic(1, "Padding is invalid. Should be zero, %d instead.\n", nbr);
+	clean_t_line(&pad);
+}
 
 /*
 ** Read and validate header
@@ -64,12 +125,17 @@ char	*parse_name(char *filename, int fd)
 t_header	*read_header(char *filename, int fd)
 {
 	t_header		*header;
+	char			*tmp;
 
 	header = ft_memalloc(sizeof(t_header));
 	header->magic = parse_magic(filename, fd);
-	ft_strcpy(header->name, parse_name(filename, fd));
-//	header->size = check_size(find_size(file));
-//	ft_strcpy(header->comment, check_comment(find_comment(file)));
+	ft_strcpy(header->name, (tmp = parse_name(filename, fd)));
+	ft_strdel(&tmp);
+	parse_padding(filename, fd);
+	header->size = parse_size(filename, fd);
+	ft_strcpy(header->comment, (tmp = parse_comment(filename, fd)));
+	ft_strdel(&tmp);
+	parse_padding(filename, fd);
 	return (header);
 }
 

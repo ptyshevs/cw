@@ -17,7 +17,7 @@
 ** Read <n> bytes from <fd>
 */
 
-t_line	*read_n_bytes(int fd, unsigned int n)
+t_line	*read_n_bytes(char *filename, int fd, unsigned int n)
 {
 	t_line	*res;
 	ssize_t	nread;
@@ -25,9 +25,9 @@ t_line	*read_n_bytes(int fd, unsigned int n)
 	res = init_line();
 	res->str = ft_memalloc(n + 1);
 	if ((nread = read(fd, res->str, n)) == - 1)
-		ft_panic(1, "Error reading file\n");
+		ft_panic(1, "Error: invalid file %s\n", filename);
 	else if (nread < n)
-		ft_panic(1, "File has ended unexpectedly\n");
+		ft_panic(1, "Error: file %s has ended unexpectedly\n", filename);
 	res->len = n;
 	return (res);
 }

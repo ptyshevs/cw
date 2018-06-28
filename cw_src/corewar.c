@@ -82,7 +82,6 @@ int		main(int ac, char **av)
 	parse_cli(&map, ac, av);
 	logging((char *)42, map.v ? (char *)(t_vrb)map.v : (char *)v_standard, (char *)1);
 	show_bots(map.bots, map.num_players);
-
 //	bot = init_bot();
 //	i = 1;
 //	check = bot;
