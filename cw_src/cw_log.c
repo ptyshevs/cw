@@ -20,7 +20,7 @@ void	logging(t_log log, char *brief, char *full)
 {
 	if (log.level == v_brief && brief)
 		ft_dprintf(log.to, "%s\n", brief);
-	else if (log.level == v_elaborate && full)
+	else if (log.level == v_full && full)
 		ft_dprintf(log.to, "%s\n", full);
 	else
 		ft_panic(1, "Unrecognized log.level level (%d) or arguments:"

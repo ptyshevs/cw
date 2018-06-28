@@ -56,8 +56,8 @@ void	show_bots(t_bot **bots, unsigned int num_bots)
 void	show_map(t_map *map)
 {
 	static char	*colors[4] = {"{green}", "{blue}", "{red}", "{cyan}"};
-	int			i;
-	int			m;
+	t_uint		i;
+	t_uint		m;
 
 	i = 0;
 	while (i < MEM_SIZE)
@@ -74,5 +74,23 @@ void	show_map(t_map *map)
 		ft_printf((i + 1) % 64 ? "%02x " : "%02x", map->map[i]);
 		if (++i % 64 == 0)
 			ft_printf("\n");
+	}
+}
+
+/*
+** Display state of each process in the list
+*/
+
+void	show_procs(t_proc *procs)
+{
+	unsigned int	i;
+
+	ft_printf("Processes output format <index>: <pc> [<id>] is <alive|dead>\n");
+	i = 0;
+	while (procs)
+	{
+		ft_printf(procs->alive ? "%u: %d [%d] is alive\n" :
+				"%u: %d [%d] is dead\n", i++, procs->pc, procs->id);
+		procs = procs->next;
 	}
 }

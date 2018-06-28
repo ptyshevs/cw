@@ -30,5 +30,7 @@ int		main(int ac, char **av)
 		show_bots(map.bots, map.n_bots);
 		show_map(&map);
 	}
+	show_procs(map.procs);
+
 	return (0);
 }

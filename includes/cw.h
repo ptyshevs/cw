@@ -92,6 +92,7 @@ void	log_this(t_log log, char *message, ...);
 void	show_usage(void);
 void	show_bots(t_bot **bots, unsigned int num_bots);
 void	show_map(t_map *map);
+void	show_procs(t_proc *procs);
 
 /*
 ** CLI parsing and bot reading
