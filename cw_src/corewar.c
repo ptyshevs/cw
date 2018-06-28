@@ -14,10 +14,10 @@
 
 void	create_map(t_bot *bot, int bot_num)
 {
-	t_map	*map;
-	int		to_place;
-	unsigned int		i;
-	int		k;
+	t_map			*map;
+	int				to_place;
+	unsigned int	i;
+	int				k;
 
 	(void)bot;
 	k = 0;
@@ -51,40 +51,23 @@ void	create_map(t_bot *bot, int bot_num)
 
 void	read_bot(t_map *map, char *filename, unsigned int id)
 {
+	int		fd;
+	t_bot	*bot;
 
-}
-
-/*
-** Parse Command-line arguments
-*/
-
-void	parse_cli(t_map *map, int ac, char **av)
-{
-	int				i;
-	unsigned int	cur_id;
-
-	if (ac == (cur_id = 1))
-		show_usage();
-	i = 0;
-	while (++i < ac)
+	if (map->num_players == MAX_PLAYERS)
+		ft_panic(1, "Too many champions\n");
+	fd = 0; // using fd as counter
+	while ((unsigned int) fd < map->num_players)
 	{
-		if (ft_strequ(av[i], "-h") || ft_strequ(av[i], "--help"))
-			show_usage();
-		else if (ft_strequ(av[i], "-n"))
-		{
-			if (i + 1 >= ac || !ft_strisnum(av[i + 1], 10))
-				ft_panic(1, "Bad %d-th argument (after -n flag): %s\n", av[i + 1]);
-			read_bot(map, av[i + 2], (unsigned int)ft_atoi(av[i + 2]));
-		}
-		else if (ft_strequ(av[i], "-v"))
-		{
-			if ((map->verbosity = ft_atoi(av[i + 1])) < 1 || map->verbosity > 3)
-				ft_panic(1, "Bad verbosity level. Use 1, 2, or 3. "
-							"Greater means more: %s\n", av[i + 1]);
-		}
-		else
-			read_bot(map, av[i], cur_id++);
+		if (map->bots[fd]->id == id)
+			ft_panic(1, "Bot with such id already exists: %s\n",
+					 map->bots[fd]->header->prog_name);
+		fd++;
 	}
+	if ((fd = open(filename, O_RDONLY)) == -1) // now fd is file descriptor
+		ft_panic(1, "Can't read source file %s\n", filename);
+	bot = create_new_bot(fd, id);
+	map->bots[map->num_players++] = bot;
 }
 
 /*
@@ -94,32 +77,31 @@ void	parse_cli(t_map *map, int ac, char **av)
 int		main(int ac, char **av)
 {
 	static t_map	map;
-	t_bot			*bot;
-	unsigned int	i;
-	t_bot			*check;
+//	t_bot			*bot;
+//	unsigned int	i;
+//	t_bot			*check;
 
 	parse_cli(&map, ac, av);
-	logging((char *) 42, (char *)(map.verbosity ?
-			(t_verbosity)map.verbosity : v_standard), (char *)1);
-	bot = init_bot();
-	i = 1;
-	if (ac == 1)
-		show_usage();
-	check = bot;
-	while (av[i])
-	{
-		if (ft_strcmp(av[i], "-n") == 0)
-			ft_panic(1, "Flag detected!\n");
-		if (open(av[i], O_RDONLY) == -1)
-			ft_panic(1, "Can't read source file\n");
-		else
-		{
-			bot->id = i;
-			complete_file(av[i], bot);
-			av[i + 1] ? bot = creat_new_bot(bot) : 0;
-		}
-		i++;
-	}
-	create_map(check, i - 1);
+	logging((char *)42, map.v ? (char *)(t_vrb)map.v : (char *)v_standard, (char *)1);
+	show_bots(map.bots, map.num_players);
+
+//	bot = init_bot();
+//	i = 1;
+//	check = bot;
+//	while (av[i])
+//	{
+//		if (ft_strcmp(av[i], "-n") == 0)
+//			ft_panic(1, "Flag detected!\n");
+//		if (open(av[i], O_RDONLY) == -1)
+//			ft_panic(1, "Can't read source file\n");
+//		else
+//		{
+//			bot->id = i;
+//			complete_file(av[i], bot);
+//			av[i + 1] ? bot = creat_new_bot(bot) : 0;
+//		}
+//		i++;
+//	}
+//	create_map(check, i - 1);
 	return (0);
 }

@@ -15,15 +15,19 @@
 /*
 ** Display usage
 **
-** Invoked when either no arguments were provided, or there is -h option
+** Invoked when either no arguments were provided, or there is -h|--help option
 ** specified.
 */
 
 void		show_usage(void)
 {
-	ft_printf("Usage: ./corewar [-dump nbr_cycles] [-h|--help]"
-			"[-v <1|2|3>]"
-			"[[-n number] champion1.cor] ...\n");
+	ft_printf("Usage: ./corewar [-d|--dump nbr_cycles] [-h|--help] "
+			"[-v|--verbose <1|2|3>] [-z] "
+			"[[-n number] champion1.cor] ...\n\n");
+	ft_printf("  -d --dump\tDump memory after N cycles then exits\n");
+	ft_printf("  -h --help\tDisplay usage\n");
+	ft_printf("  -v --verbose\tSet level of logger wordiness\n");
+	ft_printf("  -z\t\tVizualization mode\n");
 	exit(1);
 }
 
@@ -36,12 +40,13 @@ void	show_bots(t_bot **bots, unsigned int num_bots)
 	unsigned int	i;
 
 	i = 0;
-	while (i < 0)
+	while (i < num_bots)
 	{
 		ft_printf("Name: %s\n", bots[i]->header->prog_name);
-		ft_printf("Comment: %s\n", bots->header->comment);
-		ft_printf("Size: %d\n", bots->header->prog_size);
-		ft_printf("Id: %d\n", bots->id);
+		ft_printf("Comment: %s\n", bots[i]->header->comment);
+		ft_printf("Size: %d\n", bots[i]->header->prog_size);
+		ft_printf("Id: %d\n", bots[i]->id);
+		i++;
 	}
 }
 
@@ -51,12 +56,12 @@ void	show_bots(t_bot **bots, unsigned int num_bots)
 
 void	logging(char *brief, char *standard, char *elaborate)
 {
-	static	t_verbosity	verbosity = v_standard;
-	static	int			fd = 1;
+	static	t_vrb	verbosity = v_none;
+	static	int		fd = 1;
 
 	if ((unsigned long)brief == 42U && verbosity == v_none)
 	{
-		verbosity = (t_verbosity)standard;
+		verbosity = (t_vrb)standard;
 		fd = (int)elaborate;
 		return ;
 	}

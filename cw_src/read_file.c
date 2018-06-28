@@ -77,11 +77,17 @@ char			*check_comment(const char *comment)
 	return (ret);
 }
 
-t_bot			*creat_new_bot(t_bot *bot)
+/*
+** Create new bot alongside with validating successfully opened file
+*/
+
+t_bot			*create_new_bot(int fd, unsigned int id)
 {
-	while (bot->next)
-		bot = bot->next;
-	bot->next = ft_memalloc(sizeof(t_bot));
-	bot->next->header = ft_memalloc(sizeof(t_header));
-	return (bot->next);
+	t_bot	*bot;
+
+	(void)fd;
+	bot = ft_memalloc(sizeof(t_bot));
+	bot->id = id;
+	bot->header = ft_memalloc(sizeof(t_header));
+	return (bot);
 }
