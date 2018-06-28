@@ -82,13 +82,16 @@ void	read_bot(t_map *map, char *filename, unsigned int id, t_bool id_frm_cli)
 	i = 0;
 	while ((unsigned int)i < map->num_players)
 	{
-		if (map->bots[i]->id == id && id_frm_cli)
-			ft_panic(1, "Bot with such id already exists: %s\n",
-					map->bots[i]->header->name);
-		else
+		if (map->bots[i]->id == id)
 		{
-			id++;
-			i = 0;
+			if (id_frm_cli)
+				ft_panic(1, "Bot with such id=%d already exists\n",
+					map->bots[i]->id);
+			else
+			{
+				id++;
+				i = 0;
+			}
 		}
 		i++;
 	}

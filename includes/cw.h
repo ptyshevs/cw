@@ -25,6 +25,7 @@
 
 typedef struct	s_bot
 {
+	int				start_pos;
 	unsigned char	*code;
 	unsigned int	id;
 	t_header		*header;
@@ -74,6 +75,7 @@ void	logging(char *brief, char *standard, char *elaborate);
 
 void	show_usage(void);
 void	show_bots(t_bot **bots, unsigned int num_bots);
+void	show_map(t_map *map);
 
 /*
 ** CLI parsing and bot reading

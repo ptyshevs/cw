@@ -50,6 +50,34 @@ void	show_bots(t_bot **bots, unsigned int num_bots)
 }
 
 /*
+** Display map
+*/
+
+void	show_map(t_map *map)
+{
+	static char	*colors[4] = {"{green}", "{blue}", "{red}", "{cyan}"};
+	int			i;
+	int			m;
+
+	i = 0;
+	while (i < MEM_SIZE)
+	{
+		m = 0;
+		while (m < map->num_players)
+		{
+			if (i == map->bots[m]->start_pos)
+				ft_printf(colors[m]);
+			else if (i == map->bots[m]->start_pos + map->bots[m]->header->size)
+				ft_printf("{nc}");
+			m++;
+		}
+		ft_printf((i + 1) % 64 ? "%02x " : "%02x", map->map[i]);
+		if (++i % 64 == 0)
+			ft_printf("\n");
+	}
+}
+
+/*
 ** Log message either to stdout (default behavior) or to fd
 */
 

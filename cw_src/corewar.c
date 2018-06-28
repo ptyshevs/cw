@@ -12,37 +12,28 @@
 
 #include "cw.h"
 
-void	create_map(t_bot *bot, int bot_num)
+/*
+** Inhabit map with bots
+*/
+
+void	inhabit_map(t_map *map)
 {
-	t_map			*map;
 	int				to_place;
 	unsigned int	i;
 	int				k;
+	int				m;
 
-	(void)bot;
-	k = 0;
-	map = ft_memalloc(sizeof(t_map));
-	to_place = MEM_SIZE / bot_num;
-	ft_printf("%d\n", bot_num);
-	int m = 0;
-	while (m < bot_num)
+	to_place = MEM_SIZE / map->num_players;
+	m = 0;
+	while (m < map->num_players)
 	{
 		i = 0;
-		ft_printf("k: %d\n", k);
-		k = to_place * m++;
-		while (i < bot->header->size)
-			map->map[k++] = bot->code[i++];
-		ft_printf("%s: %p->%p\n", bot->header->name, bot);
+		k = to_place * m;
+		map->bots[m]->start_pos = k;
+		while (i < map->bots[m]->header->size)
+			map->map[k++] = map->bots[m]->code[i++];
+		m++;
 	}
-	k = 0;
-	while (k < MEM_SIZE)
-	{
-		ft_printf("%d|", map->map[k]);
-		if (k && k % 64 == 0)
-			ft_printf("\n");
-		k++;
-	}	
-	ft_printf("\n");
 }
 
 /*
@@ -59,6 +50,8 @@ int		main(int ac, char **av)
 	parse_cli(&map, ac, av);
 	logging((char *)42, map.v ? (char *)(t_vrb)map.v : (char *)v_standard, (char *)1);
 	show_bots(map.bots, map.num_players);
+	inhabit_map(&map);
+	show_map(&map);
 //	bot = init_bot();
 //	i = 1;
 //	check = bot;
