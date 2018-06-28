@@ -79,7 +79,7 @@ t_tk		*cut_string(t_list **lines, int *start, int *line_nbr)
 	else
 		tmp = cut_substring(&(tmp[*start]), *lines);
 	if (!tmp)
-		error(1, "No closing bracket found for STRING token [%d:%d] %s\n",
+		ft_panic(1, "No closing bracket found for STRING token [%d:%d] %s\n",
 				*line_nbr, *start, &(((char *)(*lines)->content)[*start]));
 	cnt_lines = ft_strcnt(tmp, '\n');
 	*line_nbr += cnt_lines;

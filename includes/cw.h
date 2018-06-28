@@ -54,8 +54,8 @@ typedef struct	s_proc
 
 unsigned char	*read_file(char *file_name);
 void			complete_file(char *file_name, t_bot *bot);
-char			*find_comment(unsigned char *file);
-char			*check_comment(char *comment);
+char			*find_comment(const unsigned char *file);
+char			*check_comment(const char *comment);
 t_bot			*creat_new_bot(t_bot *bot);
 t_bot			*init_bot(void);
 unsigned int	check_magic(unsigned char *magic);
@@ -77,7 +77,7 @@ typedef enum	e_verbosity
 	v_elaborate
 }				t_verbosity;
 
-void	log(char *brief, char *standard, char *elaborate);
+void	logging(char *brief, char *standard, char *elaborate);
 
 /*
 ** Display information

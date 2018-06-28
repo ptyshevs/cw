@@ -32,7 +32,7 @@ unsigned int	check_magic(unsigned char *magic)
 	while (i < 4)
 		nbr = (nbr << 8) + magic[i++];
 	if (nbr != COREWAR_EXEC_MAGIC)
-		ft_panic("Magic is bad", 2, 1);
+		ft_panic(1, "Magic is bad");
 	return (nbr);
 }
 

@@ -60,9 +60,9 @@ int		main(int ac, char **av)
 	while (av[i])
 	{
 		if (ft_strcmp(av[i], "-n") == 0)
-			ft_panic("Flag detected!\n", 2, 1);
+			ft_panic(1, "Flag detected!\n");
 		if (open(av[i], O_RDONLY) == -1)
-			ft_panic("Can't read source file\n", 2, 1);
+			ft_panic(1, "Can't read source file\n");
 		else
 		{
 			bot->id = i;

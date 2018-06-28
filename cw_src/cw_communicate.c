@@ -47,7 +47,7 @@ void	show_bots(t_bot *bots)
 ** Log message either to stdout (default behavior) or to fd
 */
 
-void	log(char *brief, char *standard, char *elaborate)
+void	logging(char *brief, char *standard, char *elaborate)
 {
 	static	t_verbosity	verbosity = v_standard;
 	static	int			fd = 1;

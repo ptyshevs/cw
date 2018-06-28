@@ -58,11 +58,13 @@ void	check_duplicates(t_list *tokens)
 void	check_lengths(t_asm *asms)
 {
 	if (ft_slen(asms->name) - 2 > PROG_NAME_LENGTH)
-		error(1, "Champion name too long (Max length %d)\n", PROG_NAME_LENGTH);
+		ft_panic(1, "Champion name too long (Max length %d)\n",
+				PROG_NAME_LENGTH);
 	else if (ft_slen(asms->comment) - 2 > COMMENT_LENGTH)
-		error(1, "Champion comment too long (Max length %d)\n", COMMENT_LENGTH);
+		ft_panic(1, "Champion comment too long (Max length %d)\n",
+				COMMENT_LENGTH);
 	else if (asms->cum_size > CHAMP_MAX_SIZE)
-		error(1, "Champion size is too big (Max size %d)\n", CHAMP_MAX_SIZE);
+		ft_panic(1, "Champion size is too big (Max size %d)\n", CHAMP_MAX_SIZE);
 }
 
 /*

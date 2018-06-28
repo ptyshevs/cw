@@ -35,7 +35,13 @@ logging.
 
 There should be globally-accessible logging variable with various levels of
 verbosity. Level dictates the appropriate message to display, while in logging
-function each argument corresponds to the level of verbosity.
+function each argument corresponds to the level of verbosity. We can get rid of
+global variables by using static variables and special initialization step.
+
+## Vizualization
+
+Visualization should also be tightly integrated into VM operationing. Moreover,
+it should be running in separate, parallel thread.
 
 ## Usage
 

@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "cw.h"
-#include "op.h"
 
 unsigned char	*read_file(char *file_name)
 {
@@ -20,7 +19,7 @@ unsigned char	*read_file(char *file_name)
 	size_t			filesize;
 
 	fd = open(file_name, O_RDONLY);
-	filesize = lseek(fd, 0, SEEK_END);
+	filesize = (size_t)lseek(fd, 0, SEEK_END);
 	lseek(fd, 0, SEEK_SET);
 	content = ft_memalloc(filesize);
 	ft_printf("read returned %d\n", read(fd, content, filesize));
@@ -34,16 +33,16 @@ void			complete_file(char *file_name, t_bot *bot)
 	file = read_file(file_name);
 	bot->header->magic = check_magic(find_magic(file));
 	ft_printf("magic is %0X\n", bot->header->magic);
-	bot->name = check_name(find_name(file));
-	ft_printf("name is %s\n", bot->name);
-	bot->size = check_size(find_size(file));
-	ft_printf("size is %d\n", bot->size);
-	bot->comment = check_comment(find_comment(file));
-	ft_printf("comment is %s\n", bot->comment);
-	bot->code = find_code(file, bot->size, bot);
+	ft_strcpy(bot->header->prog_name, check_name(find_name(file)));
+	ft_printf("name is %s\n", bot->header->prog_name);
+	bot->header->prog_size = check_size(find_size(file));
+	ft_printf("size is %d\n", bot->header->prog_size);
+	ft_strcpy(bot->header->comment, check_comment(find_comment(file)));
+	ft_printf("comment is %s\n", bot->header->comment);
+	bot->code = find_code(file, bot->header->prog_size, bot);
 }
 
-char			*find_comment(unsigned char *file)
+char			*find_comment(const unsigned char *file)
 {
 	char			*comment;
 	int				i;
@@ -58,7 +57,7 @@ char			*find_comment(unsigned char *file)
 	return (comment);
 }
 
-char			*check_comment(char *comment)
+char			*check_comment(const char *comment)
 {
 	unsigned int	nbr;
 	char			*ret;
