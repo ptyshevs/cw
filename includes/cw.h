@@ -15,18 +15,19 @@
 
 # include "op.h"
 # include "libft.h"
-#include "ft_printf.h"
-#include "ft_gnls.h"
-#include "ft_memory.h"
-#include "ft_str.h"
-#include "ft_strnum.h"
-#include "ft_tell.h"
-#include <fcntl.h>
+# include "ft_printf.h"
+# include "ft_gnls.h"
+# include "ft_memory.h"
+# include "ft_str.h"
+# include "ft_strnum.h"
+# include "ft_tell.h"
+# include <fcntl.h>
 
 typedef struct	s_map
 {
 	unsigned char map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
 }				t_map;
+
 
 typedef struct	s_bot
 {
@@ -36,7 +37,7 @@ typedef struct	s_bot
 	unsigned char	*code;
 	unsigned int	size;
 	unsigned int	id;
-	struct header_s *header;
+	struct s_header	*header;
 }				t_bot;
 /*
 ** Process - the same as caret
@@ -63,7 +64,7 @@ unsigned char	*find_magic(unsigned char *file);
 char			*find_name(unsigned char *file);
 char			*check_name(char *name);
 unsigned char	*find_size(unsigned char *file);
-unsigned char	*find_code(unsigned char *file);
+unsigned char	*find_code(unsigned char *file, int file_size, t_bot *bot);
 unsigned int	check_size(unsigned char *size);
 
 #endif

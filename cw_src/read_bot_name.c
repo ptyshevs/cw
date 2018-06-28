@@ -11,13 +11,14 @@
 /* ************************************************************************** */
 
 #include "cw.h"
+#include "op.h"
 
 t_bot			*init_bot(void)
 {
 	t_bot			*bot;
 
 	bot = ft_memalloc(sizeof(t_bot));
-	bot->header = ft_memalloc(sizeof(header_t));
+	bot->header = ft_memalloc(sizeof(t_header));
 	return (bot);
 }
 

@@ -32,6 +32,7 @@ unsigned char	*find_code(unsigned char *file, int file_size, t_bot * bot)
 	unsigned int	i;
 	unsigned int	j;
 
+	(void)file_size;
 	code = ft_memalloc(sizeof(char) * 3185);
 	i = 2191;
 	j = 0;

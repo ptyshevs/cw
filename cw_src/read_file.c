@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cw.h"
+#include "op.h"
 
 unsigned char	*read_file(char *file_name)
 {
@@ -39,7 +40,7 @@ void			complete_file(char *file_name, t_bot *bot)
 	ft_printf("size is %d\n", bot->size);
 	bot->comment = check_comment(find_comment(file));
 	ft_printf("comment is %s\n", bot->comment);
-	bot->code = find_code(file);
+	bot->code = find_code(file, bot->size, bot);
 }
 
 char			*find_comment(unsigned char *file)
@@ -82,6 +83,6 @@ t_bot			*creat_new_bot(t_bot *bot)
 	while (bot->next)
 		bot = bot->next;
 	bot->next = ft_memalloc(sizeof(t_bot));
-	bot->next->header = ft_memalloc(sizeof(header_t));
+	bot->next->header = ft_memalloc(sizeof(t_header));
 	return (bot->next);
 }
