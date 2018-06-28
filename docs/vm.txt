@@ -3,3 +3,61 @@ CLI interface: ./corewar [-dump nbr_cycles] [[-n number] champion1.cor] ...
 If two instructions should be executed in the same cycle, they are processed in
 the decreasing order (t_proc.id). It means that the latest ("right-most" in
 CLI argument array) champion plays first.
+
+As I see it, algorithm looks like this:
+1. Bots reading
+  - Parse CLI arguments
+  - For each file:
+    - Assign id (order in argv or -n flag) to bot->id
+    - Parsing and validation:
+      - Validate magic
+      - Read name, comment, and size while validating NULL paddings
+        into t_header
+      * What if file end unexpectedly?
+      - Read executable code to bot->code
+  - Put bots on the map evenly (depends on the number of bots playing the game)
+  - For each bot:
+    - Add process at the beginning of it's executable code (it means we should store where it begins)
+2. Game loop
+  - record CYCLES_TO_DIE, CYCLE_DELTA, and other constants into game/map struct
+  - while cycles > 0 or any(bots) is alive:
+    - for each process (t_proc):
+      - read instruction and validate it
+      - if instruction is valid:
+        - execute instruction
+        * if instruction is fork, copy proc->id to the child process
+      - otherwise, jump to the next instruction
+
+Apart from this, there should be tight relationship with visualization and
+logging.
+
+## Logging
+
+There should be globally-accessible logging variable with various levels of
+verbosity. Level dictates the appropriate message to display, while in logging
+function each argument corresponds to the level of verbosity.
+
+## Usage
+
+This is copy of full usage of original corewar binary:
+
+Usage: ./corewar [-d N -s N -v N | -b --stealth | -n --stealth] \
+		[-a] <champion1.cor> <...>
+		"-a        : Prints output from 'aff' (Default is to hide it)
+"#### TEXT OUTPUT MODE ####################################################
+	"-d N      : Dumps memory after N cycles then exits
+	"-s N      : Runs N cycles, dumps memory, pauses, then repeats
+	"-v N      : Verbosity levels, can be added together to enable several
+	"- 0	   : Show only essentials
+	"- 1	   : Show lives
+	"- 2	   : Show cycles
+	"- 4	   : Show operations (Params are NOT litteral ...)
+	"- 8	   : Show deaths
+	"- 16	   : Show PC movements (Except for jumps)
+#### BINARY OUTPUT MODE ###################################################
+	"-b        : Binary output mode for corewar.42.fr
+	"--stealth : Hides the real contents of the memory
+#### NCURSES OUTPUT MODE ##################################################
+	"-n        : Ncurses output mode
+	"--stealth : Hides the real contents of the memory
+###########################################################################

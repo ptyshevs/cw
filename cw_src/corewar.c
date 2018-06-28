@@ -30,9 +30,9 @@ void	create_map(t_bot *bot, int bot_num)
 		i = 0;
 		ft_printf("k: %d\n", k);
 		k = to_place * m++;
-		while (i < bot->size)
+		while (i < bot->header->prog_size)
 			map->map[k++] = bot->code[i++];
-		ft_printf("%s: %p->%p\n", bot->name, bot, bot->next);
+		ft_printf("%s: %p->%p\n", bot->header->prog_name, bot, bot->next);
 		bot = bot->next;
 	}
 	k = 0;
@@ -48,14 +48,14 @@ void	create_map(t_bot *bot, int bot_num)
 
 int		main(int ac, char **av)
 {
-	t_bot	*bot;
-	int		i;
-	t_bot	*check;
+	t_bot			*bot;
+	unsigned int	i;
+	t_bot			*check;
 
 	bot = init_bot();
 	i = 1;
 	if (ac == 1)
-		return (usage());
+		show_usage();
 	check = bot;
 	while (av[i])
 	{

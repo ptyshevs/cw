@@ -35,9 +35,7 @@ typedef enum	e_fl
 typedef struct	s_asm
 {
 	t_fl			flags;
-
 	t_list			*lines;
-
 	char			*name;
 	char			*comment;
 	unsigned int	cum_size;

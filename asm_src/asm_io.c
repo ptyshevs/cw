@@ -73,7 +73,7 @@ void		write_file(t_asm *a, t_list *tokens)
 
 	new_filename = change_extension(a->filename, ".s", ".cor");
 	if ((fd_to = open(new_filename, O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
-		ft_panic(ft_sprintf("Cant write champion to %s", new_filename), 2, 1);
+		ft_panic(1, "Can't write champion to %s\n", new_filename);
 	write_header(fd_to, a);
 	write_executable_code(fd_to, tokens);
 	ft_printf("Writing output program to %s\n", new_filename);

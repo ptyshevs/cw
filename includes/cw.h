@@ -28,16 +28,16 @@ typedef struct	s_map
 	unsigned char map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
 }				t_map;
 
+/*
+**
+*/
 
 typedef struct	s_bot
 {
-	char			*name;
-	char			*comment;
-	struct s_bot	*next;
 	unsigned char	*code;
-	unsigned int	size;
 	unsigned int	id;
-	struct s_header	*header;
+	t_header		*header;
+	struct s_bot	*next;
 }				t_bot;
 /*
 ** Process - the same as caret
@@ -52,7 +52,6 @@ typedef struct	s_proc
 	t_bool			alive;
 }				t_proc;
 
-int				usage(void);
 unsigned char	*read_file(char *file_name);
 void			complete_file(char *file_name, t_bot *bot);
 char			*find_comment(unsigned char *file);
@@ -66,5 +65,25 @@ char			*check_name(char *name);
 unsigned char	*find_size(unsigned char *file);
 unsigned char	*find_code(unsigned char *file, int file_size, t_bot *bot);
 unsigned int	check_size(unsigned char *size);
+
+/*
+** Logging and debugging
+*/
+
+typedef enum	e_verbosity
+{
+	v_brief,
+	v_standard,
+	v_elaborate
+}				t_verbosity;
+
+void	log(char *brief, char *standard, char *elaborate);
+
+/*
+** Display information
+*/
+
+void			show_usage(void);
+void			show_bots(t_bot *bots);
 
 #endif
