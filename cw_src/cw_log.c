@@ -41,3 +41,21 @@ void	log_this(t_log log, char *message, ...)
 		ft_vdprintf(log.to, message, ap);
 	}
 }
+
+/*
+** Log something that has happened on the map, adding message to it
+*/
+
+void	log_map(t_map *map, t_proc *pr, char *message, ...)
+{
+	va_list	ap;
+
+	if (map->log.level > v_none)
+	{
+		va_start(ap, message);
+		ft_dprintf(map->log.to, "%u %02x %s: ", pr->pc + 1,
+					get_map(map, pr->pc), pr->cur_ins->name);
+		ft_vdprintf(map->log.to, message, ap);
+		ft_dprintf(map->log.to, "\n");
+	}
+}

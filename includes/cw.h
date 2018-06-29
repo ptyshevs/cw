@@ -147,6 +147,7 @@ typedef struct	s_map
 */
 
 void	logging(t_log log, char *brief, char *full);
+void	log_map(t_map *map, t_proc *pr, char *message, ...);
 void	log_this(t_log log, char *message, ...);
 
 /*
@@ -183,6 +184,9 @@ void			clean_bot(t_bot **abot);
 */
 
 void	inhabit_map(t_map *map);
+t_uint	get_map(t_map *map, t_uint n);
+void	set_map(t_map *map, t_uint n, t_uc v);
+void	move_proc(t_proc *pr, t_uint n);
 
 /*
 ** Operations on processes
@@ -195,6 +199,7 @@ void	init_procs(t_map *map);
 */
 
 t_arg	*codage_to_args(const t_op *instr, t_uint codage);
+t_arg	*instr_to_args(const t_op *instr);
 t_bool	args_are_valid(const t_op *instr, t_arg *args);
 t_uint	args_to_bytes(const t_op *instr, t_arg *args);
 

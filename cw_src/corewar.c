@@ -25,34 +25,6 @@ const t_op	*find_instr(t_uint op)
 }
 
 /*
-** Move process <pr> <n> cells forward on a circular memory.
-*/
-
-void	move_proc(t_proc *pr, t_uint n)
-{
-	pr->pc = (pr->pc + n) % MEM_SIZE;
-}
-
-/*
-** Get value from circular map
-*/
-
-t_uint	get_map(t_map *map, t_uint n)
-{
-	return (map->map[n % MEM_SIZE]);
-}
-
-/*
-** Set value to circular map
-*/
-
-void	set_map(t_map *map, t_uint n, t_uc v)
-{
-	map->map[n % MEM_SIZE] = v;
-}
-
-
-/*
 ** After the instruction was executed, clean-up proc fields
 */
 
@@ -64,22 +36,25 @@ void	wrap_up(t_proc *pr)
 	pr->cur_cycle = 0;
 }
 
+
 /*
 ** Activate function if charging period has ended.
+** Arguments are read regardless of whether there is codage or not
 */
 
 void	activate_instr(t_map *map, t_proc *pr)
 {
 	if (pr->cur_ins->codage)
-	{
 		pr->cur_args = codage_to_args(pr->cur_ins, get_map(map, pr->pc + 1));
-		if (!args_are_valid(pr->cur_ins, pr->cur_args))
-		{
-			ft_printf("Arguments are not valid\n");
-			move_proc(pr, 1);
-		}
-		show_args(pr->cur_args);
+	else
+		pr->cur_args = instr_to_args(pr->cur_ins);
+	if (!args_are_valid(pr->cur_ins, pr->cur_args))
+	{
+		log_map(map, pr, "Invalid arguments for instruction");
+		move_proc(pr, 1);
 	}
+	show_args(pr->cur_args);
+	// actual instruction activation should be here
 }
 
 /*
@@ -91,13 +66,17 @@ void	exec(t_map *map, t_proc *pr)
 	if (!pr->cur_ins) // read instruction and start charging
 	{
 		if (!(pr->cur_ins = find_instr(map->map[pr->pc]))) // invalid instruction
-			move_proc(pr, 1); // move forward
+			return move_proc(pr, 1); // move forward
 	}
 	// charging and activation phase
 	if (pr->cur_cycle < pr->cur_ins->cycles) // charge
+	{
 		pr->cur_cycle++;
+		log_map(map, pr, "Charging %d/%d", pr->cur_cycle, pr->cur_ins->cycles);
+	}
 	else // activate and clean-up
 	{
+		log_map(map, pr, "Activating function");
 		activate_instr(map, pr);
 		wrap_up(pr);
 	}
@@ -122,6 +101,9 @@ int		main(int ac, char **av)
 //		show_map(&map);
 	}
 //	show_procs(map.procs);
-	exec(&map, map.procs);
+	for (int i = 0; i < 100; ++i)
+	{
+		exec(&map, map.procs);
+	}
 	return (0);
 }

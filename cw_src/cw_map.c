@@ -35,3 +35,31 @@ void	inhabit_map(t_map *map)
 		m++;
 	}
 }
+
+
+/*
+** Move process <pr> <n> cells forward on a map.
+*/
+
+void	move_proc(t_proc *pr, t_uint n)
+{
+	pr->pc = (pr->pc + n) % MEM_SIZE;
+}
+
+/*
+** Get value from circular map
+*/
+
+t_uint	get_map(t_map *map, t_uint n)
+{
+	return (map->map[n % MEM_SIZE]);
+}
+
+/*
+** Set value to circular map
+*/
+
+void	set_map(t_map *map, t_uint n, t_uc v)
+{
+	map->map[n % MEM_SIZE] = v;
+}

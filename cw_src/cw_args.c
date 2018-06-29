@@ -55,6 +55,36 @@ t_arg	*codage_to_args(const t_op *instr, t_uint codage)
 }
 
 /*
+** Unambiguously extend instruction without codage
+*/
+
+t_arg	*instr_to_args(const t_op *instr)
+{
+	t_arg	*args;
+	t_uint	i;
+
+	args = ft_memalloc(sizeof(t_arg) * 4);
+	args[0].type = (t_uc)instr->args[0];
+	args[0].size = (t_uc)(args[i].type == T_DIR ? instr->label_size : args[0].type);
+	if (args[0].type == T_REG)
+		args[0].code = REG_CODE;
+	else if (args[0].type == T_DIR)
+		args[0].code = DIR_CODE;
+	else if (args[0].type == T_IND)
+		args[0].code = IND_CODE;
+	i = 1;
+	while (i < 4)
+	{
+		args[i].code = 0;
+		args[i].type = code_to_type(args[i].code);
+		args[i].size = (t_uc)(args[i].type == T_DIR ?
+							instr->label_size : args[i].type);
+		i++;
+	}
+	return (args);
+}
+
+/*
 ** Check if arguments are of valid type
 ** Check if places for codes that weren't used are zeros.
 */
