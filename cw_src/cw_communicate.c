@@ -94,3 +94,30 @@ void	show_procs(t_proc *procs)
 		procs = procs->next;
 	}
 }
+
+/*
+** Display arguments decoded from codage
+*/
+
+void	show_args(t_uc *args)
+{
+	int	i;
+
+	ft_printf("Arguments: ");
+	i = 0;
+	while (i < 3)
+	{
+		if (args[i] == T_REG)
+			ft_printf(i + 1 < 3 && args[i + 1] > 0 ? "T_REG, " : "T_REG");
+		else if (args[i] == T_DIR)
+			ft_printf(i + 1 < 3 && args[i + 1] > 0 ? "T_DIR, " : "T_DIR");
+		else if (args[i] == T_IND)
+			ft_printf(i + 1 < 3 && args[i + 1] > 0 ? "T_IND, " : "T_IND");
+		else if (args[i] == 0)
+			;
+		else
+			ft_panic(1, "Unrecognized argument of size %d\n", args[i]);
+		i++;
+	}
+	ft_printf("\n");
+}

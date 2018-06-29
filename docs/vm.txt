@@ -38,6 +38,14 @@ verbosity. Level dictates the appropriate message to display, while in logging
 function each argument corresponds to the level of verbosity. We can get rid of
 global variables by using static variables and special initialization step.
 
+
+## WTF?
+  - Если инструкция невалидна, мы переходим на следующую ячейку, или пропускаем
+    все аргументы?
+  - Пропуск невалидной инструкции занимает один цикл?
+  - Пропуск нулевого поля занимает один цикл?
+  - Как часто процесс должен выполнять команду live?
+
 ## Vizualization
 
 Visualization should also be tightly integrated into VM operationing. Moreover,
