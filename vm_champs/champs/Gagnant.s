@@ -1,10 +1,9 @@
 # #
 
 #
-  	.comment	"Jour 
-  	J"
+  	.comment	"This is comment"
 
-  	.name		"Another"
+  	.name		"Gagnant"
 
 
 		ld   %0,r3		

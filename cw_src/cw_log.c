@@ -35,7 +35,7 @@ void	log_this(t_log log, char *message, ...)
 {
 	va_list	ap;
 
-	if (log.level > 0)
+	if (log.level > v_none)
 	{
 		va_start(ap, message);
 		ft_vdprintf(log.to, message, ap);

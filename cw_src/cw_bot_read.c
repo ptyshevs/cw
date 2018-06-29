@@ -65,6 +65,7 @@ static t_bot	*create_new_bot(char *filename, int id)
 	bot->id = id;
 	bot->header = read_header(filename, fd);
 	bot->code = read_code(filename, fd, bot->header->size);
+	close(fd);
 	return (bot);
 }
 

@@ -99,6 +99,7 @@ void	exec(t_map *map, t_proc *pr)
 	else // activate and clean-up
 	{
 		activate_instr(map, pr);
+		wrap_up(pr);
 	}
 }
 
@@ -120,7 +121,7 @@ int		main(int ac, char **av)
 //		show_bots(map.bots, map.n_bots);
 //		show_map(&map);
 	}
-	show_procs(map.procs);
+//	show_procs(map.procs);
 	exec(&map, map.procs);
 	return (0);
 }
