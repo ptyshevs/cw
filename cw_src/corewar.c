@@ -13,26 +13,6 @@
 #include "cw.h"
 
 /*
-** Initialize colors for vizualization.
-** COLOR_WHITE is grey
-** Colors:
-**   - 1:
-*/
-
-void	init_color_table(void)
-{
-	start_color(); // allocate color table
-
-	init_pair(1, COLOR_BLACK, COLOR_WHITE); // background
-	init_pair(2, COLOR_WHITE, COLOR_BLACK); // map
-	init_pair(3, COLOR_GREEN, COLOR_BLACK); // 1st bot
-	init_pair(4, COLOR_BLUE, COLOR_BLACK); // 2nd bot
-	init_pair(5, COLOR_RED, COLOR_BLACK); // 3rd bot
-	init_pair(6, COLOR_CYAN, COLOR_BLACK); // 4th bot
-	init_pair(7, COLOR_RED, COLOR_RED); // pure red for debugging purposes
-}
-
-/*
 ** Initialize everything that is needed for vizualization
 */
 
@@ -50,19 +30,12 @@ void	init_viz(t_viz *viz)
 	viz->wmain = newwin(viz->h_main, viz->w_main, 0, 0);
 	viz->wmap = newwin(64, 193, 1, 2);
 	viz->winfo = newwin(64, 52, 1, 196);
+	viz->wlog = newwin(40, 52, 25, 196);
 
-	attron(COLOR_PAIR(1));
-//	for (int i = 0; i < viz->h; ++i)
-//	{
-//		for (int k = 0; k < viz->w; ++k)
-//		{
-//			mvaddch(i, k, ' ');
-//		}
-//	}
-	attroff(COLOR_PAIR(1));
-	wbkgd(viz->wmain, COLOR_PAIR(1));
-	wbkgd(viz->wmap, COLOR_PAIR(2));
-	wbkgd(viz->winfo, COLOR_PAIR(7));
+	wbkgd(viz->wmain, get_color("bg"));
+	wbkgd(viz->wmap, get_color("map"));
+	wbkgd(viz->winfo, get_color("map"));
+	wbkgd(viz->wlog, get_color("debug"));
 }
 
 void	wrapup_viz(t_viz *viz)
@@ -71,32 +44,16 @@ void	wrapup_viz(t_viz *viz)
 	endwin();
 }
 
-void	vmap(t_map *map, t_viz *viz)
-{
-//	static int	colors[4] = {COLOR_PAIR(1), COLOR_PAIR(2), COLOR_PAIR(3), COLOR_PAIR(4)};
-	t_uint		i;
-	t_uint		j;
-
-	i = 0;
-	while (i < 64)
-	{
-		j = 0;
-		while (j < 64)
-		{
-			mvwprintw(viz->wmap, i, j * 3, " %02x ", map->map[i * 64 + j]);
-			j++;
-		}
-		i++;
-	}
-}
 
 void	viz_map(t_viz *viz, t_map *map)
 {
 	vmap(map, viz);
+	vproc(map, viz);
 	wrefresh(viz->wmain);
 	wrefresh(viz->wmap);
 	wrefresh(viz->winfo);
-	wgetch(viz->wmain);
+	wrefresh(viz->wlog);
+	wgetch(viz->wmain); // replace with key bindings
 //	getch();
 }
 
@@ -108,9 +65,8 @@ int		main(int ac, char **av)
 {
 	static t_map	map;
 
-	map.log.level = v_none;
-	map.log.to = 1;
 	parse_cli(&map, ac, av);
+	set_default_pref(&map);
 	if (map.viz.on)
 		init_viz(&map.viz);
 	inhabit_map(&map);
@@ -121,12 +77,12 @@ int		main(int ac, char **av)
 		show_map(&map);
 	}
 //	show_procs(map.procs);
-	if (map.viz.on)
-		viz_map(&map.viz, &map);
-//	for (int i = 0; i < 100; ++i)
-//	{
-//		exec(&map, map.procs);
-//	}
+	for (int i = 0; i < 100; ++i)
+	{
+		update_procs(&map);
+		if (map.viz.on)
+			viz_map(&map.viz, &map);
+	}
 	if (map.viz.on)
 		wrapup_viz(&map.viz);
 	return (0);

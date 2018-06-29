@@ -127,7 +127,30 @@ typedef struct	s_viz
 	WINDOW	*wmain;
 	WINDOW	*wmap;
 	WINDOW	*winfo;
+	WINDOW	*wlog;
 }				t_viz;
+
+/*
+** Color structure
+*/
+
+typedef struct	s_col
+{
+	char	*name;
+	chtype	c;
+}				t_col;
+
+/*
+** Corewar preferences
+*/
+
+typedef struct	s_pref
+{
+	t_uint	cycles_to_die;
+	t_uint	cycle_delta;
+	t_uint	nbr_live;
+	t_uint	max_checks;
+}				t_pref;
 
 /*
 ** Map structure
@@ -148,6 +171,7 @@ typedef struct	s_map
 	t_uc			map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
 
 	t_uint			n_bots;
+	int				*bot_ids;
 	t_bot			*bots[MAX_PLAYERS];
 
 	t_uint			n_proc;
@@ -157,7 +181,8 @@ typedef struct	s_map
 	int				game_cycles; // this regulates game loop
 
 	t_log			log;
-	t_viz			viz; // n-curses mode is ON?
+	t_viz			viz;
+	t_pref			pref;
 }				t_map;
 
 
@@ -203,6 +228,7 @@ void			clean_bot(t_bot **abot);
 ** Operations on map
 */
 
+void	set_default_pref(t_map *map);
 void	inhabit_map(t_map *map);
 t_uint	get_map(t_map *map, t_uint n);
 void	set_map(t_map *map, t_uint n, t_uc v);
@@ -228,6 +254,7 @@ t_uint	args_to_bytes(const t_op *instr, t_arg *args);
 */
 
 void	exec(t_map *map, t_proc *pr);
+void	update_procs(t_map *map);
 
 /*
 ** Errors
@@ -235,5 +262,17 @@ void	exec(t_map *map, t_proc *pr);
 
 void	invalid_header(char *filename);
 void	size_error(char *filename);
+
+/*
+** Vizualization
+*/
+
+void		init_color_table(void);
+chtype		get_color(char *color);
+int			get_proc_color(t_map *map, int id);
+
+void		vproc(t_map *map, t_viz *viz);
+void		vmap(t_map *map, t_viz *viz);
+
 
 #endif
