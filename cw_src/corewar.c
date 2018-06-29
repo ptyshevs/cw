@@ -24,11 +24,12 @@ void	init_color_table(void)
 	start_color(); // allocate color table
 
 	init_pair(1, COLOR_BLACK, COLOR_WHITE); // background
-	init_pair(2, COLOR_BLACK, COLOR_RED); // map
+	init_pair(2, COLOR_WHITE, COLOR_BLACK); // map
 	init_pair(3, COLOR_GREEN, COLOR_BLACK); // 1st bot
 	init_pair(4, COLOR_BLUE, COLOR_BLACK); // 2nd bot
 	init_pair(5, COLOR_RED, COLOR_BLACK); // 3rd bot
 	init_pair(6, COLOR_CYAN, COLOR_BLACK); // 4th bot
+	init_pair(7, COLOR_RED, COLOR_RED); // pure red for debugging purposes
 }
 
 /*
@@ -44,10 +45,11 @@ void	init_viz(t_viz *viz)
 	keypad(stdscr, true);
 	init_color_table();
 
-	viz->h_main = 60;
-	viz->w_main = 200;
+	viz->h_main = 66;
+	viz->w_main = 250;
 	viz->wmain = newwin(viz->h_main, viz->w_main, 0, 0);
-	viz->wmap = newwin(55, 150, 2, 2);
+	viz->wmap = newwin(64, 193, 1, 2);
+	viz->winfo = newwin(64, 52, 1, 196);
 
 	attron(COLOR_PAIR(1));
 //	for (int i = 0; i < viz->h; ++i)
@@ -60,6 +62,7 @@ void	init_viz(t_viz *viz)
 	attroff(COLOR_PAIR(1));
 	wbkgd(viz->wmain, COLOR_PAIR(1));
 	wbkgd(viz->wmap, COLOR_PAIR(2));
+	wbkgd(viz->winfo, COLOR_PAIR(7));
 }
 
 void	wrapup_viz(t_viz *viz)
@@ -70,36 +73,29 @@ void	wrapup_viz(t_viz *viz)
 
 void	vmap(t_map *map, t_viz *viz)
 {
-	static int	colors[4] = {COLOR_PAIR(1), COLOR_PAIR(2), COLOR_PAIR(3), COLOR_PAIR(4)};
+//	static int	colors[4] = {COLOR_PAIR(1), COLOR_PAIR(2), COLOR_PAIR(3), COLOR_PAIR(4)};
 	t_uint		i;
-	t_uint		m;
+	t_uint		j;
 
 	i = 0;
-	while (i < MEM_SIZE)
+	while (i < 64)
 	{
-		m = 0;
-		while (m < map->n_bots)
+		j = 0;
+		while (j < 64)
 		{
-			if (i == map->bots[m]->start_pos)
-				ft_printf(colors[m]);
-			else if (i == map->bots[m]->start_pos + map->bots[m]->header->size)
-				ft_printf("{nc}");
-			m++;
+			mvwprintw(viz->wmap, i, j * 3, " %02x ", map->map[i * 64 + j]);
+			j++;
 		}
-		ft_printf((i + 1) % 64 ? "%02x " : "%02x", map->map[i]);
-		if (++i % 64 == 0)
-			ft_printf("\n");
+		i++;
 	}
 }
 
 void	viz_map(t_viz *viz, t_map *map)
 {
-	(void)viz;
-	(void)map;
-	wprintw(viz->wmain, "Hello world");
-	box(viz->wmap, '4', '5');
+	vmap(map, viz);
 	wrefresh(viz->wmain);
 	wrefresh(viz->wmap);
+	wrefresh(viz->winfo);
 	wgetch(viz->wmain);
 //	getch();
 }
@@ -122,7 +118,7 @@ int		main(int ac, char **av)
 	if (map.log.level > v_none)
 	{
 //		show_bots(map.bots, map.n_bots);
-//		show_map(&map);
+		show_map(&map);
 	}
 //	show_procs(map.procs);
 	if (map.viz.on)
