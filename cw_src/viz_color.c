@@ -34,6 +34,7 @@ void	init_color_table(void)
 	init_pair(9, COLOR_CYAN, COLOR_BLACK); // 4th bot
 	init_pair(10, COLOR_BLACK, COLOR_CYAN); // 4th bot caret
 	init_pair(11, COLOR_RED, COLOR_RED); // pure red for debugging purposes
+	init_pair(12, COLOR_WHITE, COLOR_BLACK);
 }
 
 /*
@@ -42,12 +43,12 @@ void	init_color_table(void)
 
 chtype		get_color(char *color)
 {
-	static t_col	colors[11] = {{"bg", COLOR_PAIR(1)}, {"map", COLOR_PAIR(2)},
+	static t_col	colors[12] = {{"bg", COLOR_PAIR(1)}, {"map", COLOR_PAIR(2)},
 								{"b1", COLOR_PAIR(3)}, {"b1pr", COLOR_PAIR(4)},
 								{"b2", COLOR_PAIR(5)}, {"b2pr", COLOR_PAIR(6)},
 								{"b3", COLOR_PAIR(7)}, {"b3pr", COLOR_PAIR(8)},
 								{"b4", COLOR_PAIR(9)}, {"b4pr", COLOR_PAIR(10)},
-								{"debug", COLOR_PAIR(11)}};
+								{"debug", COLOR_PAIR(11)}, {"info", COLOR_PAIR(12) | A_BOLD}};
 	int				i;
 
 	i = 0;

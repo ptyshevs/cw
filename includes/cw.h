@@ -128,6 +128,7 @@ typedef struct	s_viz
 	WINDOW	*wmap;
 	WINDOW	*winfo;
 	WINDOW	*wlog;
+	t_bool	active;
 }				t_viz;
 
 /*
@@ -273,6 +274,7 @@ int			get_proc_color(t_map *map, int id);
 
 void		vproc(t_map *map, t_viz *viz);
 void		vmap(t_map *map, t_viz *viz);
+void		vinfo(t_map *map, t_viz *viz);
 
 
 #endif

@@ -25,11 +25,12 @@ void	init_viz(t_viz *viz)
 	keypad(stdscr, true);
 	init_color_table();
 
+	viz->active = True;
 	viz->h_main = 66;
 	viz->w_main = 250;
 	viz->wmain = newwin(viz->h_main, viz->w_main, 0, 0);
 	viz->wmap = newwin(64, 193, 1, 2);
-	viz->winfo = newwin(64, 52, 1, 196);
+	viz->winfo = newwin(24, 52, 1, 196);
 	viz->wlog = newwin(40, 52, 25, 196);
 
 	wbkgd(viz->wmain, get_color("bg"));
@@ -49,6 +50,7 @@ void	viz_map(t_viz *viz, t_map *map)
 {
 	vmap(map, viz);
 	vproc(map, viz);
+	vinfo(map, viz);
 	wrefresh(viz->wmain);
 	wrefresh(viz->wmap);
 	wrefresh(viz->winfo);
@@ -82,6 +84,7 @@ int		main(int ac, char **av)
 		update_procs(&map);
 		if (map.viz.on)
 			viz_map(&map.viz, &map);
+		map.cycle++;
 	}
 	if (map.viz.on)
 		wrapup_viz(&map.viz);

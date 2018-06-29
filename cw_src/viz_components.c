@@ -20,19 +20,24 @@
 void	vproc(t_map *map, t_viz *viz)
 {
 	t_proc	*pr;
+	int		col;
 
 	pr = map->procs;
 	while (pr)
 	{
 		if (!pr->alive)
 			break ;
-		int c = get_proc_color(map, pr->id);
-		wattron(viz->wmap, c);
+		col = get_proc_color(map, pr->id);
+		wattron(viz->wmap, col);
 		mvwprintw(viz->wmap, pr->pc / 64, pr->pc % 64 * 3 + 1, "%02x", map->map[pr->pc]);
-		wattroff(viz->wmap, c);
+		wattroff(viz->wmap, col);
 		pr = pr->next;
 	}
 }
+
+/*
+** Vizualize map
+*/
 
 void	vmap(t_map *map, t_viz *viz)
 {
@@ -61,4 +66,16 @@ void	vmap(t_map *map, t_viz *viz)
 		}
 		i++;
 	}
+}
+
+/*
+** Vizualize info
+*/
+
+void	vinfo(t_map *map, t_viz *viz)
+{
+	wattron(viz->winfo, get_color("info"));
+	mvwprintw(viz->winfo, 1, 20, viz->active ? "** RUNNING **" : "** PAUSED **");
+	mvwprintw(viz->winfo, 3, 1, "Cycle: %d", map->cycle);
+	wattroff(viz->winfo, get_color("info"));
 }
