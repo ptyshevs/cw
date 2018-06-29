@@ -27,8 +27,8 @@ typedef unsigned int t_uint;
 
 typedef struct	s_bot
 {
-	unsigned int	start_pos;
-	unsigned char	*code;
+	t_uint			start_pos;
+	t_uc			*code;
 	int				id;
 	t_header		*header;
 }				t_bot;
@@ -39,10 +39,12 @@ typedef struct	s_bot
 
 typedef struct	s_proc
 {
-	unsigned int	pc; // process position
-	unsigned int	carry; // flag that tells if the latest operation was successful
-	unsigned int	id; // Number of the player that have created it
-	unsigned int	reg[REG_NUMBER]; // register
+	t_uint			pc; // process position
+	t_uint			carry; // flag that tells if the latest operation was successful
+	t_uint			id; // Number of the player that have created it
+	t_uint			reg[REG_NUMBER]; // register
+	const t_op		*cur_ins;
+	t_uint			cur_cycle;
 	t_bool			alive;
 	struct s_proc	*next;
 }				t_proc;
@@ -77,10 +79,17 @@ typedef struct	s_map
 	t_bool			viz; // n-curses mode is ON?
 }				t_map;
 
+typedef struct	s_arg
+{
+	t_uc	code;
+	t_uc	type;
+	t_uc	size;
+}				t_arg;
+
+
 /*
 ** Logging and debugging
 */
-
 
 void	logging(t_log log, char *brief, char *full);
 void	log_this(t_log log, char *message, ...);

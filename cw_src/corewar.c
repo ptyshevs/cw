@@ -25,20 +25,69 @@ const t_op	*find_instr(t_uint op)
 }
 
 /*
+** Move process <pr> <n> cells forward on a circular memory.
+*/
+
+void	move_proc(t_proc *pr, t_uint n)
+{
+	pr->pc = (pr->pc + n) % MEM_SIZE;
+}
+
+/*
+** Convert argument code to type
+*/
+
+t_uc	code_to_type(t_uc code)
+{
+	if (code == REG_CODE)
+		return (T_REG);
+	else if (code == DIR_CODE)
+		return (T_DIR);
+	else if (code == IND_CODE)
+		return (T_IND);
+	else
+		return (0);
+}
+
+/*
 ** Expand codage into an array of types of argument to expect. It takes max. 3
 ** bytes, since this is max number of arguments allowed.
 */
 
-t_uc	*expand_codage(t_uint codage)
+t_arg	*codage_to_args(const t_op *instr, t_uint codage)
 {
-	t_uc	*args;
+	t_arg	*args;
 	int		i;
 
-	args = ft_memalloc(3);
+	args = ft_memalloc(sizeof(t_arg) * instr->nargs);
+	if (codage & 0x3) // skip the instruction, don't exit when invalid
+		ft_panic(1, "Bad codage: %02X\n", codage);
 	i = 0;
-	while (i < 3)
+	while (i < instr->nargs)
 	{
-		args[i] = (t_uc)((codage >> (6 - i * 2)) & 0x3);
+		args[i].code = (t_uc)((codage >> (6 - i * 2)) & 0x3);
+		args[i].type = code_to_type(args[i].code);
+		args[i].size = (t_uc)(args[i].type == T_DIR ? instr->label_size : args[i].type);
+		i++;
+	}
+	return (args);
+}
+
+/*
+** Check if arguments are of valid type
+*/
+
+t_bool	args_are_valid( const t_op *instr, t_uc *args)
+{
+	int		i;
+
+	i = 0;
+	while (i < instr->nargs)
+	{
+		if (!(code_to_type(args[i]) & instr->args[i]))
+			return (ft_memrelease((void **)&args));
+		else
+			ft_printf("arg is valid\n");
 		i++;
 	}
 	return (args);
@@ -50,13 +99,22 @@ t_uc	*expand_codage(t_uint codage)
 
 void	exec(t_map *map, t_proc *pr)
 {
-	const t_op *instr = find_instr(map->map[pr->pc]);
-	if (instr->codage)
+	const t_op	*instr;
+	t_arg		*args;
+
+	ft_printf("Opcode: %02X\n", map->map[pr->pc]);
+	instr = find_instr(map->map[pr->pc]);
+	if (instr && instr->codage) // where to store instruction execution state?
 	{
-		t_uc *args = expand_codage(map->map[pr->pc + 1]);
+		args = codage_to_args(instr, map->map[pr->pc + 1]);
+		if (!(args = validate_args(codage_to_arg(instr, map->map[pr->pc + 1]), instr)))
+			move_proc(pr, 1);
+
 		show_args(args);
+		// jump right after where the instructions have finished
 	}
-	ft_printf("%02X\n", map->map[pr->pc]);
+	else
+		move_proc(pr, 1);
 }
 
 /*
