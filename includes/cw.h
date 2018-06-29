@@ -122,9 +122,11 @@ typedef struct	s_log
 typedef struct	s_viz
 {
 	t_bool	on;
-	int		h;
-	int		w;
+	int		h_main;
+	int		w_main;
 	WINDOW	*wmain;
+	WINDOW	*wmap;
+	WINDOW	*winfo;
 }				t_viz;
 
 /*
