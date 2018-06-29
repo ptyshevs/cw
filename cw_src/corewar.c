@@ -34,63 +34,52 @@ void	move_proc(t_proc *pr, t_uint n)
 }
 
 /*
-** Convert argument code to type
+** Get value from circular map
 */
 
-t_uc	code_to_type(t_uc code)
+t_uint	get_map(t_map *map, t_uint n)
 {
-	if (code == REG_CODE)
-		return (T_REG);
-	else if (code == DIR_CODE)
-		return (T_DIR);
-	else if (code == IND_CODE)
-		return (T_IND);
-	else
-		return (0);
+	return (map->map[n % MEM_SIZE]);
 }
 
 /*
-** Expand codage into an array of types of argument to expect. It takes max. 3
-** bytes, since this is max number of arguments allowed.
+** Set value to circular map
 */
 
-t_arg	*codage_to_args(const t_op *instr, t_uint codage)
+void	set_map(t_map *map, t_uint n, t_uc v)
 {
-	t_arg	*args;
-	int		i;
+	map->map[n % MEM_SIZE] = v;
+}
 
-	args = ft_memalloc(sizeof(t_arg) * instr->nargs);
-	if (codage & 0x3) // skip the instruction, don't exit when invalid
-		ft_panic(1, "Bad codage: %02X\n", codage);
-	i = 0;
-	while (i < instr->nargs)
-	{
-		args[i].code = (t_uc)((codage >> (6 - i * 2)) & 0x3);
-		args[i].type = code_to_type(args[i].code);
-		args[i].size = (t_uc)(args[i].type == T_DIR ? instr->label_size : args[i].type);
-		i++;
-	}
-	return (args);
+
+/*
+** After the instruction was executed, clean-up proc fields
+*/
+
+void	wrap_up(t_proc *pr)
+{
+	move_proc(pr, args_to_bytes(pr->cur_ins, pr->cur_args) + 1);
+	ft_memdel((void **)&pr->cur_args);
+	pr->cur_ins = NULL;
+	pr->cur_cycle = 0;
 }
 
 /*
-** Check if arguments are of valid type
+** Activate function if charging period has ended.
 */
 
-t_bool	args_are_valid( const t_op *instr, t_uc *args)
+void	activate_instr(t_map *map, t_proc *pr)
 {
-	int		i;
-
-	i = 0;
-	while (i < instr->nargs)
+	if (pr->cur_ins->codage)
 	{
-		if (!(code_to_type(args[i]) & instr->args[i]))
-			return (ft_memrelease((void **)&args));
-		else
-			ft_printf("arg is valid\n");
-		i++;
+		pr->cur_args = codage_to_args(pr->cur_ins, get_map(map, pr->pc + 1));
+		if (!args_are_valid(pr->cur_ins, pr->cur_args))
+		{
+			ft_printf("Arguments are not valid\n");
+			move_proc(pr, 1);
+		}
+		show_args(pr->cur_args);
 	}
-	return (args);
 }
 
 /*
@@ -99,22 +88,18 @@ t_bool	args_are_valid( const t_op *instr, t_uc *args)
 
 void	exec(t_map *map, t_proc *pr)
 {
-	const t_op	*instr;
-	t_arg		*args;
-
-	ft_printf("Opcode: %02X\n", map->map[pr->pc]);
-	instr = find_instr(map->map[pr->pc]);
-	if (instr && instr->codage) // where to store instruction execution state?
+	if (!pr->cur_ins) // read instruction and start charging
 	{
-		args = codage_to_args(instr, map->map[pr->pc + 1]);
-		if (!(args = validate_args(codage_to_arg(instr, map->map[pr->pc + 1]), instr)))
-			move_proc(pr, 1);
-
-		show_args(args);
-		// jump right after where the instructions have finished
+		if (!(pr->cur_ins = find_instr(map->map[pr->pc]))) // invalid instruction
+			move_proc(pr, 1); // move forward
 	}
-	else
-		move_proc(pr, 1);
+	// charging and activation phase
+	if (pr->cur_cycle < pr->cur_ins->cycles) // charge
+		pr->cur_cycle++;
+	else // activate and clean-up
+	{
+		activate_instr(map, pr);
+	}
 }
 
 /*

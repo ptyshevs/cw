@@ -25,6 +25,15 @@
 
 typedef unsigned int t_uint;
 
+/*
+** Bot structure
+** Fields:
+**   - start_pos: Map position from which executable code of this bot begins
+**   - code: executable code, size of which is stored in header->size
+**   - id: id of the bot (either order in CLI argument list, or manual)
+**   - header: t_header structure, containing name, comment, and size
+*/
+
 typedef struct	s_bot
 {
 	t_uint			start_pos;
@@ -34,7 +43,31 @@ typedef struct	s_bot
 }				t_bot;
 
 /*
-** Process - the same as caret
+** Instruction argument
+** Fields:
+**   - code [1, 3]: 2 bits from codage that indicate type of argument
+**   - type [1, 4]: value used to represent T_* type
+**   - size [1, 4]: size of T_* type in bytes
+*/
+
+typedef struct	s_arg
+{
+	t_uc	code;
+	t_uc	type;
+	t_uc	size;
+}				t_arg;
+
+/*
+** Process (a.k.a. caret)
+** Fields:
+**    - pc: caret position on the map. Manipulate only using pc mod MEM_SIZE
+**    - carry: flag that tells if the latest operation was successful
+**    - id: ID of bot that have spawned this process
+**    - reg: registry
+**    - cur_cycle: current cycle (used for charging phase)
+**    - cur_ins: current instruction being executed
+**    - alive: is process alive
+**    - next: pointer to the next process (so we create linked list from it)
 */
 
 typedef struct	s_proc
@@ -43,11 +76,18 @@ typedef struct	s_proc
 	t_uint			carry; // flag that tells if the latest operation was successful
 	t_uint			id; // Number of the player that have created it
 	t_uint			reg[REG_NUMBER]; // register
-	const t_op		*cur_ins;
+
 	t_uint			cur_cycle;
+	const t_op		*cur_ins;
+	t_arg			*cur_args;
+
 	t_bool			alive;
 	struct s_proc	*next;
 }				t_proc;
+
+/*
+** Enumerate type for different verbosity levels
+*/
 
 typedef enum	e_vrb
 {
@@ -56,12 +96,32 @@ typedef enum	e_vrb
 	v_full
 }				t_vrb;
 
+/*
+** Structure used for managing logging options
+** Fields:
+**    - level: level of verbosity
+**    - to: FD to which log should be written
+*/
 
 typedef struct	s_log
 {
 	t_vrb		level;
 	int			to;
 }				t_log;
+
+/*
+** Map structure
+** Fields:
+**    - map: circular arena, so map[k] = map[MEM_SIZE + k] = map[MEM_SIZE - k]
+**    - n_bots: number of bots on the map
+**    - bots: structures for representing bots
+**    - n_proc: number of processes currently active
+**    - procs: list of all processes
+**    - cycle: variable for storing current cycle
+**    - game_cycles: regulates game flow
+**    - log: logging structure
+**    - viz: whether vizualization mode is ON or OFF
+*/
 
 typedef struct	s_map
 {
@@ -73,18 +133,13 @@ typedef struct	s_map
 	t_uint			n_proc;
 	t_proc			*procs;
 
-	int				cycles;
+	int				cycle; // this is indicator of current cycle
+	int				game_cycles; // this regulates game loop
 
 	t_log			log;
 	t_bool			viz; // n-curses mode is ON?
 }				t_map;
 
-typedef struct	s_arg
-{
-	t_uc	code;
-	t_uc	type;
-	t_uc	size;
-}				t_arg;
 
 
 /*
@@ -102,7 +157,7 @@ void	show_usage(void);
 void	show_bots(t_bot **bots, unsigned int num_bots);
 void	show_map(t_map *map);
 void	show_procs(t_proc *procs);
-void	show_args(t_uc *args);
+void	show_args(t_arg *args);
 
 /*
 ** CLI parsing and bot reading
@@ -130,10 +185,19 @@ void			clean_bot(t_bot **abot);
 void	inhabit_map(t_map *map);
 
 /*
-** Operations on proc
+** Operations on processes
 */
 
 void	init_procs(t_map *map);
+
+/*
+** Operations on arguments
+*/
+
+t_arg	*codage_to_args(const t_op *instr, t_uint codage);
+t_bool	args_are_valid(const t_op *instr, t_arg *args);
+t_uint	args_to_bytes(const t_op *instr, t_arg *args);
+
 
 /*
 ** Errors

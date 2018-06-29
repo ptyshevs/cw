@@ -22,7 +22,7 @@ ASM_SOURCES = $(patsubst %, $(ASM_SRCDIR)/%.c, $(ASM_FILENAMES))
 ASM_BIN = $(patsubst %, $(ODIR)/%.o, $(ASM_FILENAMES))
 
 CW_FILENAMES = corewar cw_cli cw_errors cw_parse cw_parse_helpers \
-    cw_communicate cw_bot_read cw_map cw_log cw_proc
+    cw_communicate cw_bot_read cw_map cw_log cw_proc cw_args
 
 CW_SRCDIR = cw_src
 CW_SOURCES = $(patsubst %, $(CW_SRCDIR)/%.c, $(CW_FILENAMES))

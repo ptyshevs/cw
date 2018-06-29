@@ -96,28 +96,41 @@ void	show_procs(t_proc *procs)
 }
 
 /*
+** Argument type string representation
+*/
+
+char	*arg_type_to_str(t_uc type)
+{
+	if (type == T_REG)
+		return ("T_REG");
+	else if (type == T_DIR)
+		return ("T_DIR");
+	else if (type == T_IND)
+		return ("T_IND");
+	else if (type == 0)
+		return ("T_NAN");
+	else
+		return ("Unrecognized");
+}
+
+/*
 ** Display arguments decoded from codage
 */
 
-void	show_args(t_uc *args)
+void	show_args(t_arg *args)
 {
 	int	i;
 
-	ft_printf("Arguments: ");
+	ft_printf("Arguments format: <code>: <type> [<size>]\n");
 	i = 0;
-	while (i < 3)
+	while (i < 4)
 	{
-		if (args[i] == T_REG)
-			ft_printf(i + 1 < 3 && args[i + 1] > 0 ? "T_REG, " : "T_REG");
-		else if (args[i] == T_DIR)
-			ft_printf(i + 1 < 3 && args[i + 1] > 0 ? "T_DIR, " : "T_DIR");
-		else if (args[i] == T_IND)
-			ft_printf(i + 1 < 3 && args[i + 1] > 0 ? "T_IND, " : "T_IND");
-		else if (args[i] == 0)
-			;
+		if (i < 3)
+			ft_printf("%02X: %s [%d]\n", args[i].code, arg_type_to_str(args[i].type),
+					args[i].size);
 		else
-			ft_panic(1, "Unrecognized argument of size %d\n", args[i]);
+			ft_printf("%02X: %s [%d]\t<-- This should be zero\n",
+				args[i].code, arg_type_to_str(args[i].type), args[i].size);
 		i++;
 	}
-	ft_printf("\n");
 }
