@@ -21,7 +21,7 @@ t_proc	*create_proc(t_uint id, t_uint pos)
 	t_proc	*pr;
 
 	pr = ft_memalloc(sizeof(t_proc));
-	pr->alive = TRUE;
+	pr->alive = True;
 	pr->pc = pos;
 	pr->reg[0] = id;
 	return (pr);

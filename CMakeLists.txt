@@ -12,5 +12,5 @@ add_subdirectory(libft)
 add_executable(cw ${CW_SRC} ${INCLUDES})
 add_executable(asm ${ASM_SRC} ${INCLUDES})
 
-target_link_libraries(cw ft)
+target_link_libraries(cw ft ncurses)
 target_link_libraries(asm ft)

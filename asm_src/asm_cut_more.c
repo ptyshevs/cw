@@ -25,7 +25,7 @@ t_tk	*cut_register(char *line, int *start, int line_nbr)
 	i = *start + 1;
 	i += ft_isdigit(line[i]) ? 1 : 0;
 	i += ft_isdigit(line[i]) ? 1 : 0;
-	tk = ft_strtrunc(&(line[*start]), i - *start, FALSE);
+	tk = ft_strtrunc(&(line[*start]), i - *start, False);
 	token = create_token(tk, line_nbr, *start + 1, REGISTER);
 	*start = i - 1;
 	return (token);
@@ -40,7 +40,7 @@ t_tk	*cut_separator(char *line, const int *start, int line_nbr)
 	t_tk	*token;
 	char	*tk;
 
-	tk = ft_strtrunc(&(line[*start]), 1, FALSE);
+	tk = ft_strtrunc(&(line[*start]), 1, False);
 	token = create_token(tk, line_nbr, *start + 1, SEPARATOR);
 	return (token);
 }
@@ -56,7 +56,7 @@ t_tk	*cut_label(char *line, int *start, int line_nbr)
 	int		i;
 
 	i = ft_strchr(&(line[*start]), LABEL_CHAR) - &(line[*start]);
-	tk = ft_strtrunc(&(line[*start]), i + 1, FALSE);
+	tk = ft_strtrunc(&(line[*start]), i + 1, False);
 	token = create_token(tk, line_nbr, *start + 1, LABEL);
 	*start += i;
 	return (token);
@@ -81,7 +81,7 @@ t_tk	*cut_instruction(char *line, int *start, int line_nbr)
 			lexical_error(line_nbr, i + 1);
 		i++;
 	}
-	tk = ft_strtrunc(&(line[*start]), i - *start, FALSE);
+	tk = ft_strtrunc(&(line[*start]), i - *start, False);
 	token = create_token(tk, line_nbr, *start + 1, INSTRUCTION);
 	*start = i - 1;
 	return (token);

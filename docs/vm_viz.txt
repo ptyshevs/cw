@@ -1,0 +1,5 @@
+Vizualization should work in separate thread.
+Q&A
+* How vizualize changed cells?
+- Store state of map on previous cycle.
+- Call map_update after instruction activation or *inside* function that affects map.

@@ -30,8 +30,8 @@ t_bool	is_register(char *line, int start)
 			break ;
 	}
 	if (cnt_digits == 0 || cnt_digits > 2)
-		return (FALSE);
-	return (TRUE);
+		return (False);
+	return (True);
 }
 
 /*
@@ -43,12 +43,12 @@ t_bool	is_label(char *line, int start, int line_nbr)
 	int		i;
 
 	if (line[start] == LABEL_CHAR || line[start] == '.' || line[start] == '-')
-		return (FALSE);
+		return (False);
 	i = start;
 	while (line[i])
 	{
 		if (line[i] == LABEL_CHAR)
-			return (TRUE);
+			return (True);
 		else if (ft_isspace(line[i]) || line[i] == DIRECT_CHAR ||
 				line[i] == SEPARATOR_CHAR)
 			break ;
@@ -56,7 +56,7 @@ t_bool	is_label(char *line, int start, int line_nbr)
 			lexical_error(line_nbr, i + 1);
 		i++;
 	}
-	return (FALSE);
+	return (False);
 }
 
 /*
@@ -73,15 +73,15 @@ t_bool	is_indirect(char *line, int start)
 	while (line[i])
 	{
 		if (line[i] == LABEL_CHAR)
-			return (FALSE);
+			return (False);
 		if (!ft_isdigit(line[i]))
 			break ;
 		else
 			i++;
 	}
 	if (line[start] == '-' ? i - start < 2 : i - start == 0)
-		return (FALSE);
-	return (TRUE);
+		return (False);
+	return (True);
 }
 
 /*

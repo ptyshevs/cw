@@ -105,7 +105,7 @@ t_bool		is_inside_string(char *line)
 	char	*comment;
 
 	if(!(open_quote = ft_strchr(line, '"')))
-		return (FALSE);
+		return (False);
 	hash = ft_strchr(line, COMMENT_CHAR);
 	strange = ft_strchr(line, STRANGE_CHAR);
 	if (hash && strange)

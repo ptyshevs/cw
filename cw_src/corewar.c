@@ -13,73 +13,50 @@
 #include "cw.h"
 
 /*
-** Find t_op instruction by its <op>
+** Initialize everything that is needed for vizualization
 */
 
-const t_op	*find_instr(t_uint op)
+void	init_viz(t_viz *viz)
 {
-	if (op == 0 || op > 16)
-		return (NULL);
-	else
-		return (&g_op_tab[op - 1]);
+	initscr(); // init terminal
+	curs_set(0); // make cursor invisible
+	noecho(); // disable echoing of input during getch()
+	cbreak(); // disable line buffering
+	keypad(stdscr, true);
+	start_color(); // allocate color table
+
+	init_pair(1, COLOR_BLACK, COLOR_RED);
+
+	viz->h = 20;
+	viz->w = 40;
+	viz->wmain = newwin(viz->h, viz->w, 0, 0);
+	attron(COLOR_PAIR(1));
+	for (int i = 0; i < viz->h; ++i)
+	{
+		for (int k = 0; k < viz->w; ++k)
+		{
+			mvaddch(i, k, ' ');
+		}
+	}
+	attroff(COLOR_PAIR(1));
+	wbkgd(viz->wmain, COLOR_PAIR(1));
+	box(viz->wmain, '$', '$');
 }
 
-/*
-** After the instruction was executed, clean-up proc fields
-*/
-
-void	wrap_up(t_proc *pr)
+void	wrapup_viz(t_viz *viz)
 {
-	move_proc(pr, args_to_bytes(pr->cur_ins, pr->cur_args) + 1);
-	ft_memdel((void **)&pr->cur_args);
-	pr->cur_ins = NULL;
-	pr->cur_cycle = 0;
+	(void)viz;
+	endwin();
 }
 
-
-/*
-** Activate function if charging period has ended.
-** Arguments are read regardless of whether there is codage or not
-*/
-
-void	activate_instr(t_map *map, t_proc *pr)
+void	viz_map(t_viz *viz, t_map *map)
 {
-	if (pr->cur_ins->codage)
-		pr->cur_args = codage_to_args(pr->cur_ins, get_map(map, pr->pc + 1));
-	else
-		pr->cur_args = instr_to_args(pr->cur_ins);
-	if (!args_are_valid(pr->cur_ins, pr->cur_args))
-	{
-		log_map(map, pr, "Invalid arguments for instruction");
-		move_proc(pr, 1);
-	}
-	show_args(pr->cur_args);
-	// actual instruction activation should be here
-}
-
-/*
-** Execute command on which the process currently positioned
-*/
-
-void	exec(t_map *map, t_proc *pr)
-{
-	if (!pr->cur_ins) // read instruction and start charging
-	{
-		if (!(pr->cur_ins = find_instr(map->map[pr->pc]))) // invalid instruction
-			return move_proc(pr, 1); // move forward
-	}
-	// charging and activation phase
-	if (pr->cur_cycle < pr->cur_ins->cycles) // charge
-	{
-		pr->cur_cycle++;
-		log_map(map, pr, "Charging %d/%d", pr->cur_cycle, pr->cur_ins->cycles);
-	}
-	else // activate and clean-up
-	{
-		log_map(map, pr, "Activating function");
-		activate_instr(map, pr);
-		wrap_up(pr);
-	}
+	(void)viz;
+	(void)map;
+	wprintw(viz->wmain, "Hello world");
+	wrefresh(viz->wmain);
+	wgetch(viz->wmain);
+//	getch();
 }
 
 /*
@@ -93,6 +70,8 @@ int		main(int ac, char **av)
 	map.log.level = v_none;
 	map.log.to = 1;
 	parse_cli(&map, ac, av);
+	if (map.viz.on)
+		init_viz(&map.viz);
 	inhabit_map(&map);
 	init_procs(&map);
 	if (map.log.level > v_none)
@@ -101,9 +80,13 @@ int		main(int ac, char **av)
 //		show_map(&map);
 	}
 //	show_procs(map.procs);
-	for (int i = 0; i < 100; ++i)
-	{
-		exec(&map, map.procs);
-	}
+	if (map.viz.on)
+		viz_map(&map.viz, &map);
+//	for (int i = 0; i < 100; ++i)
+//	{
+//		exec(&map, map.procs);
+//	}
+	if (map.viz.on)
+		wrapup_viz(&map.viz);
 	return (0);
 }

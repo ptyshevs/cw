@@ -52,7 +52,7 @@ static char	*cut_substring(char *start, t_list *lines)
 	if (!lines)
 		return (NULL);
 	len = ft_strchr(lines->content, '"') - (char *)lines->content;
-	another = ft_strtrunc(lines->content, len + 1, FALSE);
+	another = ft_strtrunc(lines->content, len + 1, False);
 	tmp = collect;
 	collect = ft_sjoin(3, collect, "\n", another);
 	ft_strdel(&tmp);
@@ -113,7 +113,7 @@ t_tk		*cut_direct_label(char *line, int *start, int line_nbr)
 		else if (!ft_strchr(LABEL_CHARS, line[i]))
 			lexical_error(line_nbr, i + 1);
 	}
-	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, FALSE)) == 2)
+	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, False)) == 2)
 		lexical_error(line_nbr, *start + 1);
 	token = create_token(tk, line_nbr, *start + 1, DIRECT_LABEL);
 	*start = i - 1;
@@ -148,7 +148,7 @@ t_tk		*cut_direct(char *line, int *start, int line_nbr)
 			break ;
 		}
 	}
-	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, FALSE)) == 1)
+	if (ft_slen(tk = ft_strtrunc(&(line[*start]), i - *start, False)) == 1)
 		lexical_error(line_nbr, i);
 	token = create_token(tk, line_nbr, *start + 1, DIRECT);
 	*start = i - 1;

@@ -14,6 +14,7 @@
 # define CW_H
 
 # include "op.h"
+# include <ncurses.h>
 # include "libft.h"
 # include "ft_printf.h"
 # include "ft_gnls.h"
@@ -24,6 +25,7 @@
 # include <fcntl.h>
 
 typedef unsigned int t_uint;
+
 
 /*
 ** Bot structure
@@ -109,6 +111,22 @@ typedef struct	s_log
 	int			to;
 }				t_log;
 
+
+/*
+** Structure used for managing logging options
+** Fields:
+**    - level: level of verbosity
+**    - to: FD to which log should be written
+*/
+
+typedef struct	s_viz
+{
+	t_bool	on;
+	int		h;
+	int		w;
+	WINDOW	*wmain;
+}				t_viz;
+
 /*
 ** Map structure
 ** Fields:
@@ -137,7 +155,7 @@ typedef struct	s_map
 	int				game_cycles; // this regulates game loop
 
 	t_log			log;
-	t_bool			viz; // n-curses mode is ON?
+	t_viz			viz; // n-curses mode is ON?
 }				t_map;
 
 
@@ -203,6 +221,11 @@ t_arg	*instr_to_args(const t_op *instr);
 t_bool	args_are_valid(const t_op *instr, t_arg *args);
 t_uint	args_to_bytes(const t_op *instr, t_arg *args);
 
+/*
+** Execution flow
+*/
+
+void	exec(t_map *map, t_proc *pr);
 
 /*
 ** Errors

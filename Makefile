@@ -22,7 +22,7 @@ ASM_SOURCES = $(patsubst %, $(ASM_SRCDIR)/%.c, $(ASM_FILENAMES))
 ASM_BIN = $(patsubst %, $(ODIR)/%.o, $(ASM_FILENAMES))
 
 CW_FILENAMES = corewar cw_cli cw_errors cw_parse cw_parse_helpers \
-    cw_communicate cw_bot_read cw_map cw_log cw_proc cw_args
+    cw_communicate cw_bot_read cw_map cw_log cw_proc cw_args cw_instr
 
 CW_SRCDIR = cw_src
 CW_SOURCES = $(patsubst %, $(CW_SRCDIR)/%.c, $(CW_FILENAMES))
@@ -47,7 +47,7 @@ $(ASM): $(LIBFTA) $(ASM_BIN)
 
 $(CW): $(LIBFTA) $(CW_BIN)
 	@echo ""
-	@$(CC) $(FLAGS) $^ -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR) -L $(LIBFT) -l ft
+	@$(CC) $(FLAGS) $^ -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR) -L $(LIBFT) -l ft -l ncurses
 	@echo ${GREEN}[$(CW) is up to date.]${NC}
 
 $(ODIR)/%.o: $(ASM_SRCDIR)/%.c $(INCLUDES)

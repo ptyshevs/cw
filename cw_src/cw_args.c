@@ -65,7 +65,7 @@ t_arg	*instr_to_args(const t_op *instr)
 
 	args = ft_memalloc(sizeof(t_arg) * 4);
 	args[0].type = (t_uc)instr->args[0];
-	args[0].size = (t_uc)(args[i].type == T_DIR ? instr->label_size : args[0].type);
+	args[0].size = (t_uc)(args[0].type == T_DIR ? instr->label_size : args[0].type);
 	if (args[0].type == T_REG)
 		args[0].code = REG_CODE;
 	else if (args[0].type == T_DIR)
@@ -97,16 +97,16 @@ t_bool	args_are_valid(const t_op *instr, t_arg *args)
 	while (i < instr->nargs)
 	{
 		if (!(args[i].type & instr->args[i]))
-			return (FALSE);
+			return (False);
 		i++;
 	}
 	while (i < 4)
 	{
 		if (args[i].code != 0)
-			return (FALSE);
+			return (False);
 		i++;
 	}
-	return (TRUE);
+	return (True);
 }
 
 /*
