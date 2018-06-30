@@ -73,7 +73,7 @@ int		main(int ac, char **av)
 	if (map.log.level > v_essential)
 	{
 //		show_bots(map.bots, map.n_bots);
-		show_map(&map);
+//		show_map(&map);
 	}
 //	show_procs(map.procs);
 	game_loop(&map);

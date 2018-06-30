@@ -23,6 +23,7 @@
 # include "ft_strnum.h"
 # include "ft_tell.h"
 # include <fcntl.h>
+#include <ft_lst.h>
 
 typedef unsigned int t_uint;
 
@@ -119,6 +120,9 @@ typedef struct	s_log
 {
 	t_vrb		level;
 	int			to;
+	t_list		*log;
+	int			cur_length;
+	int			length;
 }				t_log;
 
 
@@ -214,7 +218,7 @@ typedef struct	s_map
 void	logging(t_log log, char *brief, char *full);
 void	log_map(t_map *map, t_proc *pr, char *message, ...);
 void	log_bot(t_map *map, t_bot *bot);
-void	log_this(t_log log, char *message, ...);
+void	to_log(t_map *map, char *message, ...);
 
 /*
 ** Display information

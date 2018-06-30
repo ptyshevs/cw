@@ -55,8 +55,17 @@ void	wrapup_viz(t_viz *viz)
 
 void	vlog(t_map *map, t_viz *viz)
 {
-	(void)map;
-	mvwprintw(viz->wlog, 1, 1, "hi");
+	t_list	*tmp;
+	int		i;
+
+	tmp = map->log.log;
+	i = 24;
+	while (tmp)
+	{
+		mvwprintw(viz->wlog, i, 1, "%s", tmp->content);
+		tmp = tmp->next;
+		i -= 2;
+	}
 }
 
 /*
