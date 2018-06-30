@@ -30,6 +30,12 @@ CW_SRCDIR = cw_src
 CW_SOURCES = $(patsubst %, $(CW_SRCDIR)/%.c, $(CW_FILENAMES))
 CW_BIN = $(patsubst %, $(ODIR)/%.o, $(CW_FILENAMES))
 
+VIZ_FILENAMES = viz viz_br viz_color viz_components
+
+VIZ_SRCDIR = viz_src
+VIZ_SOURCES = $(patsubst %, $(VIZ_SRCDIR)/%.c, $(VIZ_FILENAMES))
+VIZ_BIN = $(patsubst %, $(ODIR)/%.o, $(VIZ_FILENAMES))
+
 BOTH_SRC =
 BOTH_SRCDIR = src
 BOTH_SOURCES = $(addprefix $(BOTH_SRCDIR)/, $(BOTH_SRC))
@@ -47,7 +53,7 @@ $(ASM): $(LIBFTA) $(ASM_BIN)
 	@$(CC) $(FLAGS) $^ -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR) -L $(LIBFT) -l ft
 	@echo ${GREEN}[$(ASM) is up to date.]${NC}
 
-$(CW): $(LIBFTA) $(CW_BIN)
+$(CW): $(LIBFTA) $(CW_BIN) $(VIZ_BIN)
 	@echo ""
 	@$(CC) $(FLAGS) $^ -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR) -L $(LIBFT) -l ft -l ncurses
 	@echo ${GREEN}[$(CW) is up to date.]${NC}
@@ -58,6 +64,11 @@ $(ODIR)/%.o: $(ASM_SRCDIR)/%.c $(INCLUDES)
 	@$(CC) $(FLAGS) -c $< -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR)
 
 $(ODIR)/%.o: $(CW_SRCDIR)/%.c $(INCLUDES)
+	@mkdir -p $(ODIR)
+	@/bin/echo -n "."
+	@$(CC) $(FLAGS) -c $< -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR)
+
+$(ODIR)/%.o: $(VIZ_SRCDIR)/%.c $(INCLUDES)
 	@mkdir -p $(ODIR)
 	@/bin/echo -n "."
 	@$(CC) $(FLAGS) -c $< -o $@ -I $(LIBFT_INCDIR) -I $(INCDIR)
