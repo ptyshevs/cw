@@ -42,10 +42,10 @@ void	game_loop(t_map *map)
 {
 	while (map->pref.cycles_to_die >= 0 && any_proc_alive(map->procs))
 	{
-		dump_if_necessary(map);
-		update_procs(map);
 		if (map->viz_mode)
 			viz_arena(&map->viz, map);
+		dump_if_necessary(map);
+		update_procs(map);
 		map->cyc_cur++;
 		map->cyc_cnt++;
 		if (map->cyc_cur == map->pref.cycles_to_die)

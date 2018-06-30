@@ -101,7 +101,7 @@ void	log_map(t_map *map, t_proc *pr, char *message, ...)
 	{
 		va_start(ap, message);
 		tmp = ft_vsprintf(message, ap);
-		to_log(map, "%u %02x %s: %s\n", pr->pc + 1, get_map(map, pr->pc),
+		to_log(map, "%#06x %02x %s: %s\n", pr->pc + 1, get_map(map, pr->pc),
 			pr->cur_ins->name, tmp);
 	}
 }

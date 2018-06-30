@@ -128,21 +128,36 @@ typedef struct	s_log
 
 
 /*
-** Structure used for managing logging options
+** Structure for vizualization
 ** Fields:
-**    - level: level of verbosity
-**    - to: FD to which log should be written
+**    - h_main: height of the main window
+**    - w_main: width of the main window
+**    - wmain: main window
+**    - wmap: map window
+**    - winfo: information window
+**    - wlive: live breakdown window
+**    - wlog: logging window
+**
+**    - br: breakdown of lives for the current period
+**    - prev_br: breakdown for the previous period
+**    - active: whether viz is running or paused
+**    - cycles_sec: cycles per second
 */
 
 typedef struct	s_viz
 {
 	int		h_main;
 	int		w_main;
+
 	WINDOW	*wmain;
 	WINDOW	*wmap;
 	WINDOW	*winfo;
 	WINDOW	*wlive;
 	WINDOW	*wlog;
+
+	int		*br;
+	int		*prev_br;
+
 	t_bool	active;
 	int		cycles_sec;
 }				t_viz;
@@ -207,6 +222,7 @@ typedef struct	s_map
 
 	int				cyc_cnt; // this is indicator of current cycle
 	int				cyc_cur; // this regulates game loop
+	int				lives_cur; // current total value of lives
 
 	t_bool			viz_mode; // the last argument wins
 	t_log			log;
