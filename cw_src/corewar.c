@@ -13,6 +13,28 @@
 #include "cw.h"
 
 /*
+** Dump map state if necessary
+*/
+
+void	dump_if_necessary(t_map *map)
+{
+	char	*tmp;
+
+	if (map->viz_mode || !map->dump.dump)
+		return ;
+	if (map->cyc_cur > 0 && map->cyc_cur % map->dump.n == 0)
+	{
+		if (map->dump.once)
+		{
+			show_map(map);
+			exit(0);
+		}
+		show_map(map);
+		ft_gnl(0, &tmp);
+	}
+}
+
+/*
 ** Game loop
 */
 
@@ -20,9 +42,9 @@ void	game_loop(t_map *map)
 {
 	while (map->pref.cycles_to_die >= 0 && any_proc_alive(map->procs))
 	{
-
+		dump_if_necessary(map);
 		update_procs(map);
-		if (map->viz.on)
+		if (map->viz_mode)
 			viz_arena(&map->viz, map);
 		map->cyc_cur++;
 		map->cyc_cnt++;
@@ -44,7 +66,7 @@ int		main(int ac, char **av)
 
 	set_default_pref(&map);
 	parse_cli(&map, ac, av);
-	if (map.viz.on)
+	if (map.viz_mode)
 		init_viz(&map.viz);
 	inhabit_map(&map);
 	init_procs(&map);
@@ -54,8 +76,8 @@ int		main(int ac, char **av)
 		show_map(&map);
 	}
 //	show_procs(map.procs);
-//	game_loop(&map);
-	if (map.viz.on)
+	game_loop(&map);
+	if (map.viz_mode)
 		wrapup_viz(&map.viz);
 	return (0);
 }

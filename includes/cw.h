@@ -131,7 +131,6 @@ typedef struct	s_log
 
 typedef struct	s_viz
 {
-	t_bool	on;
 	int		h_main;
 	int		w_main;
 	WINDOW	*wmain;
@@ -199,6 +198,7 @@ typedef struct	s_map
 	int				cyc_cnt; // this is indicator of current cycle
 	int				cyc_cur; // this regulates game loop
 
+	t_bool			viz_mode; // the last argument wins
 	t_log			log;
 	t_viz			viz;
 	t_pref			pref;

@@ -78,6 +78,10 @@ void	show_map(t_map *map)
 				ft_printf("{nc}");
 			m++;
 		}
+		if (i == 0)
+			ft_printf("0x0000 : ");
+		else if (i % 64 == 0)
+			ft_printf("%#06x : ", i);
 		ft_printf((i + 1) % 64 ? "%02x " : "%02x", map->map[i]);
 		if (++i % 64 == 0)
 			ft_printf("\n");
