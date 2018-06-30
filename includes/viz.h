@@ -1,0 +1,83 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   viz.h                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/01 00:39:05 by ptyshevs          #+#    #+#             */
+/*   Updated: 2018/07/01 00:39:29 by ptyshevs         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef VIZ_H
+# define VIZ_H
+# include "cw.h"
+# include "ncurses.h"
+
+/*
+** Structure for vizualization
+** Fields:
+**    - h_main: height of the main window
+**    - w_main: width of the main window
+**    - wmain: main window
+**    - wmap: map window
+**    - winfo: information window
+**    - wlive: live breakdown window
+**    - wlog: logging window
+**
+**    - br: breakdown of lives for the current period
+**    - prev_br: breakdown for the previous period
+**    - active: whether viz is running or paused
+**    - cycles_sec: cycles per second
+*/
+
+typedef struct	s_viz
+{
+	int		h_main;
+	int		w_main;
+
+	WINDOW	*wmain;
+	WINDOW	*wmap;
+	WINDOW	*winfo;
+	WINDOW	*wlive;
+	WINDOW	*wlog;
+
+	int		*br;
+	int		*prev_br;
+
+	t_bool	active;
+	int		cycles_sec;
+}				t_viz;
+
+/*
+** Color structure
+*/
+
+typedef struct	s_col
+{
+	char	*name;
+	chtype	c;
+}				t_col;
+
+/*
+** Vizualization
+*/
+
+void		init_color_table(void);
+chtype		get_color(char *color);
+int			get_proc_color(t_map *map, int id);
+chtype		get_bot_color_by_index(int index, t_bool foreground);
+
+void		init_viz(t_map *map);
+void		wrapup_viz(t_viz *viz);
+void		viz_arena(t_viz *viz, t_map *map);
+
+void		vproc(t_map *map, t_viz *viz);
+void		vmap(t_map *map, t_viz *viz);
+void		vinfo(t_map *map, t_viz *viz);
+void		vbots(t_map *map, t_viz *viz);
+void		vlive(t_map *map, t_viz *viz);
+void		vlog(t_map *map, t_viz *viz);
+
+#endif

@@ -7,7 +7,7 @@ LIBFT = libft
 LIBFTA = $(LIBFT)/libft.a
 LIBFT_INCDIR = $(LIBFT)/includes
 
-HEADERS = cw.h op.h asm.h
+HEADERS = cw.h op.h asm.h viz.h structs.h
 INCDIR = includes
 INCLUDES = $(addprefix $(INCDIR)/, $(HEADERS))
 

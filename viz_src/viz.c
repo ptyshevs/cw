@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cw.h"
+#include "viz.h"
 
 /*
 ** Initialize vizualization windows and set background colors

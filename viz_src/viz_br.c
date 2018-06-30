@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cw.h"
+#include "viz.h"
 
 /*
 ** Breakdown bar of 48 symbols int parts proportionally to number of lives of
