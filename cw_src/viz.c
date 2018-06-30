@@ -36,13 +36,27 @@ void	init_viz(t_viz *viz)
 	wbkgd(viz->wmain, get_color("bg"));
 	wbkgd(viz->wmap, get_color("map"));
 	wbkgd(viz->winfo, get_color("map"));
-	wbkgd(viz->wlog, get_color("debug"));
+	wbkgd(viz->wlog, get_color("map"));
 }
+
+/*
+** End vizualization
+*/
 
 void	wrapup_viz(t_viz *viz)
 {
 	(void)viz;
 	endwin();
+}
+
+/*
+** Vizualize log - store list of K last messages, redrawing it on every iteration
+*/
+
+void	vlog(t_map *map, t_viz *viz)
+{
+	(void)map;
+	mvwprintw(viz->wlog, 1, 1, "hi");
 }
 
 /*
@@ -55,6 +69,7 @@ void	viz_arena(t_viz *viz, t_map *map)
 	vproc(map, viz);
 	vinfo(map, viz);
 	vbots(map, viz);
+	vlog(map, viz);
 
 	wrefresh(viz->wmain);
 	wrefresh(viz->wmap);
