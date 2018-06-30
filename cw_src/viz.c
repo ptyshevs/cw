@@ -13,34 +13,49 @@
 #include "cw.h"
 
 /*
+ * Initialize vizualization windows and set background colors
+ */
+
+void	init_viz_windows(t_map *map, t_viz *viz)
+{
+	viz->wmain = newwin(viz->h_main, viz->w_main, 0, 0);
+	viz->wmap = newwin(64, 193, 1, 2);
+	viz->winfo = newwin(8 + map->n_bots * 4, 52, 1, 196);
+	viz->wlive = newwin(9, 52, 10 + map->n_bots * 4, 196);
+	viz->wlog = newwin(map->log->length, map->log->width,
+						20 + map->n_bots * 4, 196);
+	wbkgd(viz->wmain, get_color("bg"));
+	wbkgd(viz->wmap, get_color("map"));
+	wbkgd(viz->winfo, get_color("map"));
+	wbkgd(viz->wlive, get_color("map"));
+	wbkgd(viz->wlog, get_color("map"));
+}
+
+/*
 ** Initialize everything that is needed for vizualization
 */
 
-void	init_viz(t_viz *viz, t_log *log, t_uint n_bots)
+void	init_viz(t_map *map)
 {
+	t_viz	*viz;
+
 	initscr(); // init terminal
 	curs_set(0); // make cursor invisible
 	noecho(); // disable echoing of input during getch()
 	cbreak(); // disable line buffering
 	keypad(stdscr, true);
 	init_color_table();
-
+	map->viz = ft_memalloc(sizeof(t_viz));
+	viz = map->viz;
 	viz->active = True;
 	viz->h_main = 66;
 	viz->w_main = 250;
-	log->length = 29 + (4 - n_bots) * 4;
-	log->width = 52;
-	viz->wmain = newwin(viz->h_main, viz->w_main, 0, 0);
-	viz->wmap = newwin(64, 193, 1, 2);
-	viz->winfo = newwin(8 + n_bots * 4, 52, 1, 196);
-	viz->wlive = newwin(9, 52, 10 + n_bots * 4, 196);
-	viz->wlog = newwin(log->length, log->width, 20 + n_bots * 4, 196);
-
-	wbkgd(viz->wmain, get_color("bg"));
-	wbkgd(viz->wmap, get_color("map"));
-	wbkgd(viz->winfo, get_color("map"));
-	wbkgd(viz->wlive, get_color("map"));
-	wbkgd(viz->wlog, get_color("map"));
+	map->log->length = 29 + (4 - map->n_bots) * 4;
+	map->log->width = 52;
+	map->log->log = ft_memalloc(sizeof(char *) * map->log->length);
+	viz->br = ft_memalloc(sizeof(int) * map->n_bots);
+	viz->prev_br = ft_memalloc(sizeof(int) * map->n_bots);
+	init_viz_windows(map, viz);
 }
 
 /*
@@ -58,42 +73,33 @@ void	wrapup_viz(t_viz *viz)
 ** each player
 */
 
-int		*breakdown(t_map *map)
+void	update_breakdown(t_map *map)
 {
-	int		*br;
 	t_uint	i;
 	t_bot	*bot;
 
-	br = ft_memalloc(sizeof(int) * map->n_bots);
 	i = 0;
 	while (i < map->n_bots)
 	{
 		bot = map->bots[i];
 		if (map->lives_cur == 0)
-			br[i] = 48 / map->n_bots;
+			map->viz->br[i] = 48 / map->n_bots;
 		else
-			br[i] = (int)((float)bot->lives / (float)map->lives_cur * 48);
+			map->viz->br[i] = (int)((float)bot->lives / (float)map->lives_cur * 48);
 		i++;
 	}
-	return (br);
 }
 
 /*
 ** Vizualize period bar on the <height> specified
 */
 
-void	vperiod(t_map *map, t_viz *viz, int height, int *br)
+void	vperiod(t_map *map, t_viz *viz, int height, const int *br)
 {
 	t_uint	k;
 	int		m;
 	t_uint	i;
 	chtype	c;
-
-	if (!br)
-	{
-		mvwprintw(viz->wlive, height, 1, "[------------------------------------------------]");
-		return ;
-	}
 
 	mvwaddch(viz->wlive, height, 1, '[');
 	k = 2;
@@ -107,6 +113,8 @@ void	vperiod(t_map *map, t_viz *viz, int height, int *br)
 		wattroff(viz->wlive, c);
 		i++;
 	}
+	while (k < 50)
+		mvwaddch(viz->wlive, height, k++, '-');
 	mvwaddch(viz->wlive, height, 50, ']');
 }
 
@@ -117,20 +125,16 @@ void	vperiod(t_map *map, t_viz *viz, int height, int *br)
 void	vlive(t_map *map, t_viz *viz)
 {
 
-	if (viz->br)
-		ft_memdel((void **)&viz->br);
-	viz->br = breakdown(map);
+//	if (viz->br)
+//		ft_bzero(viz->br, sizeof(int) * map->n_bots);
+	update_breakdown(map);
 	if (map->cyc_cnt && map->cyc_cur == 0)
-	{
-		if (viz->prev_br)
-			ft_memdel((void **)&viz->prev_br);
-		viz->prev_br = viz->br;
-	}
+		ft_memcpy(viz->prev_br, viz->br, sizeof(int) * map->n_bots);
 	mvwprintw(viz->wlive, 1, 1, "Live breakdown for current period:");
 	vperiod(map, viz, 3, viz->br);
 //	mvwprintw(viz->wlive, 3, 1, "[------------------------------------------------]");
 	mvwprintw(viz->wlive, 5, 1, "Live breakdown for last period:");
-	vperiod(map, viz, 5, viz->prev_br);
+	vperiod(map, viz, 7, viz->prev_br);
 //	mvwprintw(viz->wlive, 7, 1, "[------------------------------------------------]");
 }
 

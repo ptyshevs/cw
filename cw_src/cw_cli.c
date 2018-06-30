@@ -24,7 +24,7 @@ static void	parse_verbosity(t_map *map, int ac, char **av, int i)
 		ft_panic(1, "No verbosity specified. Use 1, 2, or 3.\n");
 	if ((tmp = ft_atoi(av[i + 1])) < 1 || tmp > 3)
 		ft_panic(1, "Bad verbosity level. Use 1, 2, or 3. ", av[i + 1]);
-	map->log.level = (t_vrb)tmp;
+	map->log->level = (t_vrb)tmp;
 }
 
 /*
@@ -54,9 +54,9 @@ void	parse_dump(t_map *map, char *n, t_bool stream)
 {
 	if (ft_slen(n) == 0 || !ft_strisnum(n, 10))
 		ft_panic(1, "Bad number of cycles specified for dump\n");
-	map->dump.dump = True;
-	map->dump.once = (t_bool)!stream;
-	map->dump.n = ft_atoi(n);
+	map->dump->dump = True;
+	map->dump->once = (t_bool)!stream;
+	map->dump->n = ft_atoi(n);
 	map->viz_mode = False;
 }
 
@@ -99,12 +99,14 @@ void		parse_cli(t_map *map, int ac, char **av)
 
 void	set_default_pref(t_map *map)
 {
-
-	map->log.level = v_essential;
-	map->log.to = 1;
+	map->log = ft_memalloc(sizeof(t_log));
+	map->pref = ft_memalloc(sizeof(t_pref));
+	map->dump = ft_memalloc(sizeof(t_dump));
+	map->log->level = v_essential;
+	map->log->to = 1;
 	map->viz_mode = False;
-	map->pref.cycles_to_die = CYCLE_TO_DIE;
-	map->pref.cycle_delta = CYCLE_DELTA;
-	map->pref.max_checks = MAX_CHECKS;
-	map->pref.nbr_live = NBR_LIVE;
+	map->pref->cycles_to_die = CYCLE_TO_DIE;
+	map->pref->cycle_delta = CYCLE_DELTA;
+	map->pref->max_checks = MAX_CHECKS;
+	map->pref->nbr_live = NBR_LIVE;
 }

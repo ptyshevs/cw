@@ -20,11 +20,11 @@ void	dump_if_necessary(t_map *map)
 {
 	char	*tmp;
 
-	if (map->viz_mode || !map->dump.dump)
+	if (map->viz_mode || !map->dump->dump)
 		return ;
-	if (map->cyc_cur > 0 && map->cyc_cur % map->dump.n == 0)
+	if (map->cyc_cur > 0 && map->cyc_cur % map->dump->n == 0)
 	{
-		if (map->dump.once)
+		if (map->dump->once)
 		{
 			show_map(map);
 			exit(0);
@@ -40,17 +40,17 @@ void	dump_if_necessary(t_map *map)
 
 void	game_loop(t_map *map)
 {
-	while (map->pref.cycles_to_die >= 0 && any_proc_alive(map->procs))
+	while (map->pref->cycles_to_die >= 0 && any_proc_alive(map->procs))
 	{
 		if (map->viz_mode)
-			viz_arena(&map->viz, map);
+			viz_arena(map->viz, map);
 		dump_if_necessary(map);
 		update_procs(map);
 		map->cyc_cur++;
 		map->cyc_cnt++;
-		if (map->cyc_cur == map->pref.cycles_to_die)
+		if (map->cyc_cur == map->pref->cycles_to_die)
 		{
-			map->pref.cycles_to_die -= map->pref.cycle_delta;
+			map->pref->cycles_to_die -= map->pref->cycle_delta;
 			map->cyc_cur = 0;
 		}
 	}
@@ -89,11 +89,11 @@ int		main(int ac, char **av)
 	set_default_pref(&map);
 	parse_cli(&map, ac, av);
 	if (map.viz_mode)
-		init_viz(&map.viz, &map.log, map.n_bots);
+		init_viz(&map);
 	introduce_bots(&map);
 	inhabit_map(&map);
 	init_procs(&map);
-	if (map.log.level > v_essential)
+	if (map.log->level > v_essential)
 	{
 //		show_bots(map.bots, map.n_bots);
 //		show_map(&map);
@@ -101,6 +101,6 @@ int		main(int ac, char **av)
 //	show_procs(map.procs);
 	game_loop(&map);
 	if (map.viz_mode)
-		wrapup_viz(&map.viz);
+		wrapup_viz(map.viz);
 	return (0);
 }

@@ -13,68 +13,27 @@
 #include "cw.h"
 
 /*
-** Delete last <n> entries from the list
-*/
-
-void	ft_lstdel_last(t_list **ahead, int len, int n)
-{
-	int		i;
-	t_list	*tmp;
-	t_list	*prev;
-
-	tmp = *ahead;
-	i = 1;
-	while (i < len - n)
-	{
-		tmp = tmp->next;
-		i++;
-	}
-	while (n > 1)
-	{
-		prev = tmp;
-		tmp = tmp->next;
-		n--;
-		ft_memdel(&prev->content);
-		ft_memdel((void **)&prev);
-	}
-}
-
-/*
 ** Log to vizualization
 */
 
 void	to_vlog(t_map *map, char *message, va_list ap)
 {
-	char	*str;
+	int		i;
 
-	str = ft_vsprintf(message, ap);
-	ft_lstadd(&map->log.log, ft_lstnew(str, ft_slen(str) + 1));
-	map->log.cur_length++;
-	if (map->log.cur_length > map->log.length)
+	if (map->log->log[map->log->length - 1])
+		ft_strdel(&map->log->log[map->log->length - 1]);
+	i = map->log->cur_length - 1;
+	while (i >= 0)
 	{
-		ft_lstdel_last(&map->log.log, map->log.cur_length,
-					map->log.cur_length - map->log.length);
-		map->log.cur_length = map->log.length;
+		map->log->log[i + 1] = map->log->log[i];
+		i--;
 	}
+	map->log->log[0] = ft_vsprintf(message, ap);
+	map->log->cur_length += map->log->cur_length < map->log->length ? 1 : 0;
 }
 
 /*
-** Log message either to stdout (default behavior) or to fd
-*/
-
-void	logging(t_log log, char *brief, char *full)
-{
-	if (log.level == v_brief && brief)
-		ft_dprintf(log.to, "%s\n", brief);
-	else if (log.level == v_full && full)
-		ft_dprintf(log.to, "%s\n", full);
-	else
-		ft_panic(1, "Unrecognized log.level level (%d) or arguments:"
-		"\n%s\n%s\n%s\n", log.level, brief, full);
-}
-
-/*
-** Log smth, either to log.fd, or to viz log
+** Log smth, either to log->fd, or to viz log
 */
 
 void	to_log(t_map *map, char *message, ...)
@@ -83,7 +42,7 @@ void	to_log(t_map *map, char *message, ...)
 
 	va_start(ap, message);
 	if (!map->viz_mode)
-		ft_vdprintf(map->log.to, message, ap);
+		ft_vdprintf(map->log->to, message, ap);
 	else
 		to_vlog(map, message, ap);
 }
@@ -97,7 +56,7 @@ void	log_map(t_map *map, t_proc *pr, char *message, ...)
 	va_list	ap;
 	char	*tmp;
 
-	if (map->log.level > v_essential)
+	if (map->log->level > v_essential)
 	{
 		va_start(ap, message);
 		tmp = ft_vsprintf(message, ap);

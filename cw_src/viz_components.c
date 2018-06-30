@@ -99,14 +99,14 @@ void	vbots(t_map *map, t_viz *viz)
 void	vinfo(t_map *map, t_viz *viz)
 {
 	wattron(viz->winfo, get_color("info"));
-	mvwprintw(viz->winfo, 1, 20, viz->active ? "** RUNNING **" : "** PAUSED **");
+	mvwaddstr(viz->winfo, 1, 20, viz->active ? "** RUNNING **" : "** PAUSED **");
 	mvwprintw(viz->winfo, 3, 1, "Cycle: %d", map->cyc_cnt);
 	mvwprintw(viz->winfo, 4, 25, "Cycles/second limit: %d", viz->cycles_sec);
 	mvwprintw(viz->winfo, 4, 1, "Processes: %d", map->n_proc);
-	mvwprintw(viz->winfo, 3, 25, "Cycles to die: %d", map->pref.cycles_to_die);
-	mvwprintw(viz->winfo, 5, 1, "NBR_LIVE: %d", map->pref.nbr_live);
-	mvwprintw(viz->winfo, 5, 25, "Cycles delta: %d", map->pref.cycle_delta);
-	mvwprintw(viz->winfo, 6, 1, "MAX_CHECKS: %d", map->pref.max_checks);
+	mvwprintw(viz->winfo, 3, 25, "Cycles to die: %d", map->pref->cycles_to_die);
+	mvwprintw(viz->winfo, 5, 1, "NBR_LIVE: %d", map->pref->nbr_live);
+	mvwprintw(viz->winfo, 5, 25, "Cycles delta: %d", map->pref->cycle_delta);
+	mvwprintw(viz->winfo, 6, 1, "MAX_CHECKS: %d", map->pref->max_checks);
 	wattroff(viz->winfo, get_color("info"));
 }
 
@@ -116,15 +116,17 @@ void	vinfo(t_map *map, t_viz *viz)
 
 void	vlog(t_map *map, t_viz *viz)
 {
-	t_list	*tmp;
+	t_log	*log;
 	int		i;
+	int		j;
 
-	tmp = map->log.log;
-	i = map->log.length - 1;
-	while (tmp)
+	log = map->log;
+	i = 0;
+	j = log->length - 1;
+	while (i < log->cur_length)
 	{
-		mvwprintw(viz->wlog, i, 1, "%s", tmp->content);
-		if ((tmp = tmp->next))
-			i -= tmp->content_size / map->log.width + 1;
+		mvwaddstr(viz->wlog, j, 1, log->log[i]);
+		i++;
+		j -= (int)(ft_slen(log->log[i]) / log->width + 1);
 	}
 }

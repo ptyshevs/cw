@@ -120,7 +120,7 @@ typedef struct	s_log
 {
 	t_vrb		level;
 	int			to;
-	t_list		*log;
+	char		**log;
 	int			cur_length;
 	int			length;
 	int			width;
@@ -225,19 +225,18 @@ typedef struct	s_map
 	int				lives_cur; // current total value of lives
 
 	t_bool			viz_mode; // the last argument wins
-	t_log			log;
-	t_viz			viz;
-	t_pref			pref;
-	t_dump			dump;
+	t_log			*log;
+	t_viz			*viz;
+	t_pref			*pref;
+	t_dump			*dump;
 }				t_map;
 
 
 
 /*
-** Logging and debugging
+** Logging
 */
 
-void	logging(t_log log, char *brief, char *full);
 void	log_map(t_map *map, t_proc *pr, char *message, ...);
 void	to_log(t_map *map, char *message, ...);
 
@@ -324,7 +323,7 @@ chtype		get_color(char *color);
 int			get_proc_color(t_map *map, int id);
 chtype		get_bot_color_by_index(int index, t_bool foreground);
 
-void		init_viz(t_viz *viz, t_log *log, t_uint n_bots);
+void		init_viz(t_map *map);
 void		wrapup_viz(t_viz *viz);
 void		viz_arena(t_viz *viz, t_map *map);
 
