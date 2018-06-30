@@ -31,6 +31,15 @@ As I see it, algorithm looks like this:
 Apart from this, there should be tight relationship with visualization and
 logging.
 
+## Modes of operation
+  - Text mode:
+    - Default: minimum info to stdout
+    - Verbose: different levels of verbosity when writing to stdout
+    - Dump:
+      - Dump memory state after <N> cycles, then exit
+      - Dump memory state each <N> cycles
+  - Vizualization
+
 ## Logging
 
 There should be globally-accessible logging variable with various levels of

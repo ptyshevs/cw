@@ -35,11 +35,8 @@ void	log_this(t_log log, char *message, ...)
 {
 	va_list	ap;
 
-	if (log.level > v_none)
-	{
-		va_start(ap, message);
-		ft_vdprintf(log.to, message, ap);
-	}
+	va_start(ap, message);
+	ft_vdprintf(log.to, message, ap);
 }
 
 /*
@@ -50,7 +47,7 @@ void	log_map(t_map *map, t_proc *pr, char *message, ...)
 {
 	va_list	ap;
 
-	if (map->log.level > v_none)
+	if (map->log.level > v_essential)
 	{
 		va_start(ap, message);
 		ft_dprintf(map->log.to, "%u %02x %s: ", pr->pc + 1,
@@ -58,4 +55,16 @@ void	log_map(t_map *map, t_proc *pr, char *message, ...)
 		ft_vdprintf(map->log.to, message, ap);
 		ft_dprintf(map->log.to, "\n");
 	}
+}
+
+/*
+** Log bot (essential information)
+*/
+
+void	log_bot(t_map *map, t_bot *bot)
+{
+	if (map->n_bots == 1)
+		log_this(map->log, "Introducing contestants...\n");
+	log_this(map->log, "* Player %d, weighting %d bytes, \"%s\" (\"%s\")!\n",
+	map->n_bots, bot->header->size,bot->header->name, bot->header->comment);
 }

@@ -28,10 +28,13 @@ static void	parse_verbosity(t_map *map, int ac, char **av, int i)
 }
 
 /*
-** Parse id CLI argument (-n <id>)
+** Parse id CLI argument (-n <id> <bot>)
+**
+** If -n is found on i-th index, try to find number at i+1 and bot at i+2
+
 */
 
-static void	parse_id(t_map *map, int ac, char **av, int i)
+static t_bool	parse_id(t_map *map, int ac, char **av, int i)
 {
 	if (i + 1 >= ac)
 		ft_panic(1, "No id specified\n");
@@ -40,12 +43,29 @@ static void	parse_id(t_map *map, int ac, char **av, int i)
 	if (i + 2 >= ac)
 		ft_panic(1, "Unexpected end of arguments after specifying id\n");
 	read_bot(map, av[i + 2], ft_atoi(av[i + 1]), True);
+	return (True);
 }
 
+/*
+** Store bots id (need to color processes for vizualization)
+*/
 
+static void	collect_ids(t_map *map)
+{
+	t_uint	i;
+
+	map->bot_ids = ft_memalloc(sizeof(int) * map->n_bots);
+	i = 0;
+	while (i < map->n_bots)
+	{
+		map->bot_ids[i] = map->bots[i]->id;
+		i++;
+	}
+}
 
 /*
 ** Parse Command-line arguments
+**
 */
 
 void		parse_cli(t_map *map, int ac, char **av)
@@ -60,11 +80,10 @@ void		parse_cli(t_map *map, int ac, char **av)
 	{
 		if (ft_strequ(av[i], "-h") || ft_strequ(av[i], "--help"))
 			show_usage();
-		else if (ft_strequ(av[i], "-n"))
-		{
-			parse_id(map, ac, av, i);
+		else if (ft_strequ(av[i], "-d") || ft_strequ(av[i], "--dump"))
+
+		else if (ft_strequ(av[i], "-n") && parse_id(map, ac, av, i))
 			i += 2;
-		}
 		else if (ft_strequ(av[i], "-v"))
 			parse_verbosity(map, ac, av, i++);
 		else if (ft_strequ(av[i], "-z"))
@@ -72,6 +91,7 @@ void		parse_cli(t_map *map, int ac, char **av)
 		else
 			read_bot(map, av[i], -cur_id++, False);
 	}
+	collect_ids(map);
 }
 
 /*
@@ -81,7 +101,7 @@ void		parse_cli(t_map *map, int ac, char **av)
 void	set_default_pref(t_map *map)
 {
 
-	map->log.level = v_none;
+	map->log.level = v_essential;
 	map->log.to = 1;
 	map->pref.cycles_to_die = CYCLE_TO_DIE;
 	map->pref.cycle_delta = CYCLE_DELTA;

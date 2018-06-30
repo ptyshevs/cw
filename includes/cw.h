@@ -98,7 +98,12 @@ typedef struct	s_proc
 
 typedef enum	e_vrb
 {
-	v_none,
+	v_essential,
+	v_alive,
+	v_cycles = 2,
+	v_ops = 4,
+	v_deaths = 8,
+	v_pc = 16,
 	v_brief,
 	v_full
 }				t_vrb;
@@ -187,6 +192,7 @@ typedef struct	s_map
 	int				cyc_cnt; // this is indicator of current cycle
 	int				cyc_cur; // this regulates game loop
 
+	t_bool			dump;
 	t_log			log;
 	t_viz			viz;
 	t_pref			pref;
@@ -200,6 +206,7 @@ typedef struct	s_map
 
 void	logging(t_log log, char *brief, char *full);
 void	log_map(t_map *map, t_proc *pr, char *message, ...);
+void	log_bot(t_map *map, t_bot *bot);
 void	log_this(t_log log, char *message, ...);
 
 /*
@@ -246,6 +253,7 @@ void	move_proc(t_proc *pr, t_uint n);
 */
 
 void	init_procs(t_map *map);
+t_bool	any_proc_alive(t_proc *pr);
 
 /*
 ** Operations on arguments
@@ -279,6 +287,9 @@ chtype		get_color(char *color);
 int			get_proc_color(t_map *map, int id);
 chtype		get_bot_color_by_index(int index, t_bool foreground);
 
+void		init_viz(t_viz *viz);
+void		wrapup_viz(t_viz *viz);
+void		viz_arena(t_viz *viz, t_map *map);
 
 void		vproc(t_map *map, t_viz *viz);
 void		vmap(t_map *map, t_viz *viz);

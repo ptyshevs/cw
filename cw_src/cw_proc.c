@@ -24,7 +24,7 @@ t_proc	*create_proc(t_uint id, t_uint pos)
 	pr->alive = True;
 	pr->pc = pos;
 	pr->reg[0] = id; // do I need it?
-	pr->id = id;
+	pr->id = id; // I need this for viz
 	return (pr);
 }
 
@@ -65,4 +65,20 @@ void	init_procs(t_map *map)
 		map->n_proc++;
 		m++;
 	}
+}
+
+/*
+** Check if any of the processes is alive.
+** One of the stopping conditions of game loop
+*/
+
+t_bool	any_proc_alive(t_proc *pr)
+{
+	while (pr)
+	{
+		if (pr->alive)
+			return (True);
+		pr = pr->next;
+	}
+	return (False);
 }
