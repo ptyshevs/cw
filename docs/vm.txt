@@ -47,6 +47,7 @@ global variables by using static variables and special initialization step.
   - Как часто процесс должен выполнять команду live?
   - Что если инструкция и кодаж начинаются в конце карты, а аргументы
     перескочили в начало?
+  - What is "live breakworn for current|last period"?
 
 ## Vizualization
 

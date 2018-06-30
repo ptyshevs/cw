@@ -76,6 +76,12 @@ void	vinfo(t_map *map, t_viz *viz)
 {
 	wattron(viz->winfo, get_color("info"));
 	mvwprintw(viz->winfo, 1, 20, viz->active ? "** RUNNING **" : "** PAUSED **");
-	mvwprintw(viz->winfo, 3, 1, "Cycle: %d", map->cycle);
+	mvwprintw(viz->winfo, 3, 1, "Cycle: %d", map->cyc_cnt);
+	mvwprintw(viz->winfo, 4, 25, "Cycles/second limit: %d", viz->cycles_sec);
+	mvwprintw(viz->winfo, 4, 1, "Processes: %d", map->n_proc);
+	mvwprintw(viz->winfo, 3, 25, "Cycles to die: %d", map->pref.cycles_to_die);
+	mvwprintw(viz->winfo, 5, 1, "NBR_LIVE: %d", map->pref.nbr_live);
+	mvwprintw(viz->winfo, 5, 25, "Cycles delta: %d", map->pref.cycle_delta);
+	mvwprintw(viz->winfo, 6, 1, "MAX_CHECKS: %d", map->pref.max_checks);
 	wattroff(viz->winfo, get_color("info"));
 }

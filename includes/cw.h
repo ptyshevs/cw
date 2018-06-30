@@ -129,6 +129,7 @@ typedef struct	s_viz
 	WINDOW	*winfo;
 	WINDOW	*wlog;
 	t_bool	active;
+	int		cycles_sec;
 }				t_viz;
 
 /*
@@ -147,7 +148,7 @@ typedef struct	s_col
 
 typedef struct	s_pref
 {
-	t_uint	cycles_to_die;
+	int		cycles_to_die;
 	t_uint	cycle_delta;
 	t_uint	nbr_live;
 	t_uint	max_checks;
@@ -178,8 +179,8 @@ typedef struct	s_map
 	t_uint			n_proc;
 	t_proc			*procs;
 
-	int				cycle; // this is indicator of current cycle
-	int				game_cycles; // this regulates game loop
+	int				cyc_cnt; // this is indicator of current cycle
+	int				cyc_cur; // this regulates game loop
 
 	t_log			log;
 	t_viz			viz;

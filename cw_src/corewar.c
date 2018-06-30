@@ -60,6 +60,39 @@ void	viz_map(t_viz *viz, t_map *map)
 }
 
 /*
+** Check if any of the processes is alive.
+** One of the stopping conditions of game loop
+*/
+
+t_bool	any_proc_alive(t_proc *pr)
+{
+	while (pr)
+	{
+		if (pr->alive)
+			return (True);
+		pr = pr->next;
+	}
+	return (False);
+}
+
+/*
+** Store bots id (need to color processes for vizualization)
+*/
+
+static void	collect_ids(t_map *map)
+{
+	t_uint	i;
+
+	map->bot_ids = ft_memalloc(sizeof(int) * map->n_bots);
+	i = 0;
+	while (i < map->n_bots)
+	{
+		map->bot_ids[i] = map->bots[i]->id;
+		i++;
+	}
+}
+
+/*
 ** Virtual Arena
 */
 
@@ -67,8 +100,10 @@ int		main(int ac, char **av)
 {
 	static t_map	map;
 
-	parse_cli(&map, ac, av);
 	set_default_pref(&map);
+	parse_cli(&map, ac, av);
+	collect_ids(&map);
+
 	if (map.viz.on)
 		init_viz(&map.viz);
 	inhabit_map(&map);
@@ -79,13 +114,24 @@ int		main(int ac, char **av)
 		show_map(&map);
 	}
 //	show_procs(map.procs);
-	for (int i = 0; i < 100; ++i)
+	while (map.pref.cycles_to_die >= 0 && any_proc_alive(map.procs))
 	{
+
 		update_procs(&map);
 		if (map.viz.on)
 			viz_map(&map.viz, &map);
-		map.cycle++;
+		map.cyc_cur++;
+		map.cyc_cnt++;
+		if (map.cyc_cur == map.pref.cycles_to_die)
+		{
+			map.pref.cycles_to_die -= map.pref.cycle_delta;
+			map.cyc_cur = 0;
+		}
 	}
+//	for (int i = 0; i < 100; ++i)
+//	{
+//
+//	}
 	if (map.viz.on)
 		wrapup_viz(&map.viz);
 	return (0);

@@ -30,7 +30,8 @@ const t_op	*find_instr(t_uint op)
 
 void	wrap_up(t_proc *pr)
 {
-	move_proc(pr, args_to_bytes(pr->cur_ins, pr->cur_args) + 1);
+	move_proc(pr, args_to_bytes(pr->cur_ins, pr->cur_args) +
+			pr->cur_ins->codage + 1);
 	ft_memdel((void **)&pr->cur_args);
 	pr->cur_ins = NULL;
 	pr->cur_cycle = 0;
@@ -46,7 +47,7 @@ void	activate_instr(t_map *map, t_proc *pr)
 {
 	if (pr->cur_ins->codage)
 		pr->cur_args = codage_to_args(pr->cur_ins, get_map(map, pr->pc + 1));
-	else
+	else // if no codage
 		pr->cur_args = instr_to_args(pr->cur_ins);
 	if (!args_are_valid(pr->cur_ins, pr->cur_args))
 	{

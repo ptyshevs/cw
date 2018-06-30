@@ -42,22 +42,7 @@ static void	parse_id(t_map *map, int ac, char **av, int i)
 	read_bot(map, av[i + 2], ft_atoi(av[i + 1]), True);
 }
 
-/*
-** Store bots id (need to color processes for vizualization)
-*/
 
-static void	collect_ids(t_map *map)
-{
-	t_uint	i;
-
-	map->bot_ids = ft_memalloc(sizeof(int) * map->n_bots);
-	i = 0;
-	while (i < map->n_bots)
-	{
-		map->bot_ids[i] = map->bots[i]->id;
-		i++;
-	}
-}
 
 /*
 ** Parse Command-line arguments
@@ -95,7 +80,6 @@ void		parse_cli(t_map *map, int ac, char **av)
 
 void	set_default_pref(t_map *map)
 {
-	collect_ids(map);
 
 	map->log.level = v_none;
 	map->log.to = 1;
