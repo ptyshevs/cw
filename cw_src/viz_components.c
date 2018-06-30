@@ -109,3 +109,22 @@ void	vinfo(t_map *map, t_viz *viz)
 	mvwprintw(viz->winfo, 6, 1, "MAX_CHECKS: %d", map->pref.max_checks);
 	wattroff(viz->winfo, get_color("info"));
 }
+
+/*
+** Vizualize log - store list of K last messages, redrawing it on every iteration
+*/
+
+void	vlog(t_map *map, t_viz *viz)
+{
+	t_list	*tmp;
+	int		i;
+
+	tmp = map->log.log;
+	i = map->log.length;
+	while (tmp)
+	{
+		mvwprintw(viz->wlog, i, 1, "%s", tmp->content);
+		tmp = tmp->next;
+		i -= 1;
+	}
+}

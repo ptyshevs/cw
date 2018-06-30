@@ -311,6 +311,6 @@ void		vproc(t_map *map, t_viz *viz);
 void		vmap(t_map *map, t_viz *viz);
 void		vinfo(t_map *map, t_viz *viz);
 void		vbots(t_map *map, t_viz *viz);
-
+void		vlog(t_map *map, t_viz *viz);
 
 #endif

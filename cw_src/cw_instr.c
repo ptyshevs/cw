@@ -54,8 +54,8 @@ void	activate_instr(t_map *map, t_proc *pr)
 		log_map(map, pr, "Invalid arguments for instruction");
 		move_proc(pr, 1);
 	}
-	if (map->log.level > v_essential)
-		show_args(pr->cur_args);
+//	if (map->log.level > v_essential)
+//		show_args(pr->cur_args);
 	// actual instruction activation should be here
 }
 

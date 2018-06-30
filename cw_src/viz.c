@@ -31,7 +31,7 @@ void	init_viz(t_viz *viz)
 	viz->wmain = newwin(viz->h_main, viz->w_main, 0, 0);
 	viz->wmap = newwin(64, 193, 1, 2);
 	viz->winfo = newwin(24, 52, 1, 196);
-	viz->wlog = newwin(40, 52, 25, 196);
+	viz->wlog = newwin(25, 52, 40, 196);
 
 	wbkgd(viz->wmain, get_color("bg"));
 	wbkgd(viz->wmap, get_color("map"));
@@ -47,25 +47,6 @@ void	wrapup_viz(t_viz *viz)
 {
 	(void)viz;
 	endwin();
-}
-
-/*
-** Vizualize log - store list of K last messages, redrawing it on every iteration
-*/
-
-void	vlog(t_map *map, t_viz *viz)
-{
-	t_list	*tmp;
-	int		i;
-
-	tmp = map->log.log;
-	i = 24;
-	while (tmp)
-	{
-		mvwprintw(viz->wlog, i, 1, "%s", tmp->content);
-		tmp = tmp->next;
-		i -= 2;
-	}
 }
 
 /*

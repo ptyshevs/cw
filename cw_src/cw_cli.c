@@ -102,7 +102,7 @@ void	set_default_pref(t_map *map)
 
 	map->log.level = v_essential;
 	map->log.to = 1;
-	map->log.length = 10;
+	map->log.length = 24;
 	map->viz_mode = False;
 	map->pref.cycles_to_die = CYCLE_TO_DIE;
 	map->pref.cycle_delta = CYCLE_DELTA;
