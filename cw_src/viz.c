@@ -13,8 +13,8 @@
 #include "cw.h"
 
 /*
- * Initialize vizualization windows and set background colors
- */
+** Initialize vizualization windows and set background colors
+*/
 
 void	init_viz_windows(t_map *map, t_viz *viz)
 {
@@ -33,16 +33,22 @@ void	init_viz_windows(t_map *map, t_viz *viz)
 
 /*
 ** Initialize everything that is needed for vizualization
+** Notes:
+**   - initscr() initializes terminal
+**   - curs_set(0) makes cursor invisible
+**   - noecho() disables echoing of input during getch()
+**   - cbreak() disables line buffering
+**   - keypad(strscr, true) enables key bindings
 */
 
 void	init_viz(t_map *map)
 {
 	t_viz	*viz;
 
-	initscr(); // init terminal
-	curs_set(0); // make cursor invisible
-	noecho(); // disable echoing of input during getch()
-	cbreak(); // disable line buffering
+	initscr();
+	curs_set(0);
+	noecho();
+	cbreak();
 	keypad(stdscr, true);
 	init_color_table();
 	map->viz = ft_memalloc(sizeof(t_viz));
@@ -69,76 +75,6 @@ void	wrapup_viz(t_viz *viz)
 }
 
 /*
-** Breakdown bar of 48 symbols int parts proportionally to number of lives of
-** each player
-*/
-
-void	update_breakdown(t_map *map)
-{
-	t_uint	i;
-	t_bot	*bot;
-
-	i = 0;
-	while (i < map->n_bots)
-	{
-		bot = map->bots[i];
-		if (map->lives_cur == 0)
-			map->viz->br[i] = 48 / map->n_bots;
-		else
-			map->viz->br[i] = (int)((float)bot->lives / (float)map->lives_cur * 48);
-		i++;
-	}
-}
-
-/*
-** Vizualize period bar on the <height> specified
-*/
-
-void	vperiod(t_map *map, t_viz *viz, int height, const int *br)
-{
-	t_uint	k;
-	int		m;
-	t_uint	i;
-	chtype	c;
-
-	mvwaddch(viz->wlive, height, 1, '[');
-	k = 2;
-	i = 0;
-	while (i < map->n_bots)
-	{
-		m = 0;
-		wattron(viz->wlive, (c = get_bot_color_by_index(i, True)));
-		while (m++ < br[i])
-			mvwaddch(viz->wlive, height, k++, '-');
-		wattroff(viz->wlive, c);
-		i++;
-	}
-	while (k < 50)
-		mvwaddch(viz->wlive, height, k++, '-');
-	mvwaddch(viz->wlive, height, 50, ']');
-}
-
-/*
-** Vizualize live breakdown
-*/
-
-void	vlive(t_map *map, t_viz *viz)
-{
-
-//	if (viz->br)
-//		ft_bzero(viz->br, sizeof(int) * map->n_bots);
-	update_breakdown(map);
-	if (map->cyc_cnt && map->cyc_cur == 0)
-		ft_memcpy(viz->prev_br, viz->br, sizeof(int) * map->n_bots);
-	mvwprintw(viz->wlive, 1, 1, "Live breakdown for current period:");
-	vperiod(map, viz, 3, viz->br);
-//	mvwprintw(viz->wlive, 3, 1, "[------------------------------------------------]");
-	mvwprintw(viz->wlive, 5, 1, "Live breakdown for last period:");
-	vperiod(map, viz, 7, viz->prev_br);
-//	mvwprintw(viz->wlive, 7, 1, "[------------------------------------------------]");
-}
-
-/*
 ** Main vizualization routine
 */
 
@@ -151,12 +87,10 @@ void	viz_arena(t_viz *viz, t_map *map)
 	vbots(map, viz);
 	vlive(map, viz);
 	vlog(map, viz);
-
 	wrefresh(viz->wmain);
 	wrefresh(viz->wmap);
 	wrefresh(viz->winfo);
 	wrefresh(viz->wlive);
 	wrefresh(viz->wlog);
 	wgetch(viz->wmain); // replace with key bindings
-//	getch();
 }

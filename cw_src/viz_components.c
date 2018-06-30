@@ -12,7 +12,6 @@
 
 #include "cw.h"
 
-
 /*
 ** Vizualize process
 */
@@ -29,7 +28,8 @@ void	vproc(t_map *map, t_viz *viz)
 			break ;
 		col = get_proc_color(map, pr->id);
 		wattron(viz->wmap, col);
-		mvwprintw(viz->wmap, pr->pc / 64, pr->pc % 64 * 3 + 1, "%02x", map->map[pr->pc]);
+		mvwprintw(viz->wmap, pr->pc / 64, pr->pc % 64 * 3 + 1,
+				"%02x", map->map[pr->pc]);
 		wattroff(viz->wmap, col);
 		pr = pr->next;
 	}
@@ -44,32 +44,27 @@ void	vmap(t_map *map, t_viz *viz)
 	static int	colors[4] = {COLOR_PAIR(3), COLOR_PAIR(5),
 							COLOR_PAIR(7), COLOR_PAIR(9)};
 	t_uint		i;
-	t_uint		j;
+	t_uint		m;
 
 	i = 0;
-	while (i < 64)
+	while (i < MEM_SIZE)
 	{
-		j = 0;
-		while (j < 64)
+		m = 0;
+		while (m < map->n_bots)
 		{
-			t_uint m = 0;
-			while (m < map->n_bots)
-			{
-			if (i * 64 + j == map->bots[m]->start_pos)
+			if (i == map->bots[m]->start_pos)
 				wattron(viz->wmap, colors[m]);
-			else if (i * 64 + j == map->bots[m]->start_pos + map->bots[m]->header->size)
+			else if (i == map->bots[m]->start_pos + map->bots[m]->header->size)
 				wattroff(viz->wmap, colors[m]);
 			m++;
 		}
-			mvwprintw(viz->wmap, i, j * 3, " %02x ", map->map[i * 64 + j]);
-			j++;
-		}
+		mvwprintw(viz->wmap, i / 64, i % 64 * 3, " %02x ", map->map[i]);
 		i++;
 	}
 }
 
 /*
-* Vizualize bots and live breakdown
+** Vizualize information on players
 */
 
 void	vbots(t_map *map, t_viz *viz)
@@ -99,7 +94,7 @@ void	vbots(t_map *map, t_viz *viz)
 void	vinfo(t_map *map, t_viz *viz)
 {
 	wattron(viz->winfo, get_color("info"));
-	mvwaddstr(viz->winfo, 1, 20, viz->active ? "** RUNNING **" : "** PAUSED **");
+	mvwaddstr(viz->winfo, 1, 20, viz->active ? "**RUNNING**" : "**PAUSED**");
 	mvwprintw(viz->winfo, 3, 1, "Cycle: %d", map->cyc_cnt);
 	mvwprintw(viz->winfo, 4, 25, "Cycles/second limit: %d", viz->cycles_sec);
 	mvwprintw(viz->winfo, 4, 1, "Processes: %d", map->n_proc);
@@ -111,7 +106,7 @@ void	vinfo(t_map *map, t_viz *viz)
 }
 
 /*
-** Vizualize log - store list of K last messages, redrawing it on every iteration
+** Vizualize log - store list of K last messages, redraw it on every iteration
 */
 
 void	vlog(t_map *map, t_viz *viz)

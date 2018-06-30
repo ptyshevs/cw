@@ -14,41 +14,50 @@
 
 /*
 ** Initialize colors for vizualization.
-** COLOR_WHITE is grey
+**
+** start_color() initiates ncurses color table
 ** Colors:
-**   - 1:
+**   - 1: white background (used for making a border)
+**   - 2: default map mode (white characters on black bg)
+**   - 3: main color of the first bot
+**   - 4: color of the first bot's caret
+**   - 5: main color of the second bot
+**   - 6: color of the second bot's caret
+**   - 7: main color of the third bot
+**   - 8: color of the trird bot's caret
+**   - 9: main color of the fourth bot
+**   - 10: color of the fourth bot's caret
+**   - 11: pure red for debugging purposes
 */
 
 void	init_color_table(void)
 {
-	start_color(); // allocate color table
-
-	init_pair(1, COLOR_BLACK, COLOR_WHITE); // background
-	init_pair(2, COLOR_WHITE, COLOR_BLACK); // map
-	init_pair(3, COLOR_GREEN, COLOR_BLACK); // 1st bot
-	init_pair(4, COLOR_BLACK, COLOR_GREEN); // 1st bot caret
-	init_pair(5, COLOR_BLUE, COLOR_BLACK); // 2nd bot
-	init_pair(6, COLOR_BLACK, COLOR_BLUE); // 2nd bot caret
-	init_pair(7, COLOR_RED, COLOR_BLACK); // 3rd bot
-	init_pair(8, COLOR_BLACK, COLOR_RED); // 3rd bot caret
-	init_pair(9, COLOR_CYAN, COLOR_BLACK); // 4th bot
-	init_pair(10, COLOR_BLACK, COLOR_CYAN); // 4th bot caret
-	init_pair(11, COLOR_RED, COLOR_RED); // pure red for debugging purposes
-	init_pair(12, COLOR_WHITE, COLOR_BLACK);
+	start_color();
+	init_pair(1, COLOR_BLACK, COLOR_WHITE);
+	init_pair(2, COLOR_WHITE, COLOR_BLACK);
+	init_pair(3, COLOR_GREEN, COLOR_BLACK);
+	init_pair(4, COLOR_BLACK, COLOR_GREEN);
+	init_pair(5, COLOR_BLUE, COLOR_BLACK);
+	init_pair(6, COLOR_BLACK, COLOR_BLUE);
+	init_pair(7, COLOR_RED, COLOR_BLACK);
+	init_pair(8, COLOR_BLACK, COLOR_RED);
+	init_pair(9, COLOR_CYAN, COLOR_BLACK);
+	init_pair(10, COLOR_BLACK, COLOR_CYAN);
+	init_pair(11, COLOR_RED, COLOR_RED);
 }
 
 /*
 ** Map color name to number used in attr[on|off]
 */
 
-chtype		get_color(char *color)
+chtype	get_color(char *color)
 {
-	static t_col	colors[12] = {{"bg", COLOR_PAIR(1)}, {"map", COLOR_PAIR(2)},
+	static t_col	colors[11] = {{"bg", COLOR_PAIR(1)}, {"map", COLOR_PAIR(2)},
 								{"b1", COLOR_PAIR(3)}, {"b1pr", COLOR_PAIR(4)},
 								{"b2", COLOR_PAIR(5)}, {"b2pr", COLOR_PAIR(6)},
 								{"b3", COLOR_PAIR(7)}, {"b3pr", COLOR_PAIR(8)},
 								{"b4", COLOR_PAIR(9)}, {"b4pr", COLOR_PAIR(10)},
-								{"debug", COLOR_PAIR(11)}, {"info", COLOR_PAIR(12) | A_BOLD}};
+								{"debug", COLOR_PAIR(11)}};
 	int				i;
 
 	i = 0;
@@ -86,9 +95,9 @@ chtype	get_bot_color_by_index(int index, t_bool foreground)
 
 int		get_proc_color(t_map *map, int id)
 {
-	static int colors[4] = {COLOR_PAIR(4), COLOR_PAIR(6),
+	static int	colors[4] = {COLOR_PAIR(4), COLOR_PAIR(6),
 							COLOR_PAIR(8), COLOR_PAIR(10)};
-	int		i;
+	int			i;
 
 	i = 0;
 	while (i < 4)
@@ -97,7 +106,5 @@ int		get_proc_color(t_map *map, int id)
 			return (colors[i]);
 		i++;
 	}
-//	ft_panic(1, "get_proc_color with unrecognized id: %d\n", id);
 	return (0);
 }
-

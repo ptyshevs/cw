@@ -234,11 +234,14 @@ typedef struct	s_map
 
 
 /*
-** Logging
+** Logging and dumpin
 */
 
 void	log_map(t_map *map, t_proc *pr, char *message, ...);
 void	to_log(t_map *map, char *message, ...);
+void	introduce_bots(t_map *map);
+
+void	dump_if_necessary(t_map *map);
 
 /*
 ** Display information
@@ -331,6 +334,7 @@ void		vproc(t_map *map, t_viz *viz);
 void		vmap(t_map *map, t_viz *viz);
 void		vinfo(t_map *map, t_viz *viz);
 void		vbots(t_map *map, t_viz *viz);
+void		vlive(t_map *map, t_viz *viz);
 void		vlog(t_map *map, t_viz *viz);
 
 #endif

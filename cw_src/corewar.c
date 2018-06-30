@@ -13,28 +13,6 @@
 #include "cw.h"
 
 /*
-** Dump map state if necessary
-*/
-
-void	dump_if_necessary(t_map *map)
-{
-	char	*tmp;
-
-	if (map->viz_mode || !map->dump->dump)
-		return ;
-	if (map->cyc_cur > 0 && map->cyc_cur % map->dump->n == 0)
-	{
-		if (map->dump->once)
-		{
-			show_map(map);
-			exit(0);
-		}
-		show_map(map);
-		ft_gnl(0, &tmp);
-	}
-}
-
-/*
 ** Game loop
 */
 
@@ -56,27 +34,6 @@ void	game_loop(t_map *map)
 	}
 }
 
-/*
-** Add players introduction to log
-*/
-
-void	introduce_bots(t_map *map)
-{
-	t_uint		i;
-	t_bot		*bot;
-
-	i = 0;
-	while (i < map->n_bots)
-	{
-		if (i == 0)
-			to_log(map, "Introducing contestants...\n");
-		bot = map->bots[i];
-		to_log(map, "* Player %d, weighting %d bytes, \"%s\" (\"%s\")!\n",
-			i + 1, bot->header->size, bot->header->name,
-			bot->header->comment);
-		i++;
-	}
-}
 
 /*
 ** Virtual Arena
