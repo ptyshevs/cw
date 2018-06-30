@@ -51,6 +51,8 @@ void	viz_map(t_viz *viz, t_map *map)
 	vmap(map, viz);
 	vproc(map, viz);
 	vinfo(map, viz);
+	vbots(map, viz);
+
 	wrefresh(viz->wmain);
 	wrefresh(viz->wmap);
 	wrefresh(viz->winfo);

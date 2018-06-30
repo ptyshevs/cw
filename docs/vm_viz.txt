@@ -3,3 +3,8 @@ Q&A
 * How vizualize changed cells?
 - Store state of map on previous cycle.
 - Call map_update after instruction activation or *inside* function that affects map.
+
+`live` instructions will make alive process regardless of whether bot id passed as
+an argument exists. If it was executed successfully, it will glow in
+COLOR_PAIR(13, COLOR_WHITE, get_bot_color_by_index) for 50 cycles
+

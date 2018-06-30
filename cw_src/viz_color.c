@@ -62,6 +62,25 @@ chtype		get_color(char *color)
 }
 
 /*
+** Return bot color by index
+*/
+
+chtype	get_bot_color_by_index(int index, t_bool foreground)
+{
+	if (index == 0)
+		return (foreground ? get_color("b1") : get_color("b1pr"));
+	else if (index == 1)
+		return (foreground ? get_color("b2") : get_color("b2pr"));
+	else if (index == 2)
+		return (foreground ? get_color("b3") : get_color("b3pr"));
+	else if (index == 3)
+		return (foreground ? get_color("b4") : get_color("b4pr"));
+	else
+		ft_panic(1, "Unknown id\n");
+	return (0);
+}
+
+/*
 ** Get process color
 */
 
@@ -78,7 +97,7 @@ int		get_proc_color(t_map *map, int id)
 			return (colors[i]);
 		i++;
 	}
-	ft_panic(1, "get_proc_color with unrecognized id: %d\n", id);
+//	ft_panic(1, "get_proc_color with unrecognized id: %d\n", id);
 	return (0);
 }
 

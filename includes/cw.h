@@ -33,6 +33,9 @@ typedef unsigned int t_uint;
 **   - start_pos: Map position from which executable code of this bot begins
 **   - code: executable code, size of which is stored in header->size
 **   - id: id of the bot (either order in CLI argument list, or manual)
+**   - last_live: cyc_cnt value at the moment of last <live> executed with
+**       bot->id argument
+**   - lives: number of live executed in current period
 **   - header: t_header structure, containing name, comment, and size
 */
 
@@ -41,6 +44,8 @@ typedef struct	s_bot
 	t_uint			start_pos;
 	t_uc			*code;
 	int				id;
+	int				last_live;
+	int				lives;
 	t_header		*header;
 }				t_bot;
 
@@ -272,10 +277,13 @@ void	size_error(char *filename);
 void		init_color_table(void);
 chtype		get_color(char *color);
 int			get_proc_color(t_map *map, int id);
+chtype		get_bot_color_by_index(int index, t_bool foreground);
+
 
 void		vproc(t_map *map, t_viz *viz);
 void		vmap(t_map *map, t_viz *viz);
 void		vinfo(t_map *map, t_viz *viz);
+void		vbots(t_map *map, t_viz *viz);
 
 
 #endif

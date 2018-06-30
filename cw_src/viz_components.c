@@ -69,6 +69,30 @@ void	vmap(t_map *map, t_viz *viz)
 }
 
 /*
+* Vizualize bots and live breakdown
+*/
+
+void	vbots(t_map *map, t_viz *viz)
+{
+	t_uint	i;
+
+	i = 0;
+	while (i < map->n_bots)
+	{
+		mvwprintw(viz->winfo, 8 + (i * 4), 1, "Player %d:", map->bots[i]->id);
+		wattron(viz->winfo, get_bot_color_by_index(i, True));
+		mvwprintw(viz->winfo, 8 + (i * 4), 15, "%s",
+				map->bots[i]->header->name);
+		wattroff(viz->winfo, get_bot_color_by_index(i, True));
+		mvwprintw(viz->winfo, 8 + 1 + (i * 4), 3, "Last live: %d",
+				map->bots[i]->last_live);
+		mvwprintw(viz->winfo, 8 + 2 + (i * 4), 3, "Lives in current period: %d",
+				map->bots[i]->lives);
+		i++;
+	}
+}
+
+/*
 ** Vizualize info
 */
 
