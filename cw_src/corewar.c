@@ -44,7 +44,6 @@ int		main(int ac, char **av)
 
 	set_default_pref(&map);
 	parse_cli(&map, ac, av);
-
 	if (map.viz.on)
 		init_viz(&map.viz);
 	inhabit_map(&map);
@@ -55,11 +54,7 @@ int		main(int ac, char **av)
 		show_map(&map);
 	}
 //	show_procs(map.procs);
-
-//	for (int i = 0; i < 100; ++i)
-//	{
-//
-//	}
+//	game_loop(&map);
 	if (map.viz.on)
 		wrapup_viz(&map.viz);
 	return (0);

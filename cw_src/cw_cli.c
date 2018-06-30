@@ -47,20 +47,16 @@ static t_bool	parse_id(t_map *map, int ac, char **av, int i)
 }
 
 /*
-** Store bots id (need to color processes for vizualization)
+** Parse dump argument (-d|--dump or -s|--stream)
 */
 
-static void	collect_ids(t_map *map)
+void	parse_dump(t_map *map, char *n, t_bool stream)
 {
-	t_uint	i;
-
-	map->bot_ids = ft_memalloc(sizeof(int) * map->n_bots);
-	i = 0;
-	while (i < map->n_bots)
-	{
-		map->bot_ids[i] = map->bots[i]->id;
-		i++;
-	}
+	if (ft_slen(n) == 0 || !ft_strisnum(n, 10))
+		ft_panic(1, "Bad number of cycles specified for dump\n");
+	map->dump.dump = True;
+	map->dump.once = (t_bool)!stream;
+	map->dump.n = ft_atoi(n);
 }
 
 /*
@@ -81,7 +77,9 @@ void		parse_cli(t_map *map, int ac, char **av)
 		if (ft_strequ(av[i], "-h") || ft_strequ(av[i], "--help"))
 			show_usage();
 		else if (ft_strequ(av[i], "-d") || ft_strequ(av[i], "--dump"))
-
+			parse_dump(map, av[i + 1], False);
+		else if (ft_strequ(av[i], "-s") || ft_strequ(av[i], "--stream"))
+			parse_dump(map, av[i + 1], True);
 		else if (ft_strequ(av[i], "-n") && parse_id(map, ac, av, i))
 			i += 2;
 		else if (ft_strequ(av[i], "-v"))

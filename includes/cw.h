@@ -152,6 +152,13 @@ typedef struct	s_col
 	chtype	c;
 }				t_col;
 
+typedef struct	s_dump
+{
+	t_bool	dump;
+	t_bool	once;
+	int		n;
+}				t_dump;
+
 /*
 ** Corewar preferences
 */
@@ -192,10 +199,10 @@ typedef struct	s_map
 	int				cyc_cnt; // this is indicator of current cycle
 	int				cyc_cur; // this regulates game loop
 
-	t_bool			dump;
 	t_log			log;
 	t_viz			viz;
 	t_pref			pref;
+	t_dump			dump;
 }				t_map;
 
 
@@ -229,6 +236,11 @@ void			read_bot(t_map *map, char *filename,
 
 unsigned int	bytes_to_uint(const t_uc *bytes, t_uint n);
 t_line			*read_n_bytes(const char *filename, int fd, t_uint n);
+void			collect_ids(t_map *map);
+
+/*
+** Bot file parsing
+*/
 
 unsigned int	parse_magic(char *filename, int fd);
 char			*parse_name(char *filename, int fd);

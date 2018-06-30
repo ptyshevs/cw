@@ -21,12 +21,19 @@
 
 void		show_usage(void)
 {
-	ft_printf("Usage: ./corewar [-d|--dump nbr_cycles] [-h|--help] "
-			"[-v|--verbose <1|2|3>] [-z] "
+	ft_printf("Usage: ./corewar [-d|--dump nbr_cycles N] [-s|--stream N]"
+			" [-h|--help] [-v|--verbose <1|2|3>] [-z] "
 			"[[-n number] champion1.cor] ...\n\n");
 	ft_printf("  -d --dump\tDump memory after N cycles then exits\n");
+	ft_printf("  -s --stream\tDump memory every N cycles\n");
 	ft_printf("  -h --help\tDisplay usage\n");
 	ft_printf("  -v --verbose\tSet level of logger wordiness\n");
+	ft_printf("    0 - Show essential info (bots, winner)\n");
+	ft_printf("    1 - Show lives\n");
+	ft_printf("    2 - Show cycles\n");
+	ft_printf("    4 - Show operations\n");
+	ft_printf("    8 - Show deaths\n");
+	ft_printf("    16 - Show PC movements\n");
 	ft_printf("  -z\t\tVizualization mode\n");
 	exit(1);
 }
