@@ -103,20 +103,5 @@ void	log_map(t_map *map, t_proc *pr, char *message, ...)
 		tmp = ft_vsprintf(message, ap);
 		to_log(map, "%u %02x %s: %s\n", pr->pc + 1, get_map(map, pr->pc),
 			pr->cur_ins->name, tmp);
-//		ft_vdprintf(map->log.to, message, ap);
-//		ft_dprintf(map->log.to, "\n");
 	}
-}
-
-/*
-** Log bot (essential information)
-*/
-
-void	log_bot(t_map *map, t_bot *bot)
-{
-	to_log(map, "WHATEVER BOT IS COMING");
-	if (map->n_bots == 1)
-		to_log(map, "Introducing contestants...\n");
-	to_log(map, "* Player %d, weighting %d bytes, \"%s\" (\"%s\")!\n",
-	map->n_bots, bot->header->size, bot->header->name, bot->header->comment);
 }

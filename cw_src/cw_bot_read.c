@@ -95,7 +95,7 @@ void			read_bot(t_map *map, char *filename, int id, t_bool id_frm_cli)
 		}
 		i++;
 	}
-	log_bot(map, (map->bots[map->n_bots++] = create_new_bot(filename, id)));
+	map->bots[map->n_bots++] = create_new_bot(filename, id);
 }
 
 /*

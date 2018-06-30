@@ -123,6 +123,7 @@ typedef struct	s_log
 	t_list		*log;
 	int			cur_length;
 	int			length;
+	int			width;
 }				t_log;
 
 
@@ -140,6 +141,7 @@ typedef struct	s_viz
 	WINDOW	*wmain;
 	WINDOW	*wmap;
 	WINDOW	*winfo;
+	WINDOW	*wlive;
 	WINDOW	*wlog;
 	t_bool	active;
 	int		cycles_sec;
@@ -154,6 +156,10 @@ typedef struct	s_col
 	char	*name;
 	chtype	c;
 }				t_col;
+
+/*
+** Dump structure
+*/
 
 typedef struct	s_dump
 {
@@ -217,7 +223,6 @@ typedef struct	s_map
 
 void	logging(t_log log, char *brief, char *full);
 void	log_map(t_map *map, t_proc *pr, char *message, ...);
-void	log_bot(t_map *map, t_bot *bot);
 void	to_log(t_map *map, char *message, ...);
 
 /*
@@ -303,7 +308,7 @@ chtype		get_color(char *color);
 int			get_proc_color(t_map *map, int id);
 chtype		get_bot_color_by_index(int index, t_bool foreground);
 
-void		init_viz(t_viz *viz);
+void		init_viz(t_viz *viz, t_log *log, t_uint n_bots);
 void		wrapup_viz(t_viz *viz);
 void		viz_arena(t_viz *viz, t_map *map);
 

@@ -120,11 +120,11 @@ void	vlog(t_map *map, t_viz *viz)
 	int		i;
 
 	tmp = map->log.log;
-	i = map->log.length;
+	i = map->log.length - 1;
 	while (tmp)
 	{
 		mvwprintw(viz->wlog, i, 1, "%s", tmp->content);
-		tmp = tmp->next;
-		i -= 1;
+		if ((tmp = tmp->next))
+			i -= tmp->content_size / map->log.width + 1;
 	}
 }

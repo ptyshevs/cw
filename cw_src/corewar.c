@@ -57,6 +57,28 @@ void	game_loop(t_map *map)
 }
 
 /*
+** Add players introduction to log
+*/
+
+void	introduce_bots(t_map *map)
+{
+	t_uint		i;
+	t_bot		*bot;
+
+	i = 0;
+	while (i < map->n_bots)
+	{
+		if (i == 0)
+			to_log(map, "Introducing contestants...\n");
+		bot = map->bots[i];
+		to_log(map, "* Player %d, weighting %d bytes, \"%s\" (\"%s\")!\n",
+			i + 1, bot->header->size, bot->header->name,
+			bot->header->comment);
+		i++;
+	}
+}
+
+/*
 ** Virtual Arena
 */
 
@@ -67,7 +89,8 @@ int		main(int ac, char **av)
 	set_default_pref(&map);
 	parse_cli(&map, ac, av);
 	if (map.viz_mode)
-		init_viz(&map.viz);
+		init_viz(&map.viz, &map.log, map.n_bots);
+	introduce_bots(&map);
 	inhabit_map(&map);
 	init_procs(&map);
 	if (map.log.level > v_essential)
