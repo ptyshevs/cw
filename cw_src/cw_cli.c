@@ -23,8 +23,11 @@ static void	parse_verbosity(t_map *map, int ac, char **av, int i)
 
 	if (i + 1 >= ac)
 		ft_panic(1, "No verbosity specified. Use 1, 2, or 3.\n");
-	if ((tmp = ft_atoi(av[i + 1])) < 1 || tmp > 3)
-		ft_panic(1, "Bad verbosity level. Use 1, 2, or 3. ", av[i + 1]);
+	if ((tmp = ft_atoi(av[i + 1])) < 0 || tmp > 32)
+		ft_panic(1, "Bad verbosity level", av[i + 1]);
+	if (!(tmp == v_alive || tmp == v_cycles || tmp == v_ops || tmp == v_deaths
+		|| tmp == v_pc || tmp == v_more))
+		ft_panic(1, "Bad verbosity level", av[i + 1]);
 	map->log->level = (t_vrb)tmp;
 }
 

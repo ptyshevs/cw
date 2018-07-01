@@ -34,6 +34,7 @@ void		show_usage(void)
 	ft_printf("    4 - Show operations\n");
 	ft_printf("    8 - Show deaths\n");
 	ft_printf("    16 - Show PC movements\n");
+	ft_printf("    32 - Show even details\n");
 	ft_printf("  -z\t\tVizualization mode\n");
 	exit(1);
 }

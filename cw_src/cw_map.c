@@ -41,8 +41,9 @@ void	inhabit_map(t_map *map)
 ** Move process <pr> <n> cells forward on a map.
 */
 
-void	move_proc(t_proc *pr, t_uint n)
+void	move_proc(t_map *map, t_proc *pr, t_uint n)
 {
+	log_move(map, pr, n);
 	pr->pc = (pr->pc + n) % MEM_SIZE;
 }
 

@@ -28,9 +28,9 @@ const t_op	*find_instr(t_uint op)
 ** After the instruction was executed, clean-up proc fields
 */
 
-void	wrap_up(t_proc *pr)
+void	wrap_up(t_map *map, t_proc *pr)
 {
-	move_proc(pr, args_to_bytes(pr->cur_ins, pr->cur_args) +
+	move_proc(map, pr, args_to_bytes(pr->cur_ins, pr->cur_args) +
 			pr->cur_ins->codage + 1);
 	ft_memdel((void **)&pr->cur_args);
 	pr->cur_ins = NULL;
@@ -55,11 +55,9 @@ void	activate_instr(t_map *map, t_proc *pr)
 	if (!args_are_valid(pr->cur_ins, pr->cur_args))
 	{
 		log_map(map, pr, "Invalid arguments for instruction");
-		move_proc(pr, 1);
+		move_proc(map, pr, 1);
 	}
-//	if (map->log.level > v_essential)
-//		show_args(pr->cur_args);
-	// actual instruction activation should be here
+	log_instruction(map, pr);
 	log_map(map, pr, "Activating function");
 	(*functions[pr->cur_ins->op - 1])(map, pr);
 }
@@ -73,7 +71,7 @@ void	exec(t_map *map, t_proc *pr)
 	if (!pr->cur_ins) // read instruction and start charging
 	{
 		if (!(pr->cur_ins = find_instr(map->map[pr->pc]))) // invalid instruction
-			return move_proc(pr, 1); // move forward
+			return move_proc(map, pr, 1); // move forward
 	}
 	// charging and activation phase
 	if (pr->cur_cycle < pr->cur_ins->cycles) // charge
@@ -84,7 +82,7 @@ void	exec(t_map *map, t_proc *pr)
 	if (pr->cur_cycle == pr->cur_ins->cycles)
 	{
 		activate_instr(map, pr);
-		wrap_up(pr);
+		wrap_up(map, pr);
 	}
 }
 

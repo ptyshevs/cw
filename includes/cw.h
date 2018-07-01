@@ -33,6 +33,8 @@ void	log_map(t_map *map, t_proc *pr, char *message, ...);
 void	to_log(t_map *map, char *message, ...);
 void	to_valog(t_map *map, char *message, va_list ap);
 void	log_live(t_map *map, t_uint index);
+void	log_instruction(t_map *map, t_proc *pr);
+void	log_move(t_map *map, t_proc *pr, t_uint n);
 void	log_more(t_map *map, char *message, ...);
 void	introduce_bots(t_map *map);
 
@@ -59,6 +61,7 @@ void			read_bot(t_map *map, char *filename,
 unsigned int	bytes_to_uint(const t_uc *bytes, t_uint n);
 t_line			*read_n_bytes(const char *filename, int fd, t_uint n);
 void			collect_ids(t_map *map);
+int				p_index_from_id(t_map *map, int id);
 
 /*
 ** Bot file parsing
@@ -80,7 +83,7 @@ void	set_default_pref(t_map *map);
 void	inhabit_map(t_map *map);
 t_uint	get_map(t_map *map, t_uint n);
 void	set_map(t_map *map, t_uint n, t_uc v);
-void	move_proc(t_proc *pr, t_uint n);
+void	move_proc(t_map *map, t_proc *pr, t_uint n);
 
 /*
 ** Operations on processes

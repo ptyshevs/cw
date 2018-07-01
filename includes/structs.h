@@ -96,7 +96,6 @@ typedef enum	e_vrb
 	v_ops = 4,
 	v_deaths = 8,
 	v_pc = 16,
-	v_brief,
 	v_more = 32
 }				t_vrb;
 

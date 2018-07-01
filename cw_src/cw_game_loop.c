@@ -31,6 +31,8 @@ void	handle_period(t_map *map)
 {
 	map->cyc_cur++;
 	map->cyc_cnt++;
+	if (map->log->level & v_cycles)
+		to_log(map, "It is now cycle %d\n", map->cyc_cnt);
 	if (map->cyc_cur == map->pref->cycles_to_die)
 	{
 		map->pref->cycles_to_die -= map->pref->cycle_delta;
