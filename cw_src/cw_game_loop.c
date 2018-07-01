@@ -44,19 +44,18 @@ void	handle_period(t_map *map)
 
 /*
 ** Pronounce game to be over.
-** TODO: Show winner
 */
 
 void	game_over(t_map *map)
 {
+	to_log(map, "Contestant %d, \"%s\", has won !\n", map->last_alive_i + 1,
+			map->bots[map->last_alive_i]->header->name);
 	if (map->viz_mode)
 	{
 		to_log(map, "Game is over. Press any key to finish");
 		viz_arena(map);
 		wgetch(map->viz->wmain);
 	}
-	else
-		ft_dprintf(2, "GAME IS OVER\n");
 }
 
 /*

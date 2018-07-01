@@ -32,6 +32,7 @@ void	i_live(t_map *map, t_proc *pr)
 			map->bots[i]->last_live = map->cyc_cnt;
 			map->bots[i]->lives++;
 			map->lives_cur++;
+			map->last_alive_i = i;
 			return log_live(map, i);
 		}
 		i++;
