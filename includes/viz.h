@@ -13,7 +13,8 @@
 #ifndef VIZ_H
 # define VIZ_H
 # include "cw.h"
-# include "ncurses.h"
+# include <ncurses.h>
+# include <sys/time.h>
 
 /*
 ** Structure for vizualization
@@ -29,7 +30,8 @@
 **    - br: breakdown of lives for the current period
 **    - prev_br: breakdown for the previous period
 **    - active: whether viz is running or paused
-**    - cycles_sec: cycles per second
+**    - max_cyc_sec: max cycles per second
+**    - cyc_sec: current cycles per second ratio
 */
 
 typedef struct	s_viz
@@ -47,7 +49,8 @@ typedef struct	s_viz
 	int		*prev_br;
 
 	t_bool	active;
-	int		cycles_sec;
+	int		max_cyc_sec;
+	double	cyc_sec;
 }				t_viz;
 
 /*
@@ -79,5 +82,7 @@ void		vinfo(t_map *map, t_viz *viz);
 void		vbots(t_map *map, t_viz *viz);
 void		vlive(t_map *map, t_viz *viz);
 void		vlog(t_map *map, t_viz *viz);
+
+void		handle_time(t_map *map, struct timeval *start, int *cycles);
 
 #endif

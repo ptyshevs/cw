@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cw.h"
+#include "viz.h"
 
 /*
 ** Parse verbosity CLI argument (-v <1|2|3>)
@@ -102,6 +103,8 @@ void	set_default_pref(t_map *map)
 	map->log = ft_memalloc(sizeof(t_log));
 	map->pref = ft_memalloc(sizeof(t_pref));
 	map->dump = ft_memalloc(sizeof(t_dump));
+	map->viz = ft_memalloc(sizeof(t_viz));
+	map->viz->max_cyc_sec = 50;
 	map->log->level = v_essential;
 	map->log->to = 1;
 	map->viz_mode = False;

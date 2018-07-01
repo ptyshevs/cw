@@ -14,29 +14,6 @@
 #include "viz.h"
 
 /*
-** Game loop
-*/
-
-void	game_loop(t_map *map)
-{
-	while (map->pref->cycles_to_die >= 0 && any_proc_alive(map->procs))
-	{
-		if (map->viz_mode)
-			viz_arena(map->viz, map);
-		dump_if_necessary(map);
-		update_procs(map);
-		map->cyc_cur++;
-		map->cyc_cnt++;
-		if (map->cyc_cur == map->pref->cycles_to_die)
-		{
-			map->pref->cycles_to_die -= map->pref->cycle_delta;
-			map->cyc_cur = 0;
-		}
-	}
-}
-
-
-/*
 ** Virtual Arena
 */
 
@@ -57,7 +34,7 @@ int		main(int ac, char **av)
 //		show_map(&map);
 	}
 //	show_procs(map.procs);
-	game_loop(&map);
+	map.viz_mode ? vgame_loop(&map) : game_loop(&map);
 	if (map.viz_mode)
 		wrapup_viz(map.viz);
 	return (0);

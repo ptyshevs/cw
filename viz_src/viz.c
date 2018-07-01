@@ -51,10 +51,11 @@ void	init_viz(t_map *map)
 	noecho();
 	cbreak();
 	keypad(stdscr, true);
+	nodelay(stdscr, true);
+	timeout(0);
 	init_color_table();
-	map->viz = ft_memalloc(sizeof(t_viz));
 	viz = map->viz;
-	viz->active = True;
+	viz->active = False;
 	viz->h_main = 66;
 	viz->w_main = 250;
 	map->log->length = 29 + (4 - map->n_bots) * 4;
@@ -82,16 +83,18 @@ void	wrapup_viz(t_viz *viz)
 void	viz_arena(t_viz *viz, t_map *map)
 {
 	werase(viz->wlog);
+	werase(viz->winfo);
 	vmap(map, viz);
 	vproc(map, viz);
 	vinfo(map, viz);
 	vbots(map, viz);
 	vlive(map, viz);
 	vlog(map, viz);
-	wrefresh(viz->wmain);
-	wrefresh(viz->wmap);
-	wrefresh(viz->winfo);
-	wrefresh(viz->wlive);
-	wrefresh(viz->wlog);
-	wgetch(viz->wmain); // replace with key bindings
+	wnoutrefresh(viz->wmain);
+	wnoutrefresh(viz->wmap);
+	wnoutrefresh(viz->winfo);
+	wnoutrefresh(viz->wlive);
+	wnoutrefresh(viz->wlog);
+	doupdate();
+//	wgetch(viz->wmain); // replace with key bindings
 }

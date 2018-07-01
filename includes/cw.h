@@ -101,6 +101,9 @@ t_uint	args_to_bytes(const t_op *instr, t_arg *args);
 
 void	exec(t_map *map, t_proc *pr);
 void	update_procs(t_map *map);
+void	game_loop(t_map *map);
+void	vgame_loop(t_map *map);
+
 
 /*
 ** Errors
