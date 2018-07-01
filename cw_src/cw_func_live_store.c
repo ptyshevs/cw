@@ -23,6 +23,7 @@ void	i_live(t_map *map, t_proc *pr)
 
 	log_more(map, "Process %d pronounced alive\n", pr->index);
 	pr->alive = True;
+	pr->last_live = map->cyc_cnt;
 	i = 0;
 	while (i < map->n_bots)
 	{

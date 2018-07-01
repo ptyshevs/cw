@@ -65,21 +65,22 @@ typedef struct	s_arg
 **    - reg: registry
 **    - cur_cycle: current cycle (used for charging phase)
 **    - cur_ins: current instruction being executed
+**    - index: unique index of the process
 **    - alive: is process alive
 **    - next: pointer to the next process (so we create linked list from it)
 */
 
 typedef struct	s_proc
 {
-	t_uint			pc; // process position
-	t_uint			carry; // flag that tells if the latest operation was successful
-	t_uint			id; // Number of the player that have created it
-	t_uint			reg[REG_NUMBER]; // register
-
+	t_uint			pc;
+	t_uint			carry;
+	t_uint			id;
+	t_uint			reg[REG_NUMBER];
 	t_uint			cur_cycle;
 	const t_op		*cur_ins;
 	t_arg			*cur_args;
 	t_uint			index;
+	int				last_live;
 	t_bool			alive;
 	struct s_proc	*next;
 }				t_proc;

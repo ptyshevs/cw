@@ -14,6 +14,20 @@
 #include "viz.h"
 
 /*
+** Remove this process, update tracking variables and log if required
+*/
+
+void	rm_proc(t_map *map, t_proc **aproc)
+{
+	if (map->log->level & v_deaths)
+		to_log(map, "Process %u hasn't lived for %d cycles (CTD %d)\n",
+			(*aproc)->index, map->cyc_cnt - (*aproc)->last_live - 1,
+			map->pref->cycles_to_die);
+	ft_memdel((void **)aproc);
+	map->n_proc--;
+}
+
+/*
 ** Remove processes that weren't declared alive. More specifically, delete all
 ** processes that haven't executed live instruction in the last period
 ** Set all processes to be "dead" - next period is starting.
@@ -29,8 +43,7 @@ void	rm_dead_procs(t_map *map)
 	{
 		prev = iter;
 		iter = iter->next;
-		ft_memdel((void **)&prev);
-		map->n_proc--;
+		rm_proc(map, &prev);
 	}
 	prev = NULL;
 	map->procs = iter;
@@ -42,8 +55,7 @@ void	rm_dead_procs(t_map *map)
 			prev = iter;
 		iter = iter->next;
 		if (prev)
-			map->n_proc--;
-		ft_memdel((void **)&prev);
+			rm_proc(map, &prev);
 	}
 }
 
@@ -93,7 +105,8 @@ void	handle_period(t_map *map)
 	map->cyc_cnt++;
 	if (map->log->level & v_cycles)
 		to_log(map, "It is now cycle %d\n", map->cyc_cnt);
-	update_breakdown(map);
+	if (map->viz_mode)
+		update_breakdown(map);
 	if (map->cyc_cur != map->pref->cycles_to_die)
 		return ;
 	if (map->lives_cur < NBR_LIVE && map->n_checks > 1)

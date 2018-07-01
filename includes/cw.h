@@ -90,7 +90,6 @@ void	move_proc(t_map *map, t_proc *pr, t_uint n);
 */
 
 void	init_procs(t_map *map);
-t_bool	any_proc_alive(t_proc *pr);
 
 /*
 ** Instructions
