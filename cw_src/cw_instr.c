@@ -81,7 +81,7 @@ void	exec(t_map *map, t_proc *pr)
 		pr->cur_cycle++;
 		log_map(map, pr, "Charging %d/%d", pr->cur_cycle, pr->cur_ins->cycles);
 	}
-	else // activate and clean-up
+	if (pr->cur_cycle == pr->cur_ins->cycles)
 	{
 		activate_instr(map, pr);
 		wrap_up(pr);

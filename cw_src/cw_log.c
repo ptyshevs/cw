@@ -48,6 +48,16 @@ void	to_log(t_map *map, char *message, ...)
 }
 
 /*
+** Log smth, either to log->fd, or to viz log
+*/
+
+void	to_valog(t_map *map, char *message, va_list ap)
+{
+	map->viz_mode ? to_vlog(map, message, ap) :
+					ft_vdprintf(map->log->to, message, ap);
+}
+
+/*
 ** Log something that has happened on the map, adding message to it
 */
 
@@ -56,10 +66,36 @@ void	log_map(t_map *map, t_proc *pr, char *message, ...)
 	va_list	ap;
 	char	*tmp;
 
-	if (map->log->level > v_essential)
+	if (map->log->level & v_more)
 	{
 		va_start(ap, message);
 		tmp = ft_vsprintf(message, ap);
 		to_log(map, "%#06x %s: %s\n", pr->pc + 1, pr->cur_ins->name, tmp);
+	}
+}
+
+/*
+** Log live command if verbosity has alive flag in level
+*/
+
+void	log_live(t_map *map, t_uint index)
+{
+	if (map->log->level & v_alive)
+		to_log(map, "Player %d (%s) is said to be alive\n", index + 1,
+			map->bots[index]->header->name);
+}
+
+/*
+** Log only if more flag is specified
+*/
+
+void	log_more(t_map *map, char *message, ...)
+{
+	va_list	ap;
+
+	if (map->log->level & v_more)
+	{
+		va_start(ap, message);
+		to_valog(map, message, ap);
 	}
 }

@@ -31,6 +31,9 @@
 
 void	log_map(t_map *map, t_proc *pr, char *message, ...);
 void	to_log(t_map *map, char *message, ...);
+void	to_valog(t_map *map, char *message, va_list ap);
+void	log_live(t_map *map, t_uint index);
+void	log_more(t_map *map, char *message, ...);
 void	introduce_bots(t_map *map);
 
 void	dump_if_necessary(t_map *map);
@@ -41,7 +44,7 @@ void	dump_if_necessary(t_map *map);
 
 void	show_usage(void);
 void	show_bots(t_bot **bots, unsigned int num_bots);
-void	show_map(t_map *map);
+void	show_map(t_map *map, t_bool colorize);
 void	show_procs(t_proc *procs);
 void	show_args(t_arg *args);
 

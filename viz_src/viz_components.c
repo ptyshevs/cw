@@ -116,15 +116,13 @@ void	vlog(t_map *map, t_viz *viz)
 	t_log	*log;
 	int		i;
 	int		j;
-	int		pad;
 
 	log = map->log;
 	i = 0;
 	j = log->length - 1;
 	while (i < log->cur_length)
 	{
-		pad = ft_slen(log->log[i]) / map->log->width > 0;
-		mvwaddstr(viz->wlog, j - pad, 1, log->log[i]);
+		mvwaddstr(viz->wlog, j - 1, 1, log->log[i]);
 		i++;
 		j -= (int)(ft_slen(log->log[i]) / log->width + 1);
 	}

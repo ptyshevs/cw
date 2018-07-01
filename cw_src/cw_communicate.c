@@ -60,7 +60,7 @@ void	show_bots(t_bot **bots, unsigned int num_bots)
 ** Display map
 */
 
-void	show_map(t_map *map)
+void	show_map(t_map *map, t_bool colorize)
 {
 	static char	*colors[4] = {"{green}", "{blue}", "{red}", "{cyan}"};
 	t_uint		i;
@@ -70,7 +70,7 @@ void	show_map(t_map *map)
 	while (i < MEM_SIZE)
 	{
 		m = 0;
-		while (m < map->n_bots)
+		while (colorize && m < map->n_bots)
 		{
 			if (i == map->bots[m]->start_pos)
 				ft_printf(colors[m]);
