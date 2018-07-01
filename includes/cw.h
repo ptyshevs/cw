@@ -87,6 +87,27 @@ void	init_procs(t_map *map);
 t_bool	any_proc_alive(t_proc *pr);
 
 /*
+** Instructions
+*/
+
+void	i_live(t_map *map, t_proc *pr);
+void	i_load(t_map *map, t_proc *pr);
+void	i_store(t_map *map, t_proc *pr);
+void	i_add(t_map *map, t_proc *pr);
+void	i_sub(t_map *map, t_proc *pr);
+void	i_and(t_map *map, t_proc *pr);
+void	i_or(t_map *map, t_proc *pr);
+void	i_xor(t_map *map, t_proc *pr);
+void	i_zjmp(t_map *map, t_proc *pr);
+void	i_ldi(t_map *map, t_proc *pr);
+void	i_sti(t_map *map, t_proc *pr);
+void	i_fork(t_map *map, t_proc *pr);
+void	i_lload(t_map *map, t_proc *pr);
+void	i_lldi(t_map *map, t_proc *pr);
+void	i_lfork(t_map *map, t_proc *pr);
+void	i_aff(t_map *map, t_proc *pr);
+
+/*
 ** Operations on arguments
 */
 

@@ -29,20 +29,6 @@ void	handle_period(t_map *map)
 }
 
 /*
-** Game loop
-*/
-
-void	game_loop(t_map *map)
-{
-	while (map->pref->cycles_to_die >= 0 && any_proc_alive(map->procs))
-	{
-		dump_if_necessary(map);
-		update_procs(map);
-		handle_period(map);
-	}
-}
-
-/*
 ** Pronounce game to be over.
 ** TODO: Show winner
 */
@@ -57,6 +43,21 @@ void	game_over(t_map *map)
 	}
 	else
 		ft_dprintf(2, "GAME IS OVER\n");
+}
+
+/*
+** Game loop
+*/
+
+void	game_loop(t_map *map)
+{
+	while (map->pref->cycles_to_die >= 0 && any_proc_alive(map->procs))
+	{
+		dump_if_necessary(map);
+		update_procs(map);
+		handle_period(map);
+	}
+	game_over(map);
 }
 
 /*

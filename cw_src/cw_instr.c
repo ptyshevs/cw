@@ -37,7 +37,6 @@ void	wrap_up(t_proc *pr)
 	pr->cur_cycle = 0;
 }
 
-
 /*
 ** Activate function if charging period has ended.
 ** Arguments are read regardless of whether there is codage or not
@@ -45,6 +44,10 @@ void	wrap_up(t_proc *pr)
 
 void	activate_instr(t_map *map, t_proc *pr)
 {
+	static void (*functions[16])(t_map *, t_proc *)={i_live, i_load, i_store,
+		i_add, i_sub, i_and, i_or, i_xor, i_zjmp, i_ldi, i_sti, i_fork, i_lload,
+		i_lldi, i_lfork, i_aff};
+
 	if (pr->cur_ins->codage)
 		pr->cur_args = codage_to_args(pr->cur_ins, get_map(map, pr->pc + 1));
 	else // if no codage
@@ -57,6 +60,8 @@ void	activate_instr(t_map *map, t_proc *pr)
 //	if (map->log.level > v_essential)
 //		show_args(pr->cur_args);
 	// actual instruction activation should be here
+	log_map(map, pr, "Activating function");
+	(*functions[pr->cur_ins->op - 1])(map, pr);
 }
 
 /*
@@ -78,7 +83,6 @@ void	exec(t_map *map, t_proc *pr)
 	}
 	else // activate and clean-up
 	{
-		log_map(map, pr, "Activating function");
 		activate_instr(map, pr);
 		wrap_up(pr);
 	}
