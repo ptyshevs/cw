@@ -14,6 +14,16 @@
 #include "viz.h"
 
 /*
+** Remove processes that weren't declared alive. More specifically, delete all
+** processes that haven't executed live instruction in the last period
+*/
+
+void	rm_dead_procs(t_map *map)
+{
+	(void)map;
+}
+
+/*
 ** Handle period update
 */
 
@@ -25,6 +35,8 @@ void	handle_period(t_map *map)
 	{
 		map->pref->cycles_to_die -= map->pref->cycle_delta;
 		map->cyc_cur = 0;
+		map->lives_cur = 0;
+		rm_dead_procs(map);
 	}
 }
 

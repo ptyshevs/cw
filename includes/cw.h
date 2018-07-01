@@ -111,8 +111,8 @@ void	i_aff(t_map *map, t_proc *pr);
 ** Operations on arguments
 */
 
-t_arg	*codage_to_args(const t_op *instr, t_uint codage);
-t_arg	*instr_to_args(const t_op *instr);
+t_arg	*codage_to_args(t_map *map, t_proc *pr, const t_op *instr, t_uint cdg);
+t_arg	*instr_to_args(t_map *map, t_proc *pr, const t_op *instr);
 t_bool	args_are_valid(const t_op *instr, t_arg *args);
 t_uint	args_to_bytes(const t_op *instr, t_arg *args);
 

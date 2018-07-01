@@ -53,6 +53,7 @@ typedef struct	s_arg
 	t_uc	code;
 	t_uc	type;
 	t_uc	size;
+	t_uint	value;
 }				t_arg;
 
 /*
@@ -78,7 +79,7 @@ typedef struct	s_proc
 	t_uint			cur_cycle;
 	const t_op		*cur_ins;
 	t_arg			*cur_args;
-
+	t_uint			index;
 	t_bool			alive;
 	struct s_proc	*next;
 }				t_proc;
@@ -167,7 +168,7 @@ typedef struct	s_map
 	int				cyc_cnt; // this is indicator of current cycle
 	int				cyc_cur; // this regulates game loop
 	int				lives_cur; // current total value of lives
-
+	int				last_alive_i; // index of the last bot declared alive
 	t_bool			viz_mode; // the last argument wins
 	t_log			*log;
 	struct s_viz	*viz;

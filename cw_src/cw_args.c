@@ -31,24 +31,46 @@ static t_uc	code_to_type(t_uc code)
 }
 
 /*
+** Collect argument
+*/
+
+t_uint	collect_arg(t_map *map, t_uint size, t_uint pc, t_uint frwd)
+{
+	t_uint	nbr;
+	t_uint	i;
+
+	nbr = 0;
+	if (size == 0)
+		return (nbr);
+	i = 0;
+	while (i < size)
+		nbr = (nbr << 8) + get_map(map, pc + frwd + i++);
+	return (nbr);
+}
+
+/*
 ** Expand codage into an array of types of argument to expect. It takes max. 3
 ** bytes, since this is max number of arguments allowed.
 ** There are 4 places for arguments in one codage byte
 */
 
-t_arg	*codage_to_args(const t_op *instr, t_uint codage)
+t_arg	*codage_to_args(t_map *map, t_proc *pr, const t_op *instr, t_uint codage)
 {
 	t_arg	*args;
 	t_uint	i;
+	t_uint	cum_frwd;
 
 	args = ft_memalloc(sizeof(t_arg) * 4);
 	i = 0;
+	cum_frwd = 2; // skipping codage
 	while (i < 4)
 	{
 		args[i].code = (t_uc)((codage >> (6 - i * 2)) & 0x3);
 		args[i].type = code_to_type(args[i].code);
 		args[i].size = (t_uc)(args[i].type == T_DIR ?
 							instr->label_size : args[i].type);
+		args[i].value = collect_arg(map, args[i].size, pr->pc, cum_frwd);
+		cum_frwd += args[i].size;
 		i++;
 	}
 	return (args);
@@ -58,7 +80,7 @@ t_arg	*codage_to_args(const t_op *instr, t_uint codage)
 ** Unambiguously extend instruction without codage
 */
 
-t_arg	*instr_to_args(const t_op *instr)
+t_arg	*instr_to_args(t_map *map, t_proc *pr, const t_op *instr)
 {
 	t_arg	*args;
 	t_uint	i;
@@ -72,6 +94,7 @@ t_arg	*instr_to_args(const t_op *instr)
 		args[0].code = DIR_CODE;
 	else if (args[0].type == T_IND)
 		args[0].code = IND_CODE;
+	args[0].value = collect_arg(map, args[0].size, pr->pc, 1);
 	i = 1;
 	while (i < 4)
 	{

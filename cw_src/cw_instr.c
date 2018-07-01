@@ -49,9 +49,9 @@ void	activate_instr(t_map *map, t_proc *pr)
 		i_lldi, i_lfork, i_aff};
 
 	if (pr->cur_ins->codage)
-		pr->cur_args = codage_to_args(pr->cur_ins, get_map(map, pr->pc + 1));
+		pr->cur_args = codage_to_args(map, pr, pr->cur_ins, get_map(map, pr->pc + 1));
 	else // if no codage
-		pr->cur_args = instr_to_args(pr->cur_ins);
+		pr->cur_args = instr_to_args(map, pr, pr->cur_ins);
 	if (!args_are_valid(pr->cur_ins, pr->cur_args))
 	{
 		log_map(map, pr, "Invalid arguments for instruction");
