@@ -27,7 +27,7 @@ void		show_usage(void)
 	ft_printf("  -d --dump\tDump memory after N cycles then exits\n");
 	ft_printf("  -s --stream\tDump memory every N cycles\n");
 	ft_printf("  -h --help\tDisplay usage\n");
-	ft_printf("  -v --verbose\tSet level of logger wordiness\n");
+	ft_printf("  -v --verbose\tSet logger wordiness level (Add to combine)\n");
 	ft_printf("    0 - Show essential info (bots, winner)\n");
 	ft_printf("    1 - Show lives\n");
 	ft_printf("    2 - Show cycles\n");
