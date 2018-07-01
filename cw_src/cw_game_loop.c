@@ -14,35 +14,6 @@
 #include "viz.h"
 
 /*
-** Remove processes that weren't declared alive. More specifically, delete all
-** processes that haven't executed live instruction in the last period
-*/
-
-void	rm_dead_procs(t_map *map)
-{
-	(void)map;
-}
-
-/*
-** Handle period update
-*/
-
-void	handle_period(t_map *map)
-{
-	map->cyc_cur++;
-	map->cyc_cnt++;
-	if (map->log->level & v_cycles)
-		to_log(map, "It is now cycle %d\n", map->cyc_cnt);
-	if (map->cyc_cur == map->pref->cycles_to_die)
-	{
-		map->pref->cycles_to_die -= map->pref->cycle_delta;
-		map->cyc_cur = 0;
-		map->lives_cur = 0;
-		rm_dead_procs(map);
-	}
-}
-
-/*
 ** Pronounce game to be over.
 */
 
@@ -52,6 +23,7 @@ void	game_over(t_map *map)
 			map->bots[map->last_alive_i]->header->name);
 	if (map->viz_mode)
 	{
+		map->viz->active = False;
 		to_log(map, "Game is over. Press any key to finish");
 		viz_arena(map);
 		wgetch(map->viz->wmain);
@@ -64,7 +36,7 @@ void	game_over(t_map *map)
 
 void	game_loop(t_map *map)
 {
-	while (map->pref->cycles_to_die >= 0 && any_proc_alive(map->procs))
+	while (map->pref->cycles_to_die >= 0 && !map->game_over)
 	{
 		dump_if_necessary(map);
 		update_procs(map);
@@ -95,11 +67,11 @@ void	vgame_loop(t_map *map)
 			return ;
 		if (!map->viz->active || !map->viz->max_cyc_sec)
 			continue ;
-		if (map->pref->cycles_to_die <= 0 || !any_proc_alive(map->procs))
-			return game_over(map);
 		dump_if_necessary(map);
 		update_procs(map);
 		handle_period(map);
+		if (map->game_over)
+			return game_over(map);
 		handle_time(map, &start, &cycles);
 	}
 	pthread_exit(NULL);

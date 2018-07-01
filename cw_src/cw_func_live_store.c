@@ -29,7 +29,7 @@ void	i_live(t_map *map, t_proc *pr)
 		if (map->bot_ids[i] == (int)pr->cur_args[0].value)
 		{
 			log_more(map, "Player %d: I'm alive!\n", i + 1);
-			map->bots[i]->last_live = map->cyc_cnt;
+			map->bots[i]->last_live = map->cyc_cnt + 1;
 			map->bots[i]->lives++;
 			map->lives_cur++;
 			map->last_alive_i = i;

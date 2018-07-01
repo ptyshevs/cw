@@ -130,6 +130,7 @@ void	exec(t_map *map, t_proc *pr);
 void	update_procs(t_map *map);
 void	game_loop(t_map *map);
 void	vgame_loop(t_map *map);
+void	handle_period(t_map *map);
 
 
 /*

@@ -162,10 +162,14 @@ typedef struct	s_map
 	int				*bot_ids;
 	t_bot			*bots[MAX_PLAYERS];
 
+	t_bool			game_over;
+
 	t_uint			n_proc;
 	t_proc			*procs;
+
 	int				cyc_cnt; // this is indicator of current cycle
 	int				cyc_cur; // this regulates game loop
+	int				n_checks;
 	int				lives_cur; // current total value of lives
 	int				last_alive_i; // index of the last bot declared alive
 	t_bool			viz_mode; // the last argument wins

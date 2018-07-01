@@ -25,8 +25,6 @@ void	vproc(t_map *map, t_viz *viz)
 	pr = map->procs;
 	while (pr)
 	{
-		if (!pr->alive)
-			break ;
 		col = get_proc_color(map, pr->id);
 		wattron(viz->wmap, col);
 		mvwprintw(viz->wmap, pr->pc / 64, pr->pc % 64 * 3 + 1,

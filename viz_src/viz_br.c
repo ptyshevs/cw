@@ -14,29 +14,6 @@
 #include "viz.h"
 
 /*
-** Breakdown bar of 48 symbols int parts proportionally to number of lives of
-** each player
-*/
-
-void	update_breakdown(t_map *map)
-{
-	t_uint	i;
-	t_bot	*bot;
-
-	i = 0;
-	while (i < map->n_bots)
-	{
-		bot = map->bots[i];
-		if (map->lives_cur == 0)
-			map->viz->br[i] = 48 / map->n_bots;
-		else
-			map->viz->br[i] = (int)((float)bot->lives /
-					(float)map->lives_cur * 48);
-		i++;
-	}
-}
-
-/*
 ** Vizualize period bar on the <height> specified
 */
 
@@ -54,7 +31,7 @@ void	vperiod(t_map *map, t_viz *viz, int height, const int *br)
 	{
 		m = 0;
 		wattron(viz->wlive, (c = get_bot_color_by_index(i, True)));
-		while (m++ < br[i])
+		while (m++ < br[i] && k < 50)
 			mvwaddch(viz->wlive, height, k++, '-');
 		wattroff(viz->wlive, c);
 		i++;
@@ -70,9 +47,6 @@ void	vperiod(t_map *map, t_viz *viz, int height, const int *br)
 
 void	vlive(t_map *map, t_viz *viz)
 {
-	update_breakdown(map);
-	if (map->cyc_cnt && map->cyc_cur == 0)
-		ft_memcpy(viz->prev_br, viz->br, sizeof(int) * map->n_bots);
 	mvwprintw(viz->wlive, 1, 1, "Live breakdown for current period:");
 	vperiod(map, viz, 3, viz->br);
 	mvwprintw(viz->wlive, 5, 1, "Live breakdown for last period:");

@@ -106,9 +106,8 @@ void	set_default_pref(t_map *map)
 	map->dump = ft_memalloc(sizeof(t_dump));
 	map->viz = ft_memalloc(sizeof(t_viz));
 	map->viz->max_cyc_sec = 50;
-	map->log->level = v_essential;
+	map->n_checks = MAX_CHECKS;
 	map->log->to = 1;
-	map->viz_mode = False;
 	map->pref->cycles_to_die = CYCLE_TO_DIE;
 	map->pref->cycle_delta = CYCLE_DELTA;
 	map->pref->max_checks = MAX_CHECKS;
