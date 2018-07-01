@@ -29,7 +29,7 @@ CW_SRCDIR = cw_src
 CW_SOURCES = $(patsubst %, $(CW_SRCDIR)/%.c, $(CW_FILENAMES))
 CW_BIN = $(patsubst %, $(ODIR)/%.o, $(CW_FILENAMES))
 
-VIZ_FILENAMES = viz viz_br viz_color viz_components
+VIZ_FILENAMES = viz viz_br viz_color viz_components viz_helpers
 
 VIZ_SRCDIR = viz_src
 VIZ_SOURCES = $(patsubst %, $(VIZ_SRCDIR)/%.c, $(VIZ_FILENAMES))

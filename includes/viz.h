@@ -15,6 +15,7 @@
 # include "cw.h"
 # include <ncurses.h>
 # include <sys/time.h>
+# include <pthread.h>
 
 /*
 ** Structure for vizualization
@@ -49,6 +50,7 @@ typedef struct	s_viz
 	int		*prev_br;
 
 	t_bool	active;
+	t_bool	quit;
 	int		max_cyc_sec;
 	double	cyc_sec;
 }				t_viz;
@@ -74,7 +76,8 @@ chtype		get_bot_color_by_index(int index, t_bool foreground);
 
 void		init_viz(t_map *map);
 void		wrapup_viz(t_viz *viz);
-void		viz_arena(t_viz *viz, t_map *map);
+void		viz_arena(t_map *map);
+void		*viz_routine(void *arg);
 
 void		vproc(t_map *map, t_viz *viz);
 void		vmap(t_map *map, t_viz *viz);
@@ -84,5 +87,6 @@ void		vlive(t_map *map, t_viz *viz);
 void		vlog(t_map *map, t_viz *viz);
 
 void		handle_time(t_map *map, struct timeval *start, int *cycles);
+t_bool		handle_controls(t_map *map, int ch);;
 
 #endif

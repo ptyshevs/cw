@@ -80,21 +80,21 @@ void	wrapup_viz(t_viz *viz)
 ** Main vizualization routine
 */
 
-void	viz_arena(t_viz *viz, t_map *map)
+void	viz_arena(t_map *map)
 {
-	werase(viz->wlog);
-	werase(viz->winfo);
-	vmap(map, viz);
-	vproc(map, viz);
-	vinfo(map, viz);
-	vbots(map, viz);
-	vlive(map, viz);
-	vlog(map, viz);
-	wnoutrefresh(viz->wmain);
-	wnoutrefresh(viz->wmap);
-	wnoutrefresh(viz->winfo);
-	wnoutrefresh(viz->wlive);
-	wnoutrefresh(viz->wlog);
+	werase(map->viz->wlog);
+	werase(map->viz->winfo);
+	vmap(map, map->viz);
+	vproc(map, map->viz);
+	vinfo(map, map->viz);
+	vbots(map, map->viz);
+	vlive(map, map->viz);
+	vlog(map, map->viz);
+	wnoutrefresh(map->viz->wmain);
+	wnoutrefresh(map->viz->wmap);
+	wnoutrefresh(map->viz->winfo);
+	wnoutrefresh(map->viz->wlive);
+	wnoutrefresh(map->viz->wlog);
 	doupdate();
 //	wgetch(viz->wmain); // replace with key bindings
 }
