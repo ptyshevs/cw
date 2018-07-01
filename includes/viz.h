@@ -50,7 +50,7 @@ typedef struct	s_viz
 	int		*prev_br;
 
 	t_bool	active;
-	t_bool	quit;
+	t_bool	sound;
 	int		max_cyc_sec;
 	double	cyc_sec;
 }				t_viz;

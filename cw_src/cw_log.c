@@ -70,7 +70,8 @@ void	log_map(t_map *map, t_proc *pr, char *message, ...)
 	{
 		va_start(ap, message);
 		tmp = ft_vsprintf(message, ap);
-		to_log(map, "%#06x %s: %s\n", pr->pc + 1, pr->cur_ins->name, tmp);
+		to_log(map, pr->pc == 0 ? "0x000%d %s: %s\n" : "%#06x %s: %s\n",
+			pr->pc, pr->cur_ins->name, tmp);
 	}
 }
 

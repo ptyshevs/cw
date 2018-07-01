@@ -15,8 +15,8 @@
 # include "libft.h"
 # include "op.h"
 
-typedef unsigned int t_uint;
-struct s_viz;
+typedef unsigned int	t_uint;
+struct					s_viz;
 
 /*
 ** Bot structure
@@ -96,7 +96,8 @@ typedef enum	e_vrb
 	v_ops = 4,
 	v_deaths = 8,
 	v_pc = 16,
-	v_more = 32
+	v_mouse = 32,
+	v_more = 64
 }				t_vrb;
 
 /*
@@ -163,7 +164,6 @@ typedef struct	s_map
 
 	t_uint			n_proc;
 	t_proc			*procs;
-
 	int				cyc_cnt; // this is indicator of current cycle
 	int				cyc_cur; // this regulates game loop
 	int				lives_cur; // current total value of lives

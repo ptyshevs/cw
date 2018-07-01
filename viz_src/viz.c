@@ -96,5 +96,4 @@ void	viz_arena(t_map *map)
 	wnoutrefresh(map->viz->wlive);
 	wnoutrefresh(map->viz->wlog);
 	doupdate();
-//	wgetch(viz->wmain); // replace with key bindings
 }

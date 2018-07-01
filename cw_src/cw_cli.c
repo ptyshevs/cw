@@ -19,16 +19,14 @@
 
 static void	parse_verbosity(t_map *map, int ac, char **av, int i)
 {
-	int	tmp;
+	int	t;
 
+	t = v_essential;
 	if (i + 1 >= ac)
-		ft_panic(1, "No verbosity specified. Use 1, 2, or 3.\n");
-	if ((tmp = ft_atoi(av[i + 1])) < 0 || tmp > 32)
-		ft_panic(1, "Bad verbosity level", av[i + 1]);
-	if (!(tmp == v_alive || tmp == v_cycles || tmp == v_ops || tmp == v_deaths
-		|| tmp == v_pc || tmp == v_more))
-		ft_panic(1, "Bad verbosity level", av[i + 1]);
-	map->log->level = (t_vrb)tmp;
+		ft_panic(1, "No verbosity level specified\n");
+	if (!ft_strisnum(av[i + 1], 10) || (t = ft_atoi(av[i + 1])) < 0 || t > 127)
+		ft_panic(1, "Bad verbosity level\n", av[i + 1]);
+	map->log->level = (t_vrb)t;
 }
 
 /*
@@ -87,9 +85,9 @@ void		parse_cli(t_map *map, int ac, char **av)
 			parse_dump(map, av[i++ + 1], True);
 		else if (ft_strequ(av[i], "-n") && parse_id(map, ac, av, i))
 			i += 2;
-		else if (ft_strequ(av[i], "-v"))
+		else if (ft_strequ(av[i], "-v") || ft_strequ(av[i], "--verbose"))
 			parse_verbosity(map, ac, av, i++);
-		else if (ft_strequ(av[i], "-z"))
+		else if (ft_strequ(av[i], "-z") || ft_strequ(av[i], "--viz"))
 			map->viz_mode = True;
 		else
 			read_bot(map, av[i], -cur_id++, False);

@@ -22,20 +22,26 @@
 void		show_usage(void)
 {
 	ft_printf("Usage: ./corewar [-d|--dump nbr_cycles N] [-s|--stream N]"
-			" [-h|--help] [-v|--verbose <1|2|3>] [-z] "
+			" [-h|--help] [-v|--verbose <level>] [-z|--viz] "
 			"[[-n number] champion1.cor] ...\n\n");
 	ft_printf("  -d --dump\tDump memory after N cycles then exits\n");
-	ft_printf("  -s --stream\tDump memory every N cycles\n");
+	ft_printf("  -s --stream\tDump memory every N cycles, pause, repeat\n");
+	ft_printf("  -z --viz\t\tVizualization mode\n");
 	ft_printf("  -h --help\tDisplay usage\n");
 	ft_printf("  -v --verbose\tSet logger wordiness level (Add to combine)\n");
 	ft_printf("    0 - Show essential info (bots, winner)\n");
-	ft_printf("    1 - Show lives\n");
-	ft_printf("    2 - Show cycles\n");
-	ft_printf("    4 - Show operations\n");
-	ft_printf("    8 - Show deaths\n");
-	ft_printf("    16 - Show PC movements\n");
-	ft_printf("    32 - Show even details\n");
-	ft_printf("  -z\t\tVizualization mode\n");
+	ft_printf("    1 - Show lives\n    2 - Show cycles\n");
+	ft_printf("    4 - Show operations\n    8 - Show deaths\n");
+	ft_printf("    16 - Show PC movements\n    32 - Show key pressed\n");
+	ft_printf("    64 - Show even more details\n");
+	ft_printf("\nVizualization key bindings:\n");
+	ft_printf("  Esc, q\tquit vizualization\n");
+	ft_printf("  Space\t\tStart or stop execution\n");
+	ft_printf("  e\t\tIncrease cycles/sec limit by 10\n");
+	ft_printf("  w\t\tIncrease cycles/sec limit by 1\n");
+	ft_printf("  d\t\tDecrease cycles/sec limit by 10\n");
+	ft_printf("  s\t\tDecrease cycles/sec limit by 1\n");
+	ft_printf("  p\t\tPlay sound effects\n");
 	exit(1);
 }
 

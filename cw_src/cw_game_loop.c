@@ -89,6 +89,8 @@ void	vgame_loop(t_map *map)
 	cycles = map->cyc_cnt;
 	while ((ch = getch()))
 	{
+		if (map->log->level & v_mouse && ch != ERR)
+			to_log(map, "Key pressed: %c | %d\n", ch, ch);
 		if (handle_controls(map, ch))
 			return ;
 		if (!map->viz->active || !map->viz->max_cyc_sec)
