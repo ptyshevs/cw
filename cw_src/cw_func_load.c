@@ -35,11 +35,24 @@ void	i_load(t_map *map, t_proc *pr)
 	pr->carry = (t_uint)(val == 1);
 }
 
+/*
+** load value by index
+*/
 
 void	i_ldi(t_map *map, t_proc *pr)
 {
-	(void)map;
-	(void)pr;
+	t_uint	r;
+	t_uint	val;
+
+	r = pr->args[1].value;
+	if (pr->args[0].type == T_DIR)
+	{
+		pr->reg[r] = pr->args[0].value;
+		return ;
+	}
+	val = collect_arg(map, 4, pr->pc + (pr->args[0].value % IDX_MOD), 0);
+	pr->reg[r] = val;
+	pr->carry = (t_uint)(val == 1);
 }
 
 void	i_lload(t_map *map, t_proc *pr)

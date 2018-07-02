@@ -30,7 +30,10 @@ const t_op	*find_instr(t_uint op)
 
 void	wrap_up(t_map *map, t_proc *pr)
 {
-	move_proc(map, pr, args_to_bytes(pr->cur_ins, pr->args) +
+	if (pr->cur_ins->op == 9 && pr->jumped)
+		pr->jumped = False;
+	else
+		move_proc(map, pr, args_to_bytes(pr->cur_ins, pr->args) +
 			pr->cur_ins->codage + 1);
 	ft_memdel((void **)&pr->args);
 	pr->cur_ins = NULL;
@@ -73,7 +76,6 @@ void	exec(t_map *map, t_proc *pr)
 		if (!(pr->cur_ins = find_instr(map->map[pr->pc]))) // invalid instruction
 			return move_proc(map, pr, 1); // move forward
 	}
-	// charging and activation phase
 	if (pr->cur_cycle < pr->cur_ins->cycles) // charge
 	{
 		pr->cur_cycle++;

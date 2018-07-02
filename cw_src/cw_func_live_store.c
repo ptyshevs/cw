@@ -62,7 +62,9 @@ void	i_live(t_map *map, t_proc *pr)
 void	i_store(t_map *map, t_proc *pr)
 {
 	t_uint	val;
-	int	i;
+	int		i;
+	t_uc	cur_val;
+	t_uint	cur_pos;
 
 	val = pr->reg[pr->args[0].value];
 	if (pr->args[1].type == T_REG)
@@ -71,8 +73,7 @@ void	i_store(t_map *map, t_proc *pr)
 		return ;
 	}
 //	bytes_to_map(map, pr->pc + (pr->args[1].value % IDX_MOD), val, 4);
-	t_uc	cur_val = 0;
-	t_uint	cur_pos = pr->pc + (pr->args[1].value % IDX_MOD);
+	cur_pos = pr->pc; // This should be added, according to the table: + (pr->args[1].value % IDX_MOD);
 	i = 0;
 	while (i < 4)
 	{
@@ -84,18 +85,47 @@ void	i_store(t_map *map, t_proc *pr)
 
 void	i_sti(t_map *map, t_proc *pr)
 {
-	(void)map;
-	(void)pr;
+	t_uint	val;
+	int		i;
+	t_uc	cur_val;
+	t_uint	cur_pos;
+
+	val = pr->reg[pr->args[0].value];
+	if (pr->args[1].type == T_REG)
+	{
+		pr->reg[pr->args[1].value] = val;
+		return ;
+	}
+//	bytes_to_map(map, pr->pc + (pr->args[1].value % IDX_MOD), val, 4);
+	cur_pos = pr->pc; // This should be added, according to the table: + (pr->args[1].value % IDX_MOD);
+	i = 0;
+	while (i < 4)
+	{
+		cur_val = (t_uc)((val >> (8 * (3 - i))) & 0xFF);
+		set_map(map, cur_pos + i, cur_val, bot_color_id(map, pr->id));
+		i++;
+	}
 }
+
+/*
+** Move process pc if carry is one
+*/
 
 void	i_zjmp(t_map *map, t_proc *pr)
 {
-	(void)map;
-	(void)pr;
+	if (pr->carry)
+	{
+		pr->pc += pr->args[0].value % IDX_MOD;
+		pr->jumped = True;
+	}
+	log_more(map, "Proc %d has jumped! New position: %u\n", pr->pc);
 }
+
+/*
+** Output argument as an ascii symbol
+*/
 
 void	i_aff(t_map *map, t_proc *pr)
 {
-	(void)map;
-	(void)pr;
+	to_log(map, "%c", pr->args[0].value);
 }

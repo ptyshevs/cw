@@ -84,6 +84,7 @@ typedef struct	s_proc
 	t_uint			index;
 	int				last_live;
 	t_bool			alive;
+	t_bool			jumped;
 	struct s_proc	*next;
 }				t_proc;
 
