@@ -14,12 +14,15 @@
 
 void	i_fork(t_map *map, t_proc *pr)
 {
-	(void)map;
-	(void)pr;
+	t_proc *new_proc;
+
+	new_proc = create_proc(pr->id, pr->pc);
+ 	new_proc->pc = (pr->pc + (pr->args[0].value % IDX_MOD)) % MEM_SIZE;
+	add_proc(&map->procs, new_proc);
 }
 
 void	i_lfork(t_map *map, t_proc *pr)
 {
-	(void)map;
-	(void)pr;
+	new_proc = create_proc(pr->id, pr->pc);
+ 	new_proc->pc = (pr->pc + pr->args[0].value) % MEM_SIZE;
 }
