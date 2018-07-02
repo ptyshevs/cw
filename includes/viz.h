@@ -19,6 +19,10 @@
 
 /*
 ** Color structure
+** Fields:
+**   - name: color name (e.g. bot, map, debug)
+**   - c: chtype returned by COLOR_PAIR(n) macro
+**   - n: color table index (n in COLOR_PAIR(n))
 */
 
 typedef struct	s_col
@@ -27,6 +31,22 @@ typedef struct	s_col
 	chtype	c;
 	int		n;
 }				t_col;
+
+/*
+** Structure for special places on the map
+** Fields:
+**    - col: color
+**    - i: map position
+**    - n_cycles: how many cycles it should be shown?
+*/
+
+typedef struct		s_special
+{
+	chtype				col;
+	int					i;
+	int					n_cycles;
+	struct s_special	*next;
+}					t_special;
 
 /*
 ** Structure for vizualization
@@ -48,22 +68,24 @@ typedef struct	s_col
 
 typedef struct	s_viz
 {
-	int		h_main;
-	int		w_main;
+	int			h_main;
+	int			w_main;
 
-	WINDOW	*wmain;
-	WINDOW	*wmap;
-	WINDOW	*winfo;
-	WINDOW	*wlive;
-	WINDOW	*wlog;
+	WINDOW		*wmain;
+	WINDOW		*wmap;
+	WINDOW			*winfo;
+	WINDOW		*wlive;
+	WINDOW		*wlog;
 
-	int		*br;
-	int		*prev_br;
-	t_col	*col_table[11];
-	t_bool	active;
-	t_bool	sound;
-	int		max_cyc_sec;
-	double	cyc_sec;
+	t_special	*spec;
+	int			*br;
+	int			*prev_br;
+	int			col_table_size;
+	t_col		*col_table[22];
+	t_bool		active;
+	t_bool		sound;
+	int			max_cyc_sec;
+	double		cyc_sec;
 }				t_viz;
 
 /*
@@ -76,6 +98,7 @@ chtype		get_ctable(t_viz *viz, int i);
 short		color_index(t_viz *viz, chtype col);
 int			get_proc_color(t_map *map, int id);
 chtype		bot_color(t_viz *viz, int index);
+chtype		color_inv(t_viz *viz, int index);
 char		*bot_strcolor(int index);
 
 void		init_viz(t_map *map);
@@ -89,6 +112,9 @@ void		vinfo(t_map *map, t_viz *viz);
 void		vbots(t_map *map, t_viz *viz);
 void		vlive(t_map *map, t_viz *viz);
 void		vlog(t_map *map, t_viz *viz);
+void		vspec(t_map *map, t_viz *viz);
+
+void		add_special(t_map *map, t_uint pos, chtype c, int n_cycles);
 
 void		handle_time(t_map *map, struct timeval *start, int *cycles);
 t_bool		handle_controls(t_map *map, int ch);;

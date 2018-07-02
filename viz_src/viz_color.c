@@ -13,15 +13,21 @@
 #include "cw.h"
 #include "viz.h"
 
-void	add_color(t_viz *viz, int n, char *name, chtype c)
+/*
+** Add color to vizualization color table
+*/
+
+void	add_color(t_viz *viz, char *name, short fg, short bg)
 {
 	static int	i = 0;
 
+	init_pair((short)(i + 1), fg, bg);
 	viz->col_table[i] = ft_memalloc(sizeof(t_col));
-	viz->col_table[i]->n = n;
+	viz->col_table[i]->n = i + 1;
 	viz->col_table[i]->name = name;
-	viz->col_table[i]->c = c;
+	viz->col_table[i]->c = (chtype)COLOR_PAIR(i + 1);
 	i++;
+	viz->col_table_size++;
 }
 
 /*
@@ -45,28 +51,21 @@ void	add_color(t_viz *viz, int n, char *name, chtype c)
 void	init_color_table(t_viz *viz)
 {
 	start_color();
-	init_pair(1, COLOR_BLACK, COLOR_WHITE);
-	add_color(viz, 1, "bg", COLOR_PAIR(1));
-	init_pair(2, COLOR_WHITE, COLOR_BLACK);
-	add_color(viz, 2, "map", COLOR_PAIR(2));
-	init_pair(3, COLOR_GREEN, COLOR_BLACK);
-	add_color(viz, 3, "bot1", COLOR_PAIR(3));
-	init_pair(4, COLOR_BLACK, COLOR_GREEN);
-	add_color(viz, 4, "bot1bg", COLOR_PAIR(4));
-	init_pair(5, COLOR_BLUE, COLOR_BLACK);
-	add_color(viz, 5, "bot2", COLOR_PAIR(5));
-	init_pair(6, COLOR_BLACK, COLOR_BLUE);
-	add_color(viz, 6, "bot2bg", COLOR_PAIR(6));
-	init_pair(7, COLOR_RED, COLOR_BLACK);
-	add_color(viz, 7, "bot3", COLOR_PAIR(7));
-	init_pair(8, COLOR_BLACK, COLOR_RED);
-	add_color(viz, 8, "bot3bg", COLOR_PAIR(8));
-	init_pair(9, COLOR_CYAN, COLOR_BLACK);
-	add_color(viz, 9, "bot4", COLOR_PAIR(9));
-	init_pair(10, COLOR_BLACK, COLOR_CYAN);
-	add_color(viz, 10, "bot4bg", COLOR_PAIR(10));
-	init_pair(11, COLOR_RED, COLOR_RED);
-	add_color(viz, 11, "debug", COLOR_PAIR(11));
+	add_color(viz, "bg", COLOR_BLACK, COLOR_WHITE);
+	add_color(viz, "map", COLOR_WHITE, COLOR_BLACK);
+	add_color(viz, "bot1", COLOR_GREEN, COLOR_BLACK);
+	add_color(viz, "bot1bg",  COLOR_BLACK, COLOR_GREEN);
+	add_color(viz, "bot1inv",  COLOR_WHITE, COLOR_GREEN);
+	add_color(viz, "bot2", COLOR_BLUE, COLOR_BLACK);
+	add_color(viz, "bot2bg", COLOR_BLACK, COLOR_BLUE);
+	add_color(viz, "bot2inv", COLOR_WHITE, COLOR_BLUE);
+	add_color(viz, "bot3", COLOR_RED, COLOR_BLACK);
+	add_color(viz, "bot3bg", COLOR_BLACK, COLOR_RED);
+	add_color(viz, "bot3inv", COLOR_WHITE, COLOR_RED);
+	add_color(viz, "bot4", COLOR_CYAN, COLOR_BLACK);
+	add_color(viz, "bot4bg", COLOR_BLACK, COLOR_CYAN);
+	add_color(viz, "bot4inv", COLOR_WHITE, COLOR_CYAN);
+	add_color(viz, "debug", COLOR_RED, COLOR_RED);
 }
 
 /*
@@ -75,7 +74,8 @@ void	init_color_table(t_viz *viz)
 
 chtype	get_ctable(t_viz *viz, int n)
 {
-	return (n > 0 && n <= 11 ? viz->col_table[n - 1]->c : (t_uint)-1);
+	return (n > 0 && n <= viz->col_table_size ?
+			viz->col_table[n - 1]->c : (t_uint)-1);
 }
 
 /*
@@ -87,7 +87,7 @@ chtype	get_color(t_viz *viz, char *color)
 	int				i;
 
 	i = 0;
-	while (i < 11)
+	while (i < viz->col_table_size)
 	{
 		if (ft_strequ(viz->col_table[i]->name, color))
 			return (viz->col_table[i]->c);
@@ -105,7 +105,7 @@ short	color_index(t_viz *viz, chtype col)
 	short			i;
 
 	i = 0;
-	while (i < 11)
+	while (i < viz->col_table_size)
 	{
 		if (col == viz->col_table[i]->c)
 			return (short)(i + 1);
@@ -131,6 +131,15 @@ chtype	bot_color(t_viz *viz, int index)
 	else
 		ft_panic(1, "Unknown id\n");
 	return (0);
+}
+
+/*
+** Return inverse of bot color
+*/
+
+chtype	color_inv(t_viz *viz, int index)
+{
+	return (get_ctable(viz, color_index(viz, bot_color(viz, index)) + 2));
 }
 
 /*

@@ -24,7 +24,7 @@ t_bool	handle_controls(t_map *map, int ch)
 	else if (ch == ' ')
 		map->viz->active = (t_bool)!map->viz->active;
 	else if (ch == 'e')
-		map->viz->max_cyc_sec += map->viz->max_cyc_sec < 2500 ? 10 : 0;
+		map->viz->max_cyc_sec += map->viz->max_cyc_sec < 2491 ? 10 : 0;
 	else if (ch == 'w')
 		map->viz->max_cyc_sec += map->viz->max_cyc_sec < 2500 ? 1 : 0;
 	else if (ch == 'd')
@@ -49,4 +49,20 @@ void	*viz_routine(void *arg)
 		usleep(50000);
 	}
 	pthread_exit(NULL);
+}
+
+/*
+** Add special character
+*/
+
+void	add_special(t_map *map, t_uint pos, chtype c, int n_cycles)
+{
+	t_special	*sp;
+
+	sp = ft_memalloc(sizeof(t_special));
+	sp->i = pos;
+	sp->col = c;
+	sp->n_cycles = n_cycles;
+	sp->next = map->viz->spec;
+	map->viz->spec = sp;
 }

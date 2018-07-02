@@ -48,12 +48,43 @@ void	game_loop(t_map *map)
 }
 
 /*
+** Update special symbols
+*/
+
+void	update_special(t_map *map, t_viz *viz)
+{
+	t_special	*it;
+	t_special	*tmp;
+	(void)map;
+
+	it = viz->spec;
+	while (it && it->n_cycles < 0)
+	{
+		tmp = it;
+		it = it->next;
+		ft_memdel((void **)&tmp);
+	}
+	viz->spec = it;
+	while (it)
+	{
+		while (it->next && it->next->n_cycles < 0)
+		{
+			tmp = it->next->next;
+			ft_memdel((void **)&it->next);
+			it->next = tmp;
+		}
+		it->n_cycles--;
+		it = it->next;
+	}
+}
+
+/*
 ** Game loop for visualization
 */
 
 void	vgame_loop(t_map *map)
 {
-	pthread_t	vizthr;
+	pthread_t		vizthr;
 	struct timeval	start;
 	int				ch;
 	int				cycles;
@@ -71,6 +102,7 @@ void	vgame_loop(t_map *map)
 			continue ;
 		dump_if_necessary(map);
 		update_procs(map);
+		update_special(map, map->viz);
 		handle_period(map);
 		if (map->game_over)
 			return game_over(map);

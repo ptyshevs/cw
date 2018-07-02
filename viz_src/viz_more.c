@@ -52,3 +52,25 @@ void	vlive(t_map *map, t_viz *viz)
 	mvwprintw(viz->wlive, 5, 1, "Live breakdown for last period:");
 	vperiod(map, viz, 7, viz->prev_br);
 }
+
+/*
+** Vizualize special characters
+*/
+
+void	vspec(t_map *map, t_viz *viz)
+{
+	t_special	*it;
+
+	it = viz->spec;
+	while (it)
+	{
+		if (it->n_cycles >= 0)
+		{
+			wattron(viz->wmap, it->col);
+			mvwprintw(viz->wmap, it->i / 64, it->i % 64 * 3 + 1, "%02x",
+					map->map[it->i]);
+			wattroff(viz->wmap, it->col);
+		}
+		it = it->next;
+	}
+}

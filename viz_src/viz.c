@@ -90,6 +90,7 @@ void	viz_arena(t_map *map)
 	vbots(map, map->viz);
 	vlive(map, map->viz);
 	vlog(map, map->viz);
+	vspec(map, map->viz);
 	wnoutrefresh(map->viz->wmain);
 	wnoutrefresh(map->viz->wmap);
 	wnoutrefresh(map->viz->winfo);
