@@ -129,7 +129,7 @@ void	i_zjmp(t_map *map, t_proc *pr)
 {
 	if (pr->carry)
 	{
-		pr->pc += pr->args[0].value % IDX_MOD;
+		pr->pc += ((short)pr->args[0].value) % IDX_MOD;
 		pr->jumped = True;
 	}
 	log_more(map, "Proc %d has jumped! New position: %u\n", pr->pc);

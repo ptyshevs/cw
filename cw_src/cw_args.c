@@ -96,6 +96,8 @@ t_arg	*instr_to_args(t_map *map, t_proc *pr, const t_op *instr)
 	else if (args[0].type == T_IND)
 		args[0].code = IND_CODE;
 	args[0].value = collect_arg(map, args[0].size, pr->pc, 1);
+	if (args[0].size == 2)
+		args[0].value = (short)args[0].value;
 	i = 1;
 	while (i < 4)
 	{
