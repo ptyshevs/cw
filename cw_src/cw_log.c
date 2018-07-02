@@ -92,19 +92,35 @@ void	log_live(t_map *map, t_uint index)
 
 void	log_instruction(t_map *map, t_proc *pr)
 {
+	char	*tmp;
+	t_uint	i;
+
 	if (map->log->level & v_ops)
 	{
-		if (pr->cur_ins->nargs == 1)
-			to_log(map, "P%5d | %s %d\n", p_index_from_id(map, pr->id) + 1,
-			pr->cur_ins->name, pr->args[0].value);
-		else if (pr->cur_ins->nargs == 2)
-			to_log(map, "P%5d | %s %d %d\n", p_index_from_id(map, pr->id) + 1,
-			pr->cur_ins->name, pr->args[0].value, pr->args[1].value);
-		else
-			to_log(map, "P%5d | %s %d %d %d\n",
-				p_index_from_id(map, pr->id) + 1,
-				pr->cur_ins->name, pr->args[0].value, pr->args[1].value,
-				pr->args[2].value);
+		tmp = ft_sprintf("P%5d | %s", p_index_from_id(map, pr->id) + 1,
+						pr->cur_ins->name);
+		i = 0;
+		while (i < pr->cur_ins->nargs)
+		{
+			tmp = ft_concat(tmp, ft_sprintf(
+					(pr->args[i].type == T_REG ? " r%d" : " %d"),
+					pr->args[i].value), True);
+			i++;
+		}
+		to_log(map, "%s\n", tmp);
+		ft_strdel(&tmp);
+//
+//		if (pr->cur_ins->nargs == 1, )
+//			to_log(map, "P%5d | %s %d\n", ,
+//			pr->cur_ins->name, pr->args[0].value);
+//		else if (pr->cur_ins->nargs == 2)
+//			to_log(map, "P%5d | %s %d %d\n", p_index_from_id(map, pr->id) + 1,
+//			pr->cur_ins->name, pr->args[0].value, pr->args[1].value);
+//		else
+//			to_log(map, "P%5d | %s %d %d %d\n",
+//				p_index_from_id(map, pr->id) + 1,
+//				pr->cur_ins->name, pr->args[0].value, pr->args[1].value,
+//				pr->args[2].value);
 	}
 }
 

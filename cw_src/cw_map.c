@@ -44,7 +44,7 @@ void	inhabit_map(t_map *map)
 ** Move process <pr> <n> cells forward on a map.
 */
 
-void	move_proc(t_map *map, t_proc *pr, t_uint n)
+void	move_proc(t_map *map, t_proc *pr, int n)
 {
 	if (map->log->level & v_pc && n > 1)
 		log_move(map, pr, n);
@@ -55,17 +55,17 @@ void	move_proc(t_map *map, t_proc *pr, t_uint n)
 ** Get value from circular map
 */
 
-t_uint	get_map(t_map *map, t_uint n)
+t_uint	get_map(t_map *map, int n)
 {
-	return (map->map[n % MEM_SIZE]);
+	return (map->map[(MEM_SIZE + n) % MEM_SIZE]);
 }
 
 /*
 ** Set value to circular map
 */
 
-void	set_map(t_map *map, t_uint n, t_uc v, chtype who)
+void	set_map(t_map *map, int n, t_uc v, chtype who)
 {
-	map->map[n % MEM_SIZE] = v;
-	map->cmap[n % MEM_SIZE] = who;
+	map->map[(MEM_SIZE + n) % MEM_SIZE] = v;
+	map->cmap[(MEM_SIZE + n) % MEM_SIZE] = who;
 }

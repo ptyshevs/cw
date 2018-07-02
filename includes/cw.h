@@ -81,10 +81,10 @@ void			clean_bot(t_bot **abot);
 
 void	set_default_pref(t_map *map);
 void	inhabit_map(t_map *map);
-t_uint	get_map(t_map *map, t_uint n);
-void	set_map(t_map *map, t_uint n, t_uc v, chtype who);
-void	bytes_to_map(t_map *map, t_uint pc, t_uint val, t_uint nbytes);
-void	move_proc(t_map *map, t_proc *pr, t_uint n);
+t_uint	get_map(t_map *map, int n);
+void	set_map(t_map *map, int n, t_uc v, chtype who);
+//void	bytes_to_map(t_map *map, t_uint pc, t_uint val, t_uint nbytes);
+void	move_proc(t_map *map, t_proc *pr, int n);
 
 /*
 ** Operations on processes
@@ -128,6 +128,8 @@ t_uint	collect_arg(t_map *map, t_uint size, t_uint pc, t_uint frwd);
 */
 
 void	exec(t_map *map, t_proc *pr);
+t_proc	*create_proc(t_uint id, t_uint pos);
+void	add_proc(t_proc **ahead, t_proc *pr);
 void	update_procs(t_map *map);
 void	game_loop(t_map *map);
 void	vgame_loop(t_map *map);

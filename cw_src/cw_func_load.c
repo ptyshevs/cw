@@ -30,7 +30,7 @@ void	i_load(t_map *map, t_proc *pr)
 		pr->reg[r] = pr->args[0].value;
 		return ;
 	}
-	val = collect_arg(map, 4, pr->pc + (pr->args[0].value % IDX_MOD), 0);
+	val = collect_arg(map, 4, pr->pc + (((short)pr->args[0].value) % IDX_MOD), 0);
 	pr->reg[r] = val;
 	pr->carry = (t_uint)(val == 1);
 }
@@ -50,7 +50,7 @@ void	i_ldi(t_map *map, t_proc *pr)
 		pr->reg[r] = pr->args[0].value;
 		return ;
 	}
-	val = collect_arg(map, 4, pr->pc + (pr->args[0].value % IDX_MOD), 0);
+	val = collect_arg(map, 4, pr->pc + ((short)pr->args[0].value % IDX_MOD), 0);
 	pr->reg[r] = val;
 	pr->carry = (t_uint)(val == 1);
 }
