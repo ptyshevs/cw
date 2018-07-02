@@ -80,7 +80,7 @@ typedef struct	s_proc
 	t_uint			reg[REG_NUMBER];
 	t_uint			cur_cycle;
 	const t_op		*cur_ins;
-	t_arg			*cur_args;
+	t_arg			*args;
 	t_uint			index;
 	int				last_live;
 	t_bool			alive;

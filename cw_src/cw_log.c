@@ -96,15 +96,15 @@ void	log_instruction(t_map *map, t_proc *pr)
 	{
 		if (pr->cur_ins->nargs == 1)
 			to_log(map, "P%5d | %s %d\n", p_index_from_id(map, pr->id) + 1,
-			pr->cur_ins->name, pr->cur_args[0].value);
+			pr->cur_ins->name, pr->args[0].value);
 		else if (pr->cur_ins->nargs == 2)
 			to_log(map, "P%5d | %s %d %d\n", p_index_from_id(map, pr->id) + 1,
-			pr->cur_ins->name, pr->cur_args[0].value, pr->cur_args[1].value);
+			pr->cur_ins->name, pr->args[0].value, pr->args[1].value);
 		else
 			to_log(map, "P%5d | %s %d %d %d\n",
 				p_index_from_id(map, pr->id) + 1,
-				pr->cur_ins->name, pr->cur_args[0].value, pr->cur_args[1].value,
-				pr->cur_args[2].value);
+				pr->cur_ins->name, pr->args[0].value, pr->args[1].value,
+				pr->args[2].value);
 	}
 }
 

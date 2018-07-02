@@ -28,7 +28,7 @@ void	i_live(t_map *map, t_proc *pr)
 	i = 0;
 	while (i < map->n_bots)
 	{
-		if (map->bot_ids[i] == (int)pr->cur_args[0].value)
+		if (map->bot_ids[i] == (int)pr->args[0].value)
 		{
 			log_more(map, "Player %d: I'm alive!\n", i + 1);
 			if (map->viz_mode)
@@ -41,14 +41,23 @@ void	i_live(t_map *map, t_proc *pr)
 		}
 		i++;
 	}
-	return log_more(map, "No player with id %d\n", pr->cur_args[0].value);
+	return log_more(map, "No player with id %d\n", pr->args[0].value);
 }
+
+/*
+** Write value from T_REG, either on a map (T_IND) or to registry (T_REG)
+*/
 
 void	i_store(t_map *map, t_proc *pr)
 {
-	(void)map;
-	(void)pr;
+	if (pr->args[1].type == T_REG)
+	{
+		pr->reg[pr->args[1].value] = pr->reg[pr->args[0].value];
+		return ;
+	}
+	set_map(map, pr->pc + (pr->args[1].value % IDX_MOD), (t_uc)pr->args[0].value);
 }
+
 void	i_sti(t_map *map, t_proc *pr)
 {
 	(void)map;
