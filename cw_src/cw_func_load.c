@@ -12,10 +12,27 @@
 
 #include "cw.h"
 
+/*
+** Load value into process' registry
+**
+** If first arg is T_DIR, write it directly into T_REG.
+** Else if first arg is T_IND, write map->map[T_IND % IDX_MOD] to T_REG
+*/
+
 void	i_load(t_map *map, t_proc *pr)
 {
-	(void)map;
-	(void)pr;
+	t_uint	r;
+	t_uint	val;
+
+	r = pr->cur_args[1].value;
+	if (pr->cur_args[0].type == T_DIR)
+	{
+		pr->reg[r] = pr->cur_args[0].value;
+		return ;
+	}
+	val = collect_arg(map, 4, pr->pc + (pr->cur_args[0].value % IDX_MOD), 0);
+	pr->reg[r] = val;
+	pr->carry = (t_uint)(val == 1);
 }
 
 

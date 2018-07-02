@@ -31,7 +31,8 @@ static t_uc	code_to_type(t_uc code)
 }
 
 /*
-** Collect argument
+** Collect argument that consists of <size> bytes, starting from <pc> position,
+** optionally skipping <frwd> bytes.
 */
 
 t_uint	collect_arg(t_map *map, t_uint size, t_uint pc, t_uint frwd)

@@ -120,6 +120,7 @@ t_arg	*codage_to_args(t_map *map, t_proc *pr, const t_op *instr, t_uint cdg);
 t_arg	*instr_to_args(t_map *map, t_proc *pr, const t_op *instr);
 t_bool	args_are_valid(const t_op *instr, t_arg *args);
 t_uint	args_to_bytes(const t_op *instr, t_arg *args);
+t_uint	collect_arg(t_map *map, t_uint size, t_uint pc, t_uint frwd);
 
 /*
 ** Execution flow
