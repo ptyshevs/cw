@@ -79,6 +79,39 @@ void	update_special(t_map *map, t_viz *viz)
 }
 
 /*
+** Handle sound effects
+*/
+
+void	handle_sound(t_map *map, t_viz *viz)
+{
+	static t_song	songs[8] = {{"War sounds", "war.mp4"},
+		{"Battlefield 1", "battlefield.mp4"},
+		{"XXXTentacion - Look At Me", "xxxtentacion.3gp"},
+		{"It's a trap", "nice_pony.mp4"},
+		{"Snoop Dog - The Last Episode", "snoop.3gp"},
+		{"Childish Gambino - Sweatpants", "sweatpants.3gp"},
+		{"Vitas - 7th element", "vitas.3gp"},
+		{"Childish Gambino - 3005", "3005.3gp"}};
+	t_song		song;
+	char		*tmp;
+
+	if (viz->sound && !viz->playing)
+	{
+		song = songs[rand() % 8];
+		tmp = ft_sprintf("afplay resources/%s&", song.filename);
+		to_log(map, "Song playing: %s", song.name);
+		system(tmp);
+		ft_strdel(&tmp);
+		viz->playing = True;
+	}
+	else if (!viz->sound && viz->playing)
+	{
+		system("pkill afplay 2> /dev/null");
+		viz->playing = False;
+	}
+}
+
+/*
 ** Game loop for visualization
 */
 
@@ -94,6 +127,7 @@ void	vgame_loop(t_map *map)
 	cycles = map->cyc_cnt;
 	while ((ch = getch()))
 	{
+		handle_sound(map, map->viz);
 		if (map->log->level & v_mouse && ch != ERR)
 			to_log(map, "Key pressed: %c | %d\n", ch, ch);
 		if (handle_controls(map, ch))

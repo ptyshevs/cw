@@ -48,6 +48,12 @@ typedef struct		s_special
 	struct s_special	*next;
 }					t_special;
 
+typedef struct		s_song
+{
+	char	*name;
+	char	*filename;
+}					t_song;
+
 /*
 ** Structure for vizualization
 ** Fields:
@@ -63,7 +69,7 @@ typedef struct		s_special
 **    - prev_br: breakdown for the previous period
 **    - active: whether viz is running or paused
 **    - max_cyc_sec: max cycles per second
-**    - cyc_sec: current cycles per second ratio
+**    - cyc_sec: current cycles per second ratiofaffadfd
 */
 
 typedef struct	s_viz
@@ -84,6 +90,7 @@ typedef struct	s_viz
 	t_col		*col_table[22];
 	t_bool		active;
 	t_bool		sound;
+	t_bool		playing;
 	int			max_cyc_sec;
 	double		cyc_sec;
 }				t_viz;

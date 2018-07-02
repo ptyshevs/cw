@@ -24,6 +24,8 @@ void	rm_proc(t_map *map, t_proc **aproc)
 			(*aproc)->index, map->cyc_cnt - (*aproc)->last_live - 1,
 			map->pref->cycles_to_die);
 	ft_memdel((void **)aproc);
+	if (map->viz->sound)
+		system("afplay resources/kill_proc.mp3&");
 	map->n_proc--;
 }
 
