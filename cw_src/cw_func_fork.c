@@ -21,8 +21,15 @@ void	i_fork(t_map *map, t_proc *pr)
 	add_proc(&map->procs, new_proc);
 }
 
+/*
+** Like fork, but creates process without % IDX_MOD
+*/
+
 void	i_lfork(t_map *map, t_proc *pr)
 {
-	new_proc = create_proc(pr->id, pr->pc);
- 	new_proc->pc = (pr->pc + pr->args[0].value) % MEM_SIZE;
+	t_proc	*new_pr;
+
+	new_pr = create_proc(pr->id, pr->pc);
+ 	new_pr->pc = (pr->pc + pr->args[0].value) % MEM_SIZE;
+	add_proc(&map->procs, new_pr);
 }
