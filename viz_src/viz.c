@@ -21,10 +21,10 @@ void	init_viz_windows(t_map *map, t_viz *viz)
 {
 	viz->wmain = newwin(viz->h_main, viz->w_main, 0, 0);
 	viz->wmap = newwin(64, 193, 1, 2);
-	viz->winfo = newwin(8 + map->n_bots * 4, 52, 1, 196);
-	viz->wlive = newwin(9, 52, 10 + map->n_bots * 4, 196);
+	viz->winfo = newwin(7 + map->n_bots * 4, 52, 1, 196);
+	viz->wlive = newwin(9, 52, 8 + map->n_bots * 4, 196);
 	viz->wlog = newwin(map->log->length, map->log->width,
-						20 + map->n_bots * 4, 196);
+						18 + map->n_bots * 4, 196);
 	wbkgd(viz->wmain, get_color("bg"));
 	wbkgd(viz->wmap, get_color("map"));
 	wbkgd(viz->winfo, get_color("map"));
@@ -58,7 +58,7 @@ void	init_viz(t_map *map)
 	viz->active = False;
 	viz->h_main = 66;
 	viz->w_main = 250;
-	map->log->length = 29 + (4 - map->n_bots) * 4;
+	map->log->length = 31 + (4 - map->n_bots) * 4;
 	map->log->width = 52;
 	map->log->log = ft_memalloc(sizeof(char *) * map->log->length);
 	viz->br = ft_memalloc(sizeof(int) * map->n_bots);

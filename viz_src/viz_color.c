@@ -48,6 +48,22 @@ void	init_color_table(void)
 }
 
 /*
+** get color from colortable
+*/
+
+chtype	get_ctable(int n)
+{
+	static t_col	colors[11] = {{"bg", COLOR_PAIR(1)}, {"map", COLOR_PAIR(2)},
+								{"b1", COLOR_PAIR(3)}, {"b1pr", COLOR_PAIR(4)},
+								{"b2", COLOR_PAIR(5)}, {"b2pr", COLOR_PAIR(6)},
+								{"b3", COLOR_PAIR(7)}, {"b3pr", COLOR_PAIR(8)},
+								{"b4", COLOR_PAIR(9)}, {"b4pr", COLOR_PAIR(10)},
+								{"debug", COLOR_PAIR(11)}};
+
+	return (n > 0 && n <= 11 ? colors[n - 1].c : (t_uint)-1);
+}
+
+/*
 ** Map color name to number used in attr[on|off]
 */
 
@@ -72,10 +88,34 @@ chtype	get_color(char *color)
 }
 
 /*
+** Get index of the color in the colortable.
+*/
+
+short	color_index(chtype col)
+{
+	static t_col	colors[11] = {{"bg", COLOR_PAIR(1)}, {"map", COLOR_PAIR(2)},
+								{"b1", COLOR_PAIR(3)}, {"b1pr", COLOR_PAIR(4)},
+								{"b2", COLOR_PAIR(5)}, {"b2pr", COLOR_PAIR(6)},
+								{"b3", COLOR_PAIR(7)}, {"b3pr", COLOR_PAIR(8)},
+								{"b4", COLOR_PAIR(9)}, {"b4pr", COLOR_PAIR(10)},
+								{"debug", COLOR_PAIR(11)}};
+	short			i;
+
+	i = 0;
+	while (i < 11)
+	{
+		if (col == colors[i].c)
+			return (short)(i + 1);
+		i++;
+	}
+	return (-1);
+}
+
+/*
 ** Return bot color by index
 */
 
-chtype	get_bot_color_by_index(int index, t_bool foreground)
+chtype	bot_color(int index, t_bool foreground)
 {
 	if (index == 0)
 		return (foreground ? get_color("b1") : get_color("b1pr"));
@@ -88,6 +128,17 @@ chtype	get_bot_color_by_index(int index, t_bool foreground)
 	else
 		ft_panic(1, "Unknown id\n");
 	return (0);
+}
+
+/*
+** Return bot color by index (text-mode)
+*/
+
+char	*bot_strcolor(int index)
+{
+	static char	*colors[4] = {"{green}", "{blue}", "{red}", "{cyan}"};
+
+	return (index >= 0 && index < 4 ? colors[index] : NULL);
 }
 
 /*

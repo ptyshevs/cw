@@ -12,6 +12,8 @@
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
+
+#include <curses.h>
 # include "libft.h"
 # include "op.h"
 
@@ -158,12 +160,10 @@ typedef struct	s_pref
 typedef struct	s_map
 {
 	t_uc			map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
-
+	chtype			cmap[MEM_SIZE]; // Map copy for storing colors
 	t_uint			n_bots;
 	int				*bot_ids;
 	t_bot			*bots[MAX_PLAYERS];
-
-	t_bool			game_over;
 
 	t_uint			n_proc;
 	t_proc			*procs;
@@ -174,6 +174,8 @@ typedef struct	s_map
 	int				lives_cur; // current total value of lives
 	int				last_alive_i; // index of the last bot declared alive
 	t_bool			viz_mode; // the last argument wins
+	t_bool			colorful; // whether memory dump should be using colors
+	t_bool			game_over;
 	t_log			*log;
 	struct s_viz	*viz;
 	t_pref			*pref;

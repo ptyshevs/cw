@@ -11,9 +11,10 @@
 /* ************************************************************************** */
 
 #include "cw.h"
+#include "viz.h"
 
 /*
-** Inhabit map with bots
+** Inhabit map with bots and initialize cmap
 */
 
 void	inhabit_map(t_map *map)
@@ -31,11 +32,13 @@ void	inhabit_map(t_map *map)
 		k = to_place * m;
 		map->bots[m]->start_pos = k;
 		while (i < map->bots[m]->header->size)
-			map->map[k++] = map->bots[m]->code[i++];
+		{
+			map->map[k] = map->bots[m]->code[i++];
+			map->cmap[k++] = map->viz_mode ? bot_color(m, True) : m;
+		}
 		m++;
 	}
 }
-
 
 /*
 ** Move process <pr> <n> cells forward on a map.
@@ -43,7 +46,8 @@ void	inhabit_map(t_map *map)
 
 void	move_proc(t_map *map, t_proc *pr, t_uint n)
 {
-	log_move(map, pr, n);
+	if (map->log->level & v_pc && n > 1)
+		log_move(map, pr, n);
 	pr->pc = (pr->pc + n) % MEM_SIZE;
 }
 

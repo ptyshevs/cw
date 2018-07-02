@@ -119,24 +119,20 @@ void	log_move(t_map *map, t_proc *pr, t_uint n)
 	t_uint	i;
 
 	cmb = NULL;
-	if (map->log->level & v_pc && n > 1)
+	i = 0;
+	while (i < n)
 	{
-		i = 0;
-		while (i < n)
-		{
-			t = ft_sprintf(i + 1 < n ? "%02x " : "%02x", map->map[pr->pc + i]);
-			cmb = ft_concat(cmb, t, True);
-			i++;
-		}
-		if (pr->pc == 0)
-			to_log(map, "ADV %u (0x0000 -> %#06x) %s\n", n, pr->pc + n, cmb);
-		else if (pr->pc + n == 0)
-			to_log(map, "ADV %u (%#06x -> 0x0000) %s\n", n, pr->pc, cmb);
-		else
-			to_log(map, "ADV %u (%#06x -> %#06x) %s\n", n, pr->pc, pr->pc + n,
-				cmb);
-		ft_strdel(&cmb);
+		t = ft_sprintf(i + 1 < n ? "%02x " : "%02x", map->map[pr->pc + i]);
+		cmb = ft_concat(cmb, t, True);
+		i++;
 	}
+	if (pr->pc == 0)
+		to_log(map, "ADV %u (0x0000 -> %#06x) %s\n", n, pr->pc + n, cmb);
+	else if (pr->pc + n == 0)
+		to_log(map, "ADV %u (%#06x -> 0x0000) %s\n", n, pr->pc, cmb);
+	else
+		to_log(map, "ADV %u (%#06x -> %#06x) %s\n", n, pr->pc, pr->pc + n, cmb);
+	ft_strdel(&cmb);
 }
 
 /*

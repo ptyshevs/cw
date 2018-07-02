@@ -25,15 +25,10 @@ int		main(int ac, char **av)
 	parse_cli(&map, ac, av);
 	if (map.viz_mode)
 		init_viz(&map);
+	collect_ids(&map);
 	introduce_bots(&map);
 	inhabit_map(&map);
 	init_procs(&map);
-	if (map.log->level > v_essential)
-	{
-//		show_bots(map.bots, map.n_bots);
-//		show_map(&map);
-	}
-//	show_procs(map.procs);
 	map.viz_mode ? vgame_loop(&map) : game_loop(&map);
 	if (map.viz_mode)
 		wrapup_viz(map.viz);

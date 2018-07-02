@@ -26,10 +26,10 @@ void	dump_if_necessary(t_map *map)
 	{
 		if (map->dump->once)
 		{
-			show_map(map, False);
+			show_map(map, map->colorful);
 			exit(0);
 		}
-		show_map(map, False);
+		show_map(map, map->colorful);
 		ft_gnl(0, &tmp);
 	}
 }

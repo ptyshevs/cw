@@ -36,6 +36,7 @@ void	rm_proc(t_map *map, t_proc **aproc)
 void	rm_dead_procs(t_map *map)
 {
 	t_proc	*iter;
+	t_proc	*next;
 	t_proc	*prev;
 
 	iter = map->procs;
@@ -45,7 +46,7 @@ void	rm_dead_procs(t_map *map)
 		iter = iter->next;
 		rm_proc(map, &prev);
 	}
-	prev = NULL;
+	prev = iter;
 	map->procs = iter;
 	while (iter)
 	{
@@ -54,8 +55,13 @@ void	rm_dead_procs(t_map *map)
 		else
 			prev = iter;
 		iter = iter->next;
-		if (prev)
-			rm_proc(map, &prev);
+		if (iter && !iter->alive)
+		{
+			next = iter->next;
+			rm_proc(map, &iter);
+			prev->next = next;
+			iter = next;
+		}
 	}
 }
 

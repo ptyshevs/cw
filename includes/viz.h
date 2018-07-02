@@ -71,8 +71,11 @@ typedef struct	s_col
 
 void		init_color_table(void);
 chtype		get_color(char *color);
+chtype		get_ctable(int i);
+short		color_index(chtype col);
 int			get_proc_color(t_map *map, int id);
-chtype		get_bot_color_by_index(int index, t_bool foreground);
+chtype		bot_color(int index, t_bool foreground);
+char		*bot_strcolor(int index);
 
 void		init_viz(t_map *map);
 void		wrapup_viz(t_viz *viz);

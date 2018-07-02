@@ -83,6 +83,8 @@ void		parse_cli(t_map *map, int ac, char **av)
 			parse_dump(map, av[i++ + 1], False);
 		else if (ft_strequ(av[i], "-s") || ft_strequ(av[i], "--stream"))
 			parse_dump(map, av[i++ + 1], True);
+		else if (ft_strequ(av[i], "-c") || ft_strequ(av[i], "--colorful"))
+			map->colorful = True;
 		else if (ft_strequ(av[i], "-n") && parse_id(map, ac, av, i))
 			i += 2;
 		else if (ft_strequ(av[i], "-v") || ft_strequ(av[i], "--verbose"))
@@ -92,7 +94,6 @@ void		parse_cli(t_map *map, int ac, char **av)
 		else
 			read_bot(map, av[i], -cur_id++, False);
 	}
-	collect_ids(map);
 }
 
 /*
@@ -105,6 +106,7 @@ void	set_default_pref(t_map *map)
 	map->pref = ft_memalloc(sizeof(t_pref));
 	map->dump = ft_memalloc(sizeof(t_dump));
 	map->viz = ft_memalloc(sizeof(t_viz));
+	ft_memset(map->cmap, UINT32_MAX, sizeof(chtype) * MEM_SIZE);
 	map->viz->max_cyc_sec = 50;
 	map->n_checks = MAX_CHECKS;
 	map->log->to = 1;

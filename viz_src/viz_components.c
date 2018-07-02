@@ -20,12 +20,15 @@
 void	vproc(t_map *map, t_viz *viz)
 {
 	t_proc	*pr;
-	int		col;
+	int	col;
 
 	pr = map->procs;
 	while (pr)
 	{
-		col = get_proc_color(map, pr->id);
+		if (map->cmap[pr->pc] == UINT32_MAX)
+			col = COLOR_PAIR(1);
+		else
+			col = get_ctable(color_index(map->cmap[pr->pc]) + 1);
 		wattron(viz->wmap, col);
 		mvwprintw(viz->wmap, pr->pc / 64, pr->pc % 64 * 3 + 1,
 				"%02x", map->map[pr->pc]);
@@ -40,24 +43,16 @@ void	vproc(t_map *map, t_viz *viz)
 
 void	vmap(t_map *map, t_viz *viz)
 {
-	static int	colors[4] = {COLOR_PAIR(3), COLOR_PAIR(5),
-							COLOR_PAIR(7), COLOR_PAIR(9)};
 	t_uint		i;
-	t_uint		m;
 
 	i = 0;
 	while (i < MEM_SIZE)
 	{
-		m = 0;
-		while (m < map->n_bots)
-		{
-			if (i == map->bots[m]->start_pos)
-				wattron(viz->wmap, colors[m]);
-			else if (i == map->bots[m]->start_pos + map->bots[m]->header->size)
-				wattroff(viz->wmap, colors[m]);
-			m++;
-		}
+		if (map->cmap[i] != UINT32_MAX)
+			wattron(viz->wmap, map->cmap[i]);
 		mvwprintw(viz->wmap, i / 64, i % 64 * 3, " %02x ", map->map[i]);
+		if (map->cmap[i] != UINT32_MAX)
+			wattroff(viz->wmap, map->cmap[i]);
 		i++;
 	}
 }
@@ -74,10 +69,10 @@ void	vbots(t_map *map, t_viz *viz)
 	while (i < map->n_bots)
 	{
 		mvwprintw(viz->winfo, 8 + (i * 4), 1, "Player %d:", map->bots[i]->id);
-		wattron(viz->winfo, get_bot_color_by_index(i, True));
+		wattron(viz->winfo, bot_color(i, True));
 		mvwprintw(viz->winfo, 8 + (i * 4), 15, "%s",
 				map->bots[i]->header->name);
-		wattroff(viz->winfo, get_bot_color_by_index(i, True));
+		wattroff(viz->winfo, bot_color(i, True));
 		mvwprintw(viz->winfo, 8 + 1 + (i * 4), 3, "Last live: %d",
 				map->bots[i]->last_live);
 		mvwprintw(viz->winfo, 8 + 2 + (i * 4), 3, "Lives in current period: %d",

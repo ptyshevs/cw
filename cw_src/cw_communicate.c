@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cw.h"
+#include "viz.h"
 
 /*
 ** Display usage
@@ -26,6 +27,7 @@ void		show_usage(void)
 			"[[-n number] champion1.cor] ...\n\n");
 	ft_printf("  -d --dump\tDump memory after N cycles then exits\n");
 	ft_printf("  -s --stream\tDump memory every N cycles, pause, repeat\n");
+	ft_printf("  -c --colorful\tColorize memory dump\n");
 	ft_printf("  -z --viz\t\tVizualization mode\n");
 	ft_printf("  -h --help\tDisplay usage\n");
 	ft_printf("  -v --verbose\tSet logger wordiness level (Add to combine)\n");
@@ -69,27 +71,22 @@ void	show_bots(t_bot **bots, unsigned int num_bots)
 
 void	show_map(t_map *map, t_bool colorize)
 {
-	static char	*colors[4] = {"{green}", "{blue}", "{red}", "{cyan}"};
 	t_uint		i;
-	t_uint		m;
+	char		*c;
 
 	i = 0;
 	while (i < MEM_SIZE)
 	{
-		m = 0;
-		while (colorize && m < map->n_bots)
-		{
-			if (i == map->bots[m]->start_pos)
-				ft_printf(colors[m]);
-			else if (i == map->bots[m]->start_pos + map->bots[m]->header->size)
-				ft_printf("{nc}");
-			m++;
-		}
+		c = colorize ? bot_strcolor(map->cmap[i]) : NULL;
 		if (i == 0)
 			ft_printf("0x0000 : ");
 		else if (i % 64 == 0)
 			ft_printf("%#06x : ", i);
+		if (c)
+			ft_printf(c);
 		ft_printf((i + 1) % 64 ? "%02x " : "%02x", map->map[i]);
+		if (c)
+			ft_printf("{nc}");
 		if (++i % 64 == 0)
 			ft_printf("\n");
 	}
