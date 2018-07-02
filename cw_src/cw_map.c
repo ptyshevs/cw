@@ -34,7 +34,7 @@ void	inhabit_map(t_map *map)
 		while (i < map->bots[m]->header->size)
 		{
 			map->map[k] = map->bots[m]->code[i++];
-			map->cmap[k++] = map->viz_mode ? bot_color(map->viz, m) : m;
+			map->cmap[k++] = map->viz_mode ? bot_color(map, m) : m;
 		}
 		m++;
 	}
@@ -64,7 +64,8 @@ t_uint	get_map(t_map *map, t_uint n)
 ** Set value to circular map
 */
 
-void	set_map(t_map *map, t_uint n, t_uc v)
+void	set_map(t_map *map, t_uint n, t_uc v, chtype who)
 {
 	map->map[n % MEM_SIZE] = v;
+	map->cmap[n % MEM_SIZE] = who;
 }

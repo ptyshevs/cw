@@ -20,29 +20,40 @@
 
 void	i_live(t_map *map, t_proc *pr)
 {
-	t_uint	i;
+	int	i;
 
 	log_more(map, "Process %d pronounced alive\n", pr->index);
 	pr->alive = True;
 	pr->last_live = map->cyc_cnt;
-	i = 0;
-	while (i < map->n_bots)
-	{
-		if (map->bot_ids[i] == (int)pr->args[0].value)
-		{
-			log_more(map, "Player %d: I'm alive!\n", i + 1);
-			if (map->viz_mode)
-				add_special(map, pr->pc, color_inv(map->viz, i), 50);
-			map->bots[i]->last_live = map->cyc_cnt + 1;
-			map->bots[i]->lives++;
-			map->lives_cur++;
-			map->last_alive_i = i;
-			return log_live(map, i);
-		}
-		i++;
-	}
-	return log_more(map, "No player with id %d\n", pr->args[0].value);
+	if ((i = p_index_from_id(map, pr->args[0].value)) == -1)
+		return log_more(map, "No player with id %d\n", pr->args[0].value);
+	log_more(map, "Player %d: I'm alive!\n", i + 1);
+	if (map->viz_mode)
+		add_special(map, pr->pc, color_inv(map, i), 50);
+	map->bots[i]->last_live = map->cyc_cnt + 1;
+	map->bots[i]->lives++;
+	map->lives_cur++;
+	map->last_alive_i = i;
+	return log_live(map, (t_uint)i);
 }
+
+/*
+** Write <n> bytes to map, starting from <pc>, essentially breaking up <val>
+** into bytes.
+*/
+
+//void	bytes_to_map(t_map *map, t_uint pc, t_uint val, t_uint n)
+//{
+//	int	i;
+//
+//	i = 0;
+//	while (i < n)
+//	{
+//		set_map(map, pc + i, (val >> (8 * (n - 1 - i))) & 0xFF, );
+//		i++;
+//	}
+//}
+
 
 /*
 ** Write value from T_REG, either on a map (T_IND) or to registry (T_REG)
@@ -50,12 +61,25 @@ void	i_live(t_map *map, t_proc *pr)
 
 void	i_store(t_map *map, t_proc *pr)
 {
+	t_uint	val;
+	int	i;
+
+	val = pr->reg[pr->args[0].value];
 	if (pr->args[1].type == T_REG)
 	{
-		pr->reg[pr->args[1].value] = pr->reg[pr->args[0].value];
+		pr->reg[pr->args[1].value] = val;
 		return ;
 	}
-	set_map(map, pr->pc + (pr->args[1].value % IDX_MOD), (t_uc)pr->args[0].value);
+//	bytes_to_map(map, pr->pc + (pr->args[1].value % IDX_MOD), val, 4);
+	t_uc	cur_val = 0;
+	t_uint	cur_pos = pr->pc + (pr->args[1].value % IDX_MOD);
+	i = 0;
+	while (i < 4)
+	{
+		cur_val = (t_uc)((val >> (8 * (3 - i))) & 0xFF);
+		set_map(map, cur_pos + i, cur_val, bot_color_id(map, pr->id));
+		i++;
+	}
 }
 
 void	i_sti(t_map *map, t_proc *pr)

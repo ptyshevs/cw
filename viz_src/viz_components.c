@@ -69,10 +69,10 @@ void	vbots(t_map *map, t_viz *viz)
 	while (i < map->n_bots)
 	{
 		mvwprintw(viz->winfo, 8 + (i * 4), 1, "Player %d:", map->bots[i]->id);
-		wattron(viz->winfo, bot_color(viz, i));
+		wattron(viz->winfo, bot_color(map, i));
 		mvwprintw(viz->winfo, 8 + (i * 4), 15, "%s",
 				map->bots[i]->header->name);
-		wattroff(viz->winfo, bot_color(viz, i));
+		wattroff(viz->winfo, bot_color(map, i));
 		mvwprintw(viz->winfo, 8 + 1 + (i * 4), 3, "Last live: %d",
 				map->bots[i]->last_live);
 		mvwprintw(viz->winfo, 8 + 2 + (i * 4), 3, "Lives in current period: %d",

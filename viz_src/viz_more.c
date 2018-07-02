@@ -30,7 +30,7 @@ void	vperiod(t_map *map, t_viz *viz, int height, const int *br)
 	while (i < map->n_bots)
 	{
 		m = 0;
-		wattron(viz->wlive, (c = bot_color(viz, i)));
+		wattron(viz->wlive, (c = bot_color(map, i)));
 		while (m++ < br[i] && k < 50)
 			mvwaddch(viz->wlive, height, k++, '-');
 		wattroff(viz->wlive, c);

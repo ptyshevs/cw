@@ -118,28 +118,36 @@ short	color_index(t_viz *viz, chtype col)
 ** Return bot color by index
 */
 
-chtype	bot_color(t_viz *viz, int index)
+chtype	bot_color(t_map *map, int index)
 {
+	if (!map->viz_mode)
+		return (chtype)(index);
 	if (index == 0)
-		return (get_color(viz, "bot1"));
+		return (get_color(map->viz, "bot1"));
 	else if (index == 1)
-		return (get_color(viz, "bot2"));
+		return (get_color(map->viz, "bot2"));
 	else if (index == 2)
-		return (get_color(viz, "bot3"));
+		return (get_color(map->viz, "bot3"));
 	else if (index == 3)
-		return (get_color(viz, "bot4"));
+		return (get_color(map->viz, "bot4"));
 	else
-		ft_panic(1, "Unknown id\n");
+		log_more(map, "bot_color was called with bad index: %d\n", index);
 	return (0);
+}
+
+chtype	bot_color_id(t_map *map, int id)
+{
+	return (bot_color(map, p_index_from_id(map, id)));
 }
 
 /*
 ** Return inverse of bot color
 */
 
-chtype	color_inv(t_viz *viz, int index)
+chtype	color_inv(t_map *map, int index)
 {
-	return (get_ctable(viz, color_index(viz, bot_color(viz, index)) + 2));
+	return (get_ctable(map->viz,
+				color_index(map->viz, bot_color(map, index)) + 2));
 }
 
 /*

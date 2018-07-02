@@ -27,6 +27,7 @@ int		p_index_from_id(t_map *map, int id)
 	{
 		if (map->bots[i]->id == id)
 			return ((int)i);
+		i++;
 	}
 	return (-1);
 }

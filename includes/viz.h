@@ -103,9 +103,9 @@ void		init_color_table(t_viz *viz);
 chtype		get_color(t_viz *viz, char *color);
 chtype		get_ctable(t_viz *viz, int i);
 short		color_index(t_viz *viz, chtype col);
-int			get_proc_color(t_map *map, int id);
-chtype		bot_color(t_viz *viz, int index);
-chtype		color_inv(t_viz *viz, int index);
+chtype		bot_color(t_map *map, int index);
+chtype		bot_color_id(t_map *map, int id);
+chtype		color_inv(t_map *map, int index);
 char		*bot_strcolor(int index);
 
 void		init_viz(t_map *map);
