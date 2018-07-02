@@ -83,20 +83,6 @@ void	i_store(t_map *map, t_proc *pr)
 	}
 }
 
-/*
-** Access method for process registry: get value stored in <n>th registry cell
-*/
-
-t_uint	get_registry(t_map *map, t_proc *pr, t_uint n)
-{
-	if (n <= 0 || n > 16)
-	{
-		log_more(map, "Tried to access invalid register (r%d)\n", n);
-		return (0);
-	}
-	return (pr->reg[n - 1]);
-}
-
 void	i_sti(t_map *map, t_proc *pr)
 {
 	t_uint	val;
@@ -104,13 +90,12 @@ void	i_sti(t_map *map, t_proc *pr)
 	t_uc	cur_val;
 	t_uint	cur_pos;
 
-	val = get_registry(map, pr, pr->args[0].value);
+	val = get_reg(pr, pr->args[0].value);
 	if (pr->args[1].type == T_REG)
 	{
 		pr->reg[pr->args[1].value] = val;
 		return ;
 	}
-//	bytes_to_map(map, pr->pc + (pr->args[1].value % IDX_MOD), val, 4);
 	cur_pos = pr->pc + pr->cur_ins->codage + (pr->args[1].value % IDX_MOD); // This should be added, according to the table: + (pr->args[1].value % IDX_MOD);
 	i = 0;
 	while (i < 4)
@@ -132,7 +117,7 @@ void	i_zjmp(t_map *map, t_proc *pr)
 		pr->pc += ((short)pr->args[0].value) % IDX_MOD;
 		pr->jumped = True;
 	}
-	log_more(map, "Proc %d has jumped! New position: %u\n", pr->pc);
+	log_more(map, "Proc %d has jumped! New position: %u\n", pr->index, pr->pc);
 }
 
 /*
@@ -141,5 +126,5 @@ void	i_zjmp(t_map *map, t_proc *pr)
 
 void	i_aff(t_map *map, t_proc *pr)
 {
-	to_log(map, "%c", pr->args[0].value);
+	to_log(map, "%C", pr->args[0].value);
 }

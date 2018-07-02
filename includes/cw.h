@@ -45,7 +45,7 @@ void	dump_if_necessary(t_map *map);
 */
 
 void	show_usage(void);
-void	show_bots(t_bot **bots, unsigned int num_bots);
+void	show_bots(t_bot **bots, t_uint num_bots);
 void	show_map(t_map *map, t_bool colorize);
 void	show_procs(t_proc *procs);
 void	show_args(t_arg *args);
@@ -54,26 +54,31 @@ void	show_args(t_arg *args);
 ** CLI parsing and bot reading
 */
 
-void			parse_cli(t_map *map, int ac, char **av);
-void			read_bot(t_map *map, char *filename,
-						int id, t_bool id_frm_cli);
+void	parse_cli(t_map *map, int ac, char **av);
+void	read_bot(t_map *map, char *filename, int id, t_bool id_frm_cli);
 
-unsigned int	bytes_to_uint(const t_uc *bytes, t_uint n);
-t_line			*read_n_bytes(const char *filename, int fd, t_uint n);
-void			collect_ids(t_map *map);
-int				p_index_from_id(t_map *map, int id);
+/*
+** Misc useful stuff
+*/
+
+t_uint	bytes_to_uint(const t_uc *bytes, t_uint n);
+t_line	*read_n_bytes(const char *filename, int fd, t_uint n);
+void	collect_ids(t_map *map);
+int		p_index_from_id(t_map *map, int id);
+t_uint	get_reg(t_proc *pr, t_uint n);
+void	set_reg(t_proc *pr, t_uint n, t_uint v);
 
 /*
 ** Bot file parsing
 */
 
-unsigned int	parse_magic(char *filename, int fd);
-char			*parse_name(char *filename, int fd);
-unsigned int	parse_size(char *filename, int fd);
-char			*parse_comment(char *filename, int fd);
-void			parse_padding(char *filename, int fd);
+t_uint	parse_magic(char *filename, int fd);
+char	*parse_name(char *filename, int fd);
+t_uint	parse_size(char *filename, int fd);
+char	*parse_comment(char *filename, int fd);
+void	parse_padding(char *filename, int fd);
 
-void			clean_bot(t_bot **abot);
+void	clean_bot(t_bot **abot);
 
 /*
 ** Operations on map
@@ -134,7 +139,6 @@ void	update_procs(t_map *map);
 void	game_loop(t_map *map);
 void	vgame_loop(t_map *map);
 void	handle_period(t_map *map);
-
 
 /*
 ** Errors

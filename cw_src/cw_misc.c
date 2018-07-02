@@ -31,3 +31,29 @@ int		p_index_from_id(t_map *map, int id)
 	}
 	return (-1);
 }
+
+/*
+** Access method for process registry: get value stored in <n>th registry cell
+*/
+
+t_uint	get_reg(t_proc *pr, t_uint n)
+{
+	if (n <= 0 || n > 16)
+//	{
+//		log_more(map, "Tried to access invalid register (r%d)\n", n);
+		return (0);
+//	}
+	return (pr->reg[n - 1]);
+}
+
+/*
+** Setter for process register
+*/
+
+void	set_reg(t_proc *pr, t_uint n, t_uint v)
+{
+	if (n == 0 || n > 16)
+		return ;
+	pr->reg[n - 1] = v;
+//			log_more(map, "i_add tried to write to r%d\n", pr->args[2].value);
+}
