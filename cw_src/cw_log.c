@@ -107,6 +107,8 @@ void	log_instruction(t_map *map, t_proc *pr)
 					pr->args[i].value), True);
 			i++;
 		}
+		if (pr->cur_ins->op == 9)
+			tmp = ft_concat(tmp, ft_sprintf(" %s", pr->carry ? "OK" : "FAILED"), True);
 		to_log(map, "%s\n", tmp);
 		ft_strdel(&tmp);
 //

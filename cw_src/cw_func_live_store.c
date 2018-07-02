@@ -66,14 +66,12 @@ void	i_store(t_map *map, t_proc *pr)
 	t_uc	cur_val;
 	t_uint	cur_pos;
 
-	val = pr->reg[pr->args[0].value];
+	val = get_reg(pr, pr->args[0].value);
 	if (pr->args[1].type == T_REG)
-	{
-		pr->reg[pr->args[1].value] = val;
-		return ;
-	}
+		return set_reg(pr, pr->args[1].value, val);
 //	bytes_to_map(map, pr->pc + (pr->args[1].value % IDX_MOD), val, 4);
-	cur_pos = pr->pc; // This should be added, according to the table: + (pr->args[1].value % IDX_MOD);
+	// BUG IS HERE
+	cur_pos = pr->pc + (pr->args[1].value % IDX_MOD);// This should be added, according to the table: + (pr->args[1].value % IDX_MOD);
 	i = 0;
 	while (i < 4)
 	{
