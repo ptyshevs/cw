@@ -25,11 +25,11 @@ void	init_viz_windows(t_map *map, t_viz *viz)
 	viz->wlive = newwin(9, 52, 8 + map->n_bots * 4, 196);
 	viz->wlog = newwin(map->log->length, map->log->width,
 						18 + map->n_bots * 4, 196);
-	wbkgd(viz->wmain, get_color("bg"));
-	wbkgd(viz->wmap, get_color("map"));
-	wbkgd(viz->winfo, get_color("map"));
-	wbkgd(viz->wlive, get_color("map"));
-	wbkgd(viz->wlog, get_color("map"));
+	wbkgd(viz->wmain, get_color(viz, "bg"));
+	wbkgd(viz->wmap, get_color(viz, "map"));
+	wbkgd(viz->winfo, get_color(viz, "map"));
+	wbkgd(viz->wlive, get_color(viz, "map"));
+	wbkgd(viz->wlog, get_color(viz, "map"));
 }
 
 /*
@@ -53,7 +53,7 @@ void	init_viz(t_map *map)
 	keypad(stdscr, true);
 	nodelay(stdscr, true);
 	timeout(0);
-	init_color_table();
+	init_color_table(map->viz);
 	viz = map->viz;
 	viz->active = False;
 	viz->h_main = 66;

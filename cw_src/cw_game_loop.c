@@ -43,6 +43,8 @@ void	game_loop(t_map *map)
 		handle_period(map);
 	}
 	game_over(map);
+	if (map->dump->n > map->cyc_cnt)
+		dump_if_necessary(map);
 }
 
 /*

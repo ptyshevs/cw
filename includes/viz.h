@@ -18,6 +18,17 @@
 # include <pthread.h>
 
 /*
+** Color structure
+*/
+
+typedef struct	s_col
+{
+	char	*name;
+	chtype	c;
+	int		n;
+}				t_col;
+
+/*
 ** Structure for vizualization
 ** Fields:
 **    - h_main: height of the main window
@@ -48,7 +59,7 @@ typedef struct	s_viz
 
 	int		*br;
 	int		*prev_br;
-
+	t_col	*col_table[11];
 	t_bool	active;
 	t_bool	sound;
 	int		max_cyc_sec;
@@ -56,25 +67,15 @@ typedef struct	s_viz
 }				t_viz;
 
 /*
-** Color structure
-*/
-
-typedef struct	s_col
-{
-	char	*name;
-	chtype	c;
-}				t_col;
-
-/*
 ** Vizualization
 */
 
-void		init_color_table(void);
-chtype		get_color(char *color);
-chtype		get_ctable(int i);
-short		color_index(chtype col);
+void		init_color_table(t_viz *viz);
+chtype		get_color(t_viz *viz, char *color);
+chtype		get_ctable(t_viz *viz, int i);
+short		color_index(t_viz *viz, chtype col);
 int			get_proc_color(t_map *map, int id);
-chtype		bot_color(int index, t_bool foreground);
+chtype		bot_color(t_viz *viz, int index);
 char		*bot_strcolor(int index);
 
 void		init_viz(t_map *map);

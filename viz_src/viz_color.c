@@ -13,6 +13,17 @@
 #include "cw.h"
 #include "viz.h"
 
+void	add_color(t_viz *viz, int n, char *name, chtype c)
+{
+	static int	i = 0;
+
+	viz->col_table[i] = ft_memalloc(sizeof(t_col));
+	viz->col_table[i]->n = n;
+	viz->col_table[i]->name = name;
+	viz->col_table[i]->c = c;
+	i++;
+}
+
 /*
 ** Initialize colors for vizualization.
 **
@@ -31,57 +42,55 @@
 **   - 11: pure red for debugging purposes
 */
 
-void	init_color_table(void)
+void	init_color_table(t_viz *viz)
 {
 	start_color();
 	init_pair(1, COLOR_BLACK, COLOR_WHITE);
+	add_color(viz, 1, "bg", COLOR_PAIR(1));
 	init_pair(2, COLOR_WHITE, COLOR_BLACK);
+	add_color(viz, 2, "map", COLOR_PAIR(2));
 	init_pair(3, COLOR_GREEN, COLOR_BLACK);
+	add_color(viz, 3, "bot1", COLOR_PAIR(3));
 	init_pair(4, COLOR_BLACK, COLOR_GREEN);
+	add_color(viz, 4, "bot1bg", COLOR_PAIR(4));
 	init_pair(5, COLOR_BLUE, COLOR_BLACK);
+	add_color(viz, 5, "bot2", COLOR_PAIR(5));
 	init_pair(6, COLOR_BLACK, COLOR_BLUE);
+	add_color(viz, 6, "bot2bg", COLOR_PAIR(6));
 	init_pair(7, COLOR_RED, COLOR_BLACK);
+	add_color(viz, 7, "bot3", COLOR_PAIR(7));
 	init_pair(8, COLOR_BLACK, COLOR_RED);
+	add_color(viz, 8, "bot3bg", COLOR_PAIR(8));
 	init_pair(9, COLOR_CYAN, COLOR_BLACK);
+	add_color(viz, 9, "bot4", COLOR_PAIR(9));
 	init_pair(10, COLOR_BLACK, COLOR_CYAN);
+	add_color(viz, 10, "bot4bg", COLOR_PAIR(10));
 	init_pair(11, COLOR_RED, COLOR_RED);
+	add_color(viz, 11, "debug", COLOR_PAIR(11));
 }
 
 /*
 ** get color from colortable
 */
 
-chtype	get_ctable(int n)
+chtype	get_ctable(t_viz *viz, int n)
 {
-	static t_col	colors[11] = {{"bg", COLOR_PAIR(1)}, {"map", COLOR_PAIR(2)},
-								{"b1", COLOR_PAIR(3)}, {"b1pr", COLOR_PAIR(4)},
-								{"b2", COLOR_PAIR(5)}, {"b2pr", COLOR_PAIR(6)},
-								{"b3", COLOR_PAIR(7)}, {"b3pr", COLOR_PAIR(8)},
-								{"b4", COLOR_PAIR(9)}, {"b4pr", COLOR_PAIR(10)},
-								{"debug", COLOR_PAIR(11)}};
-
-	return (n > 0 && n <= 11 ? colors[n - 1].c : (t_uint)-1);
+	return (n > 0 && n <= 11 ? viz->col_table[n - 1]->c : (t_uint)-1);
 }
 
 /*
 ** Map color name to number used in attr[on|off]
 */
 
-chtype	get_color(char *color)
+chtype	get_color(t_viz *viz, char *color)
 {
-	static t_col	colors[11] = {{"bg", COLOR_PAIR(1)}, {"map", COLOR_PAIR(2)},
-								{"b1", COLOR_PAIR(3)}, {"b1pr", COLOR_PAIR(4)},
-								{"b2", COLOR_PAIR(5)}, {"b2pr", COLOR_PAIR(6)},
-								{"b3", COLOR_PAIR(7)}, {"b3pr", COLOR_PAIR(8)},
-								{"b4", COLOR_PAIR(9)}, {"b4pr", COLOR_PAIR(10)},
-								{"debug", COLOR_PAIR(11)}};
 	int				i;
 
 	i = 0;
 	while (i < 11)
 	{
-		if (ft_strequ(colors[i].name, color))
-			return (colors[i].c);
+		if (ft_strequ(viz->col_table[i]->name, color))
+			return (viz->col_table[i]->c);
 		i++;
 	}
 	return (0);
@@ -91,20 +100,14 @@ chtype	get_color(char *color)
 ** Get index of the color in the colortable.
 */
 
-short	color_index(chtype col)
+short	color_index(t_viz *viz, chtype col)
 {
-	static t_col	colors[11] = {{"bg", COLOR_PAIR(1)}, {"map", COLOR_PAIR(2)},
-								{"b1", COLOR_PAIR(3)}, {"b1pr", COLOR_PAIR(4)},
-								{"b2", COLOR_PAIR(5)}, {"b2pr", COLOR_PAIR(6)},
-								{"b3", COLOR_PAIR(7)}, {"b3pr", COLOR_PAIR(8)},
-								{"b4", COLOR_PAIR(9)}, {"b4pr", COLOR_PAIR(10)},
-								{"debug", COLOR_PAIR(11)}};
 	short			i;
 
 	i = 0;
 	while (i < 11)
 	{
-		if (col == colors[i].c)
+		if (col == viz->col_table[i]->c)
 			return (short)(i + 1);
 		i++;
 	}
@@ -115,16 +118,16 @@ short	color_index(chtype col)
 ** Return bot color by index
 */
 
-chtype	bot_color(int index, t_bool foreground)
+chtype	bot_color(t_viz *viz, int index)
 {
 	if (index == 0)
-		return (foreground ? get_color("b1") : get_color("b1pr"));
+		return (get_color(viz, "bot1"));
 	else if (index == 1)
-		return (foreground ? get_color("b2") : get_color("b2pr"));
+		return (get_color(viz, "bot2"));
 	else if (index == 2)
-		return (foreground ? get_color("b3") : get_color("b3pr"));
+		return (get_color(viz, "bot3"));
 	else if (index == 3)
-		return (foreground ? get_color("b4") : get_color("b4pr"));
+		return (get_color(viz, "bot4"));
 	else
 		ft_panic(1, "Unknown id\n");
 	return (0);
@@ -139,24 +142,4 @@ char	*bot_strcolor(int index)
 	static char	*colors[4] = {"{green}", "{blue}", "{red}", "{cyan}"};
 
 	return (index >= 0 && index < 4 ? colors[index] : NULL);
-}
-
-/*
-** Get process color
-*/
-
-int		get_proc_color(t_map *map, int id)
-{
-	static int	colors[4] = {COLOR_PAIR(4), COLOR_PAIR(6),
-							COLOR_PAIR(8), COLOR_PAIR(10)};
-	int			i;
-
-	i = 0;
-	while (i < 4)
-	{
-		if (map->bot_ids[i] == id)
-			return (colors[i]);
-		i++;
-	}
-	return (0);
 }

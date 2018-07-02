@@ -34,7 +34,7 @@ void	inhabit_map(t_map *map)
 		while (i < map->bots[m]->header->size)
 		{
 			map->map[k] = map->bots[m]->code[i++];
-			map->cmap[k++] = map->viz_mode ? bot_color(m, True) : m;
+			map->cmap[k++] = map->viz_mode ? bot_color(map->viz, m) : m;
 		}
 		m++;
 	}

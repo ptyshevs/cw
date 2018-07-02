@@ -28,7 +28,7 @@ void	vproc(t_map *map, t_viz *viz)
 		if (map->cmap[pr->pc] == UINT32_MAX)
 			col = COLOR_PAIR(1);
 		else
-			col = get_ctable(color_index(map->cmap[pr->pc]) + 1);
+			col = get_ctable(viz, color_index(viz, map->cmap[pr->pc]) + 1);
 		wattron(viz->wmap, col);
 		mvwprintw(viz->wmap, pr->pc / 64, pr->pc % 64 * 3 + 1,
 				"%02x", map->map[pr->pc]);
@@ -69,10 +69,10 @@ void	vbots(t_map *map, t_viz *viz)
 	while (i < map->n_bots)
 	{
 		mvwprintw(viz->winfo, 8 + (i * 4), 1, "Player %d:", map->bots[i]->id);
-		wattron(viz->winfo, bot_color(i, True));
+		wattron(viz->winfo, bot_color(viz, i));
 		mvwprintw(viz->winfo, 8 + (i * 4), 15, "%s",
 				map->bots[i]->header->name);
-		wattroff(viz->winfo, bot_color(i, True));
+		wattroff(viz->winfo, bot_color(viz, i));
 		mvwprintw(viz->winfo, 8 + 1 + (i * 4), 3, "Last live: %d",
 				map->bots[i]->last_live);
 		mvwprintw(viz->winfo, 8 + 2 + (i * 4), 3, "Lives in current period: %d",
@@ -87,7 +87,7 @@ void	vbots(t_map *map, t_viz *viz)
 
 void	vinfo(t_map *map, t_viz *viz)
 {
-	wattron(viz->winfo, get_color("info"));
+	wattron(viz->winfo, get_color(viz, "info"));
 	mvwaddstr(viz->winfo, 1, 20, viz->active ? "**RUNNING**" : "**PAUSED**");
 	mvwprintw(viz->winfo, 3, 1, "Cycle: %d", map->cyc_cnt);
 	mvwprintw(viz->winfo, 4, 1, "Processes: %d", map->n_proc);
@@ -97,7 +97,7 @@ void	vinfo(t_map *map, t_viz *viz)
 	mvwprintw(viz->winfo, 5, 25, "Cycles/second limit: %d", viz->max_cyc_sec);
 	mvwprintw(viz->winfo, 6, 1, "MAX_CHECKS: %d", map->pref->max_checks);
 	mvwprintw(viz->winfo, 6, 25, "Cycles/sec: %f", viz->cyc_sec);
-	wattroff(viz->winfo, get_color("info"));
+	wattroff(viz->winfo, get_color(viz, "info"));
 }
 
 /*
