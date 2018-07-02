@@ -69,9 +69,7 @@ void	i_store(t_map *map, t_proc *pr)
 	val = get_reg(pr, pr->args[0].value);
 	if (pr->args[1].type == T_REG)
 		return set_reg(pr, pr->args[1].value, val);
-//	bytes_to_map(map, pr->pc + (pr->args[1].value % IDX_MOD), val, 4);
-	// BUG IS HERE
-	cur_pos = pr->pc + (pr->args[1].value % IDX_MOD);// This should be added, according to the table: + (pr->args[1].value % IDX_MOD);
+	cur_pos = pr->pc + (((short)pr->args[1].value) % IDX_MOD);
 	i = 0;
 	while (i < 4)
 	{
@@ -90,10 +88,7 @@ void	i_sti(t_map *map, t_proc *pr)
 
 	val = get_reg(pr, pr->args[0].value);
 	if (pr->args[1].type == T_REG)
-	{
-		pr->reg[pr->args[1].value] = val;
-		return ;
-	}
+		return (set_reg(pr, pr->args[1].value, val));
 	cur_pos = pr->pc + pr->cur_ins->codage + (pr->args[1].value % IDX_MOD); // This should be added, according to the table: + (pr->args[1].value % IDX_MOD);
 	i = 0;
 	while (i < 4)

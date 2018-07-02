@@ -68,9 +68,13 @@ t_arg	*codage_to_args(t_map *map, t_proc *pr, const t_op *instr, t_uint codage)
 	{
 		args[i].code = (t_uc)((codage >> (6 - i * 2)) & 0x3);
 		args[i].type = code_to_type(args[i].code);
-		args[i].size = (t_uc)(args[i].type == T_DIR ?
-							instr->label_size : args[i].type);
+		if (args[i].type == T_DIR)
+			args[i].size = (t_uc)instr->label_size;
+		else
+			args[i].size = (t_uc)(args[i].type == T_REG ? 1 : 2);
 		args[i].value = collect_arg(map, args[i].size, pr->pc, cum_frwd);
+		if (args[i].size == 2)
+			args[i].value = (short)args[i].value;
 		cum_frwd += args[i].size;
 		i++;
 	}
