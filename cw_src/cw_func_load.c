@@ -36,8 +36,13 @@ void	i_load(t_map *map, t_proc *pr)
 void	i_ldi(t_map *map, t_proc *pr)
 {
 	t_uint	val;
+	t_uint	first_arg;
+	t_uint	sec_arg;
 
-	val = get_arg(map, pr, 0, False) + get_arg(map, pr, 1, False);
+	first_arg = get_arg(map, pr, 0, False);
+	sec_arg = get_arg(map, pr, 1, False);
+	val = pr->pc + first_arg + sec_arg;
+	log_ldi(map, val, first_arg, sec_arg);
 	val = get_indval(map, pr, val, False);
 	set_reg(pr, pr->args[2].value, val);
 }

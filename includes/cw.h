@@ -34,6 +34,7 @@ void	to_log(t_map *map, char *message, ...);
 void	to_valog(t_map *map, char *message, va_list ap);
 void	log_live(t_map *map, t_uint index);
 void	log_sti(t_map *map, t_uint start_pos, t_uint first_arg, t_uint sec_arg);
+void	log_ldi(t_map *map, t_uint start_pos, t_uint first_arg, t_uint sec_arg);
 void	log_fork(t_map *map, t_proc *pr, t_uint new_pc);
 void	log_instruction(t_map *map, t_proc *pr);
 void	log_move(t_map *map, t_proc *pr, t_uint n);

@@ -51,6 +51,13 @@ void	log_sti(t_map *map, t_uint start_pos, t_uint first_arg, t_uint sec_arg)
 		first_arg, sec_arg, first_arg + sec_arg, start_pos);
 }
 
+void	log_ldi(t_map *map, t_uint start_pos, t_uint first_arg, t_uint sec_arg)
+{
+	if (!(map->log->level & v_ops))
+		return ;
+	to_log(map, "       | -> load from %d + %d = %d (with pc and mod %d)\n",
+		first_arg, sec_arg, first_arg + sec_arg, start_pos);
+}
 void	log_reg(t_map *map, t_proc *pr)
 {
 	if (!(map->log->level & v_reg))
