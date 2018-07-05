@@ -86,7 +86,7 @@ void	show_map(t_map *map, t_bool colorize)
 			ft_printf("%#06x : ", i);
 		if (c)
 			ft_printf(c);
-		ft_printf((i + 1) % 64 ? "%02x " : "%02x", map->map[i]);
+		ft_printf("%02x ", map->map[i]);
 		if (c)
 			ft_printf("{nc}");
 		if (++i % 64 == 0)

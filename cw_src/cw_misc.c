@@ -64,7 +64,7 @@ void	set_reg(t_proc *pr, t_uint n, t_uint v)
 ** from PC + (<ind_v> % IND_MOD)
 */
 
-t_uint	get_indval(t_map *map, t_proc *pr, t_uint ind_v)
+t_uint	get_indval(t_map *map, t_proc *pr, t_uint ind_v, t_bool is_l)
 {
 	t_uint	val;
 	int		pos;
@@ -72,9 +72,10 @@ t_uint	get_indval(t_map *map, t_proc *pr, t_uint ind_v)
 
 	val = 0;
 	i = 0;
+	pos = pr->pc + (is_l ? (short)ind_v : ((short)ind_v  % IDX_MOD));
 	while (i < 4)
 	{
-		pos = pr->pc + (((short)ind_v) % IDX_MOD) + i;
+		pos += i;
 		val = (val << 8) + get_map(map, pos);
 		i++;
 	}
@@ -115,12 +116,12 @@ void	val_to_map(t_map *map, t_proc *pr, t_uint n, t_uint v)
 ** Get <n>-th argument of the current instruction, zero-indexed
 */
 
-t_uint	get_arg(t_map *map, t_proc *pr, t_uint n)
+t_uint	get_arg(t_map *map, t_proc *pr, t_uint n, t_bool is_l)
 {
 	if (pr->args[n].type == T_DIR)
 		return (pr->args[n].value);
 	else if (pr->args[n].type == T_REG)
 		return (get_reg(pr, pr->args[n].value));
 	else
-		return get_indval(map, pr, pr->args[n].value);
+		return get_indval(map, pr, pr->args[n].value, is_l);
 }

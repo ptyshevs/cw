@@ -89,9 +89,16 @@ void	log_live(t_map *map, t_uint index)
 void	log_zjmp(t_map *map, t_proc *pr)
 {
 	if (pr->carry)
-		to_log(map, "P%5d | zjmp %d OK\n", pr->index, get_arg(map, pr, 0));
+		to_log(map, "P%5d | zjmp %d OK\n", pr->index, get_arg(map, pr, 0, False));
 	else
-		to_log(map, "P%5d | zjmp %d FAILED\n", pr->index, get_arg(map, pr, 0));
+		to_log(map, "P%5d | zjmp %d FAILED\n", pr->index, get_arg(map, pr, 0, False));
+}
+
+void	log_fork(t_map *map, t_proc *pr, t_uint new_pc)
+{
+	if (map->log->level & v_ops)
+		to_log(map, "P%5d | %s %d (%u)\n", pr->index, pr->cur_ins->name,
+			pr->args[0].value, new_pc);
 }
 
 /*
@@ -107,6 +114,8 @@ void	log_instruction(t_map *map, t_proc *pr)
 		return ;
 	if (pr->cur_ins->op == 9)
 		return log_zjmp(map, pr);
+	else if (pr->cur_ins->op == 12 || pr->cur_ins->op == 15)
+		return ;
 	tmp = ft_sprintf("P%5d | %s", pr->index, pr->cur_ins->name);
 	i = 0;
 	while (i < pr->cur_ins->nargs)

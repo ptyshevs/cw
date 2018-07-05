@@ -47,7 +47,7 @@ void	i_store(t_map *map, t_proc *pr)
 
 	val = get_reg(pr, pr->args[0].value);
 	if (pr->args[1].type == T_REG)
-		return set_reg(pr, get_arg(map, pr, 1), val);
+		return set_reg(pr, get_arg(map, pr, 1, False), val);
 	val_to_map(map, pr, pr->pc + ((short)pr->args[1].value % IDX_MOD), val);
 }
 
@@ -64,10 +64,10 @@ void	i_sti(t_map *map, t_proc *pr)
 	t_uint	sec_arg;
 
 	val = get_reg(pr, pr->args[0].value);
-	first_arg = get_arg(map, pr, 1);
-	sec_arg = get_arg(map, pr, 2);
+	first_arg = get_arg(map, pr, 1, False);
+	sec_arg = get_arg(map, pr, 2, False);
 	start_pos = pr->pc + first_arg + sec_arg;
-	log_sti(map, first_arg, sec_arg);
+	log_sti(map, start_pos, first_arg, sec_arg);
 	val_to_map(map, pr, start_pos, val);
 }
 

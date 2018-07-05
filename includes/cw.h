@@ -33,9 +33,11 @@ void	log_map(t_map *map, t_proc *pr, char *message, ...);
 void	to_log(t_map *map, char *message, ...);
 void	to_valog(t_map *map, char *message, va_list ap);
 void	log_live(t_map *map, t_uint index);
-void	log_sti(t_map *map, t_uint first_arg, t_uint sec_arg);
+void	log_sti(t_map *map, t_uint start_pos, t_uint first_arg, t_uint sec_arg);
+void	log_fork(t_map *map, t_proc *pr, t_uint new_pc);
 void	log_instruction(t_map *map, t_proc *pr);
 void	log_move(t_map *map, t_proc *pr, t_uint n);
+void	log_reg(t_map *map, t_proc *pr);
 void	log_more(t_map *map, char *message, ...);
 void	introduce_bots(t_map *map);
 
@@ -69,9 +71,9 @@ int		p_index_from_id(t_map *map, int id);
 t_uint	get_reg(t_proc *pr, t_uint n);
 void	set_reg(t_proc *pr, t_uint n, t_uint v);
 t_uint	get_ind(t_proc *pr, t_uint v, t_bool is_long);
-t_uint	get_indval(t_map *map, t_proc *pr, t_uint ind_v);
+t_uint	get_indval(t_map *map, t_proc *pr, t_uint ind_v, t_bool is_l);
 void	val_to_map(t_map *map, t_proc *pr, t_uint n, t_uint v);
-t_uint	get_arg(t_map *map, t_proc *pr, t_uint n);
+t_uint	get_arg(t_map *map, t_proc *pr, t_uint n, t_bool is_l);
 
 /*
 ** Bot file parsing

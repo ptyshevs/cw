@@ -14,11 +14,19 @@
 
 void	i_fork(t_map *map, t_proc *pr)
 {
-	t_proc *new_proc;
+	t_proc	*new_pr;
+	int		i;
 
-	new_proc = create_proc(pr->id, pr->pc);
-	new_proc->pc = get_ind(pr, get_arg(map, pr, 0), False) % MEM_SIZE;
-	add_proc(&map->procs, new_proc);
+	new_pr = create_proc(pr->id, pr->pc);
+	new_pr->pc = get_ind(pr, get_arg(map, pr, 0, False), False) % MEM_SIZE;
+	i = 0;
+	while (i < 16)
+	{
+		new_pr->reg[i] = pr->reg[i];
+		i++;
+	}
+	log_fork(map, pr, new_pr->pc);
+	add_proc(&map->procs, new_pr);
 }
 
 /*
@@ -28,8 +36,16 @@ void	i_fork(t_map *map, t_proc *pr)
 void	i_lfork(t_map *map, t_proc *pr)
 {
 	t_proc	*new_pr;
+	int		i;
 
 	new_pr = create_proc(pr->id, pr->pc);
-	new_pr->pc = get_ind(pr, get_arg(map, pr, 0), True) % MEM_SIZE;
+	new_pr->pc = get_ind(pr, get_arg(map, pr, 0, True), True) % MEM_SIZE;
+	i = 0;
+	while (i < 16)
+	{
+		new_pr->reg[i] = pr->reg[i];
+		i++;
+	}
+	log_fork(map, pr, new_pr->pc);
 	add_proc(&map->procs, new_pr);
 }
