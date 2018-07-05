@@ -22,8 +22,7 @@ void	dump_if_necessary(t_map *map)
 
 	if (map->viz_mode || !map->dump->dump)
 		return ;
-	if ((map->cyc_cur > 0 && map->cyc_cur % map->dump->n == 0)
-		|| map->game_over)
+	if (map->game_over || (map->cyc_cnt && (map->cyc_cnt % map->dump->n) == 0))
 	{
 		if (map->dump->once)
 		{
