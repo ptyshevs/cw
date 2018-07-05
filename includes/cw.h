@@ -68,7 +68,8 @@ void	collect_ids(t_map *map);
 int		p_index_from_id(t_map *map, int id);
 t_uint	get_reg(t_proc *pr, t_uint n);
 void	set_reg(t_proc *pr, t_uint n, t_uint v);
-t_uint	get_ind(t_map *map, t_proc *pr, t_uint ind_v);
+t_uint	get_ind(t_proc *pr, t_uint v, t_bool is_long);
+t_uint	get_indval(t_map *map, t_proc *pr, t_uint ind_v);
 void	val_to_map(t_map *map, t_proc *pr, t_uint n, t_uint v);
 t_uint	get_arg(t_map *map, t_proc *pr, t_uint n);
 
@@ -90,8 +91,8 @@ void	clean_bot(t_bot **abot);
 
 void	set_default_pref(t_map *map);
 void	inhabit_map(t_map *map);
-t_uint	get_map(t_map *map, int n);
-void	set_map(t_map *map, int n, t_uc v, chtype who);
+t_uint	get_map(t_map *map, t_uint n);
+void	set_map(t_map *map, t_uint n, t_uc v, chtype who);
 //void	bytes_to_map(t_map *map, t_uint pc, t_uint val, t_uint nbytes);
 void	move_proc(t_map *map, t_proc *pr, int n);
 

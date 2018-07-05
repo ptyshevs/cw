@@ -23,15 +23,9 @@ void	i_load(t_map *map, t_proc *pr)
 {
 	t_uint	val;
 
-	if (pr->args[0].type == T_DIR)
-	{
-		pr->carry = (t_uint)(get_reg(pr, pr->args[0].value) == 0);
-		return set_reg(pr, pr->args[1].value, get_reg(pr, pr->args[0].value));
-	}
-	t_uint	i_from = pr->pc + ((short)pr->args[0].value) % IDX_MOD;
-	val = collect_arg(map, pr->cur_ins->label_size, i_from, 0);
-	set_reg(pr, pr->args[1].value, val);
+	val = get_arg(map, pr, 0);
 	pr->carry = (t_uint)(val == 0);
+	set_reg(pr, pr->args[1].value, val);
 }
 
 

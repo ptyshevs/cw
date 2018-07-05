@@ -23,10 +23,11 @@
 void		show_usage(void)
 {
 	ft_printf("Usage: ./corewar [-d|--dump nbr_cycles N] [-s|--stream N]"
-			" [-h|--help] [-v|--verbose <level>] [-z|--viz] "
-			"[[-n number] champion1.cor] ...\n\n");
+			" [-h|--help] [-v|--verbose <level>] [-z|--viz] [-c|--colorful] "
+			"[-i|--identical] [[-n number] champion1.cor] ...\n\n");
 	ft_printf("  -d --dump\tDump memory after N cycles then exits\n");
 	ft_printf("  -s --stream\tDump memory every N cycles, pause, repeat\n");
+	ft_printf("  -i --identical\tMake memory dump identical (typos included\n");
 	ft_printf("  -c --colorful\tColorize memory dump\n");
 	ft_printf("  -z --viz\tVizualization mode\n");
 	ft_printf("  -h --help\tDisplay usage\n");
@@ -35,7 +36,8 @@ void		show_usage(void)
 	ft_printf("    1 - Show lives\n    2 - Show cycles\n");
 	ft_printf("    4 - Show operations\n    8 - Show deaths\n");
 	ft_printf("    16 - Show PC movements\n    32 - Show key pressed\n");
-	ft_printf("    64 - Show even more details\n");
+	ft_printf("    64 - Show registry state\n");
+	ft_printf("    128 - Show even more details\n");
 	ft_printf("\nVizualization key bindings:\n");
 	ft_printf("  Esc, q\tquit vizualization\n");
 	ft_printf("  Space\t\tStart or stop execution\n");

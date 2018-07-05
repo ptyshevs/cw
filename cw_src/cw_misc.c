@@ -64,19 +64,33 @@ void	set_reg(t_proc *pr, t_uint n, t_uint v)
 ** from PC + (<ind_v> % IND_MOD)
 */
 
-t_uint	get_ind(t_map *map, t_proc *pr, t_uint ind_v)
+t_uint	get_indval(t_map *map, t_proc *pr, t_uint ind_v)
 {
 	t_uint	val;
+	int		pos;
 	t_uint	i;
 
 	val = 0;
 	i = 0;
 	while (i < 4)
 	{
-		val = (val << 8) + get_map(map, pr->pc + (ind_v % IDX_MOD) + i);
+		pos = pr->pc + (((short)ind_v) % IDX_MOD) + i;
+		val = (val << 8) + get_map(map, pos);
 		i++;
 	}
 	return (val);
+}
+
+/*
+** Get index of the map
+*/
+
+t_uint	get_ind(t_proc *pr, t_uint v, t_bool is_long)
+{
+	short	pos;
+
+	pos = (short)(is_long ? (short)v : ((short)v) % IDX_MOD);
+	return (pr->pc + pos);
 }
 
 /*
@@ -108,5 +122,5 @@ t_uint	get_arg(t_map *map, t_proc *pr, t_uint n)
 	else if (pr->args[n].type == T_REG)
 		return (get_reg(pr, pr->args[n].value));
 	else
-		return get_ind(map, pr, pr->args[n].value);
+		return get_indval(map, pr, pr->args[n].value);
 }

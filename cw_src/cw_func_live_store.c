@@ -38,45 +38,17 @@ void	i_live(t_map *map, t_proc *pr)
 }
 
 /*
-** Write <n> bytes to map, starting from <pc>, essentially breaking up <val>
-** into bytes.
-*/
-
-//void	bytes_to_map(t_map *map, t_uint pc, t_uint val, t_uint n)
-//{
-//	int	i;
-//
-//	i = 0;
-//	while (i < n)
-//	{
-//		set_map(map, pc + i, (val >> (8 * (n - 1 - i))) & 0xFF, );
-//		i++;
-//	}
-//}
-
-
-/*
 ** Write value from T_REG, either on a map (T_IND) or to registry (T_REG)
 */
 
 void	i_store(t_map *map, t_proc *pr)
 {
 	t_uint	val;
-	int		i;
-	t_uc	cur_val;
-	t_uint	cur_pos;
 
 	val = get_reg(pr, pr->args[0].value);
 	if (pr->args[1].type == T_REG)
-		return set_reg(pr, pr->args[1].value, val);
-	cur_pos = pr->pc + (((short)pr->args[1].value) % IDX_MOD);
-	i = 0;
-	while (i < 4)
-	{
-		cur_val = (t_uc)((val >> (8 * (3 - i))) & 0xFF);
-		set_map(map, cur_pos + i, cur_val, bot_color_id(map, pr->id));
-		i++;
-	}
+		return set_reg(pr, get_arg(map, pr, 1), val);
+	val_to_map(map, pr, pr->pc + ((short)pr->args[1].value % IDX_MOD), val);
 }
 
 /*
@@ -94,7 +66,7 @@ void	i_sti(t_map *map, t_proc *pr)
 	val = get_reg(pr, pr->args[0].value);
 	first_arg = get_arg(map, pr, 1);
 	sec_arg = get_arg(map, pr, 2);
-	start_pos = pr->pc +  + first_arg + sec_arg;
+	start_pos = pr->pc + first_arg + sec_arg;
 	log_sti(map, first_arg, sec_arg);
 	val_to_map(map, pr, start_pos, val);
 }

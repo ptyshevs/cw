@@ -101,7 +101,8 @@ typedef enum	e_vrb
 	v_deaths = 8,
 	v_pc = 16,
 	v_mouse = 32,
-	v_more = 64
+	v_reg = 64,
+	v_more = 128
 }				t_vrb;
 
 /*
@@ -114,6 +115,7 @@ typedef enum	e_vrb
 typedef struct	s_log
 {
 	t_vrb		level;
+	t_bool		identical;
 	int			to;
 	char		**log;
 	int			cur_length;

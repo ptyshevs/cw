@@ -73,7 +73,7 @@ void	exec(t_map *map, t_proc *pr)
 {
 	if (!pr->cur_ins) // read instruction and start charging
 	{
-		if (!(pr->cur_ins = find_instr(map->map[pr->pc]))) // invalid instruction
+		if (!(pr->cur_ins = find_instr(get_map(map, pr->pc)))) // invalid instruction
 			return move_proc(map, pr, 1); // move forward
 	}
 	if (pr->cur_cycle < pr->cur_ins->cycles) // charge

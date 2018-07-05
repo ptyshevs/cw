@@ -27,7 +27,12 @@ void	introduce_bots(t_map *map)
 		if (i == 0)
 			to_log(map, "Introducing contestants...\n");
 		bot = map->bots[i];
-		to_log(map, "* Player %d, weighting %d bytes, \"%s\" (\"%s\")!\n",
+		if (map->log->identical)
+			to_log(map, "* Player %d, weighing %d bytes, \"%s\" (\"%s\")!\n",
+			i + 1, bot->header->size, bot->header->name,
+			bot->header->comment);
+		else
+			to_log(map, "* Player %d, weighting %d bytes, \"%s\" (\"%s\")!\n",
 			i + 1, bot->header->size, bot->header->name,
 			bot->header->comment);
 		i++;
@@ -42,6 +47,6 @@ void	log_sti(t_map *map, t_uint first_arg, t_uint sec_arg)
 {
 	if (!(map->log->level & v_ops))
 		return ;
-	to_log(map, "       | -> store to %d + %lld = %d (with pc and mod 14)\n",
+	to_log(map, "       | -> store to %d + %d = %d (with pc and mod 14)\n",
 		first_arg, sec_arg, first_arg + sec_arg);
 }

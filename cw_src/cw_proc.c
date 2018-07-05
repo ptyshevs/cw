@@ -31,23 +31,14 @@ t_proc	*create_proc(t_uint id, t_uint pos)
 }
 
 /*
-** Add process at the beginning of the list. This will satisfy the requirement
+** Add process at the end of the list. This will satisfy the requirement
 ** such that the last bot begins first.
 */
 
 void	add_proc(t_proc **ahead, t_proc *pr)
 {
-	t_proc	*tmp;
-
-	if (!*ahead)
-		*ahead = pr;
-	else
-	{
-		tmp = *ahead;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = pr;
-	}
+	pr->next = *ahead;
+	*ahead = pr;
 }
 
 /*

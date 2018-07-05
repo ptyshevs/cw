@@ -17,7 +17,7 @@
 ** Parse verbosity CLI argument (-v <1|2|3>)
 */
 
-static void	parse_verbosity(t_map *map, int ac, char **av, int i)
+static int	parse_verbosity(t_map *map, int ac, char **av, int i)
 {
 	int	t;
 
@@ -27,6 +27,7 @@ static void	parse_verbosity(t_map *map, int ac, char **av, int i)
 	if (!ft_strisnum(av[i + 1], 10) || (t = ft_atoi(av[i + 1])) < 0 || t > 127)
 		ft_panic(1, "Bad verbosity level\n", av[i + 1]);
 	map->log->level = (t_vrb)t;
+	return (1);
 }
 
 /*
@@ -52,7 +53,7 @@ static t_bool	parse_id(t_map *map, int ac, char **av, int i)
 ** Parse dump argument (-d|--dump or -s|--stream)
 */
 
-void	parse_dump(t_map *map, char *n, t_bool stream)
+int		parse_dump(t_map *map, char *n, t_bool stream)
 {
 	if (ft_slen(n) == 0 || !ft_strisnum(n, 10))
 		ft_panic(1, "Bad number of cycles specified for dump\n");
@@ -60,6 +61,35 @@ void	parse_dump(t_map *map, char *n, t_bool stream)
 	map->dump->once = (t_bool)!stream;
 	map->dump->n = ft_atoi(n);
 	map->viz_mode = False;
+	return (1);
+}
+
+/*
+** Compare options, return increment of i. if return value is -1, then read bot.
+** Don't ask why. Because I want to.
+*/
+
+int		parse_options(t_map *map, int ac, char **av, int i)
+{
+	if (ft_strequ(av[i], "-h") || ft_strequ(av[i], "--help"))
+		show_usage();
+	else if (ft_strequ(av[i], "-d") || ft_strequ(av[i], "--dump"))
+		return (parse_dump(map, av[i + 1], False));
+	else if (ft_strequ(av[i], "-s") || ft_strequ(av[i], "--stream"))
+		return (parse_dump(map, av[i + 1], True));
+	else if (ft_strequ(av[i], "-c") || ft_strequ(av[i], "--colorful"))
+		map->colorful = True;
+	else if (ft_strequ(av[i], "-n") && parse_id(map, ac, av, i))
+		return (2);
+	else if (ft_strequ(av[i], "-v") || ft_strequ(av[i], "--verbose"))
+		return (parse_verbosity(map, ac, av, i));
+	else if (ft_strequ(av[i], "-z") || ft_strequ(av[i], "--viz"))
+		map->viz_mode = True;
+	else if (ft_strequ(av[i], "-i") || ft_strequ(av[i], "--identical"))
+		map->log->identical = True;
+	else
+		return (-1);
+	return (0);
 }
 
 /*
@@ -71,28 +101,18 @@ void		parse_cli(t_map *map, int ac, char **av)
 {
 	int		i;
 	int		cur_id;
+	int		ret;
 
 	if (ac == (cur_id = 1))
 		show_usage();
 	i = 0;
 	while (++i < ac)
 	{
-		if (ft_strequ(av[i], "-h") || ft_strequ(av[i], "--help"))
-			show_usage();
-		else if (ft_strequ(av[i], "-d") || ft_strequ(av[i], "--dump"))
-			parse_dump(map, av[i++ + 1], False);
-		else if (ft_strequ(av[i], "-s") || ft_strequ(av[i], "--stream"))
-			parse_dump(map, av[i++ + 1], True);
-		else if (ft_strequ(av[i], "-c") || ft_strequ(av[i], "--colorful"))
-			map->colorful = True;
-		else if (ft_strequ(av[i], "-n") && parse_id(map, ac, av, i))
-			i += 2;
-		else if (ft_strequ(av[i], "-v") || ft_strequ(av[i], "--verbose"))
-			parse_verbosity(map, ac, av, i++);
-		else if (ft_strequ(av[i], "-z") || ft_strequ(av[i], "--viz"))
-			map->viz_mode = True;
-		else
+		ret = parse_options(map, ac, av, i);
+		if (ret == -1)
 			read_bot(map, av[i], -cur_id++, False);
+		else
+			i += ret;
 	}
 }
 
