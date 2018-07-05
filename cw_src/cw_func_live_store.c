@@ -79,24 +79,24 @@ void	i_store(t_map *map, t_proc *pr)
 	}
 }
 
+/*
+** Store value from the first arg (T_REG) by index on the map, starting from
+** PC + (value of the second arg + value of the third arg)
+*/
+
 void	i_sti(t_map *map, t_proc *pr)
 {
 	t_uint	val;
-	int		i;
-	t_uc	cur_val;
-	t_uint	cur_pos;
+	t_uint	start_pos;
+	t_uint	first_arg;
+	t_uint	sec_arg;
 
 	val = get_reg(pr, pr->args[0].value);
-	if (pr->args[1].type == T_REG)
-		return (set_reg(pr, pr->args[1].value, val));
-	cur_pos = pr->pc + pr->cur_ins->codage + (pr->args[1].value % IDX_MOD); // This should be added, according to the table: + (pr->args[1].value % IDX_MOD);
-	i = 0;
-	while (i < 4)
-	{
-		cur_val = (t_uc)((val >> (8 * (3 - i))) & 0xFF);
-		set_map(map, cur_pos + i, cur_val, bot_color_id(map, pr->id));
-		i++;
-	}
+	first_arg = get_arg(map, pr, 1);
+	sec_arg = get_arg(map, pr, 2);
+	start_pos = pr->pc +  + first_arg + sec_arg;
+	log_sti(map, first_arg, sec_arg);
+	val_to_map(map, pr, start_pos, val);
 }
 
 /*

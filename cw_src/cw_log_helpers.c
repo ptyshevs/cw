@@ -33,3 +33,15 @@ void	introduce_bots(t_map *map)
 		i++;
 	}
 }
+
+/*
+** Log more info on sti instruction, if necessary.
+*/
+
+void	log_sti(t_map *map, t_uint first_arg, t_uint sec_arg)
+{
+	if (!(map->log->level & v_ops))
+		return ;
+	to_log(map, "       | -> store to %d + %lld = %d (with pc and mod 14)\n",
+		first_arg, sec_arg, first_arg + sec_arg);
+}

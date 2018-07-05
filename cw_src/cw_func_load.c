@@ -34,14 +34,6 @@ void	i_load(t_map *map, t_proc *pr)
 	pr->carry = (t_uint)(val == 0);
 }
 
-t_uint	get_arg(t_map *map, t_proc *pr, t_arg arg)
-{
-	if (arg.type == T_REG)
-		return (get_reg(pr, arg.value));
-	else if (arg.type == T_DIR)
-		return (arg.value);
-	return collect_arg(map, 4, pr->pc + ((short)pr->args[0].value) % IDX_MOD, 0);
-}
 
 /*
 ** load value by index
@@ -51,7 +43,7 @@ void	i_ldi(t_map *map, t_proc *pr)
 {
 	t_uint	val;
 
-	val = get_arg(map, pr, pr->args[0]) + get_arg(map, pr, pr->args[1]);
+	val = get_arg(map, pr, 0) + get_arg(map, pr, 1);
 	val = collect_arg(map, 4, (pr->pc + val) % IDX_MOD, 0);
 	set_reg(pr, pr->args[2].value, val);
 //	pr->carry = (t_uint)(val == 1);
@@ -81,7 +73,7 @@ void	i_lldi(t_map *map, t_proc *pr)
 {
 	t_uint	val;
 
-	val = get_arg(map, pr, pr->args[0]) + get_arg(map, pr, pr->args[1]);
+	val = get_arg(map, pr, 0) + get_arg(map, pr, 1);
 	val = collect_arg(map, 4, pr->pc + val, 0);
 	set_reg(pr, pr->args[2].value, val);
 	pr->carry = (t_uint)(val == 0);
