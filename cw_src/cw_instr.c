@@ -55,12 +55,12 @@ void	activate_instr(t_map *map, t_proc *pr)
 		pr->args = codage_to_args(map, pr, pr->cur_ins, get_map(map, pr->pc + 1));
 	else // if no codage
 		pr->args = instr_to_args(map, pr, pr->cur_ins);
+	log_instruction(map, pr);
 	if (!args_are_valid(pr->cur_ins, pr->args))
 	{
-		log_map(map, pr, "Invalid arguments for instruction");
-		move_proc(map, pr, 1);
+//		to_log(map, "Invalid arguments for instruction %s\n", pr->cur_ins->name);
+		return ;
 	}
-	log_instruction(map, pr);
 	log_map(map, pr, "Activating function");
 	(*functions[pr->cur_ins->op - 1])(map, pr);
 	log_reg(map, pr);

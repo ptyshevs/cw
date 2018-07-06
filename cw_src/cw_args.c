@@ -128,11 +128,8 @@ t_bool	args_are_valid(const t_op *instr, t_arg *args)
 	{
 		if (!(args[i].type & instr->args[i]))
 			return (False);
-		i++;
-	}
-	while (i < 4)
-	{
-		if (args[i].code != 0)
+		else if (args[i].type == T_REG &&
+				(args[i].value == 0 || args[i].value > 16))
 			return (False);
 		i++;
 	}

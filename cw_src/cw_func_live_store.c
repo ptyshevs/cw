@@ -48,7 +48,7 @@ void	i_store(t_map *map, t_proc *pr)
 	val = get_reg(pr, pr->args[0].value);
 	if (pr->args[1].type == T_REG)
 		return set_reg(pr, get_arg(map, pr, 1, False), val);
-	val_to_map(map, pr, pr->pc + ((short)pr->args[1].value % IDX_MOD), val);
+	val_to_map(map, pr, get_ind(pr, pr->args[1].value, False), val);
 }
 
 /*
