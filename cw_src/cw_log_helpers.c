@@ -43,20 +43,22 @@ void	introduce_bots(t_map *map)
 ** Log more info on sti instruction, if necessary.
 */
 
-void	log_sti(t_map *map, t_uint start_pos, t_uint first_arg, t_uint sec_arg)
+void	log_sti(t_map *map, t_proc *pr, t_uint first_arg, t_uint sec_arg)
 {
 	if (!(map->log->level & v_ops))
 		return ;
+	to_log(map, "P%5d | %s r%d %d %d\n", pr->index, pr->cur_ins->name,
+		pr->args[0].value, first_arg, sec_arg);
 	to_log(map, "       | -> store to %d + %d = %d (with pc and mod %d)\n",
-		first_arg, sec_arg, first_arg + sec_arg, start_pos);
+		first_arg, sec_arg, first_arg + sec_arg, pr->pc + first_arg + sec_arg);
 }
 
-void	log_ldi(t_map *map, t_uint start_pos, t_uint first_arg, t_uint sec_arg)
+void	log_ldi(t_map *map, t_uint pc, t_uint first_arg, t_uint sec_arg)
 {
 	if (!(map->log->level & v_ops))
 		return ;
 	to_log(map, "       | -> load from %d + %d = %d (with pc and mod %d)\n",
-		first_arg, sec_arg, first_arg + sec_arg, start_pos);
+		first_arg, sec_arg, first_arg + sec_arg, pc + first_arg + sec_arg);
 }
 void	log_reg(t_map *map, t_proc *pr)
 {

@@ -28,8 +28,8 @@ void	i_live(t_map *map, t_proc *pr)
 	if ((i = p_index_from_id(map, pr->args[0].value)) == -1)
 		return log_more(map, "No player with id %d\n", pr->args[0].value);
 	log_more(map, "Player %d: I'm alive!\n", i + 1);
-	if (map->viz_mode)
-		add_special(map, pr->pc, color_inv(map, i), 50);
+//	if (map->viz_mode)
+//		add_special(map, pr->pc, color_inv(map, i), 50);
 	map->bots[i]->last_live = map->cyc_cnt + 1;
 	map->bots[i]->lives++;
 	map->lives_cur++;
@@ -67,7 +67,7 @@ void	i_sti(t_map *map, t_proc *pr)
 	first_arg = get_arg(map, pr, 1, False);
 	sec_arg = get_arg(map, pr, 2, False);
 	start_pos = pr->pc + first_arg + sec_arg;
-	log_sti(map, start_pos, first_arg, sec_arg);
+	log_sti(map, pr, first_arg, sec_arg);
 	val_to_map(map, pr, start_pos, val);
 }
 

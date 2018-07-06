@@ -114,7 +114,7 @@ void	log_instruction(t_map *map, t_proc *pr)
 		return ;
 	if (pr->cur_ins->op == 9)
 		return log_zjmp(map, pr);
-	else if (pr->cur_ins->op == 12 || pr->cur_ins->op == 15)
+	else if (pr->cur_ins->op == 12 || pr->cur_ins->op == 15 || pr->cur_ins->op == 11)
 		return ;
 	tmp = ft_sprintf("P%5d | %s", pr->index, pr->cur_ins->name);
 	i = 0;
@@ -143,7 +143,7 @@ void	log_move(t_map *map, t_proc *pr, t_uint n)
 	i = 0;
 	while (i < n)
 	{
-		t = ft_sprintf(i + 1 < n ? "%02x " : "%02x", map->map[pr->pc + i]);
+		t = ft_sprintf(i + 1 < n || map->log->identical ? "%02x " : "%02x", map->map[pr->pc + i]);
 		cmb = ft_concat(cmb, t, True);
 		i++;
 	}

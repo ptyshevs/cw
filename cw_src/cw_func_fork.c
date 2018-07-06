@@ -25,6 +25,7 @@ void	i_fork(t_map *map, t_proc *pr)
 		new_pr->reg[i] = pr->reg[i];
 		i++;
 	}
+	map->n_proc++;
 	log_fork(map, pr, new_pr->pc);
 	add_proc(&map->procs, new_pr);
 }
@@ -46,6 +47,7 @@ void	i_lfork(t_map *map, t_proc *pr)
 		new_pr->reg[i] = pr->reg[i];
 		i++;
 	}
+	map->n_proc++;
 	log_fork(map, pr, new_pr->pc);
 	add_proc(&map->procs, new_pr);
 }
