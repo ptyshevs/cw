@@ -61,9 +61,10 @@ void	activate_instr(t_map *map, t_proc *pr)
 		return ;
 	}
 	log_instruction(map, pr);
+	log_reg(map, pr);
+	log_args(map, pr);
 	log_map(map, pr, "Activating function");
 	(*functions[pr->cur_ins->op - 1])(map, pr);
-	log_reg(map, pr);
 }
 
 /*

@@ -115,7 +115,7 @@ void	val_to_map(t_map *map, t_proc *pr, t_uint n, t_uint v)
 t_uint	get_arg(t_map *map, t_proc *pr, t_uint n, t_bool is_l)
 {
 	if (pr->args[n].type == T_DIR)
-		return (pr->args[n].value);
+		return (pr->cur_ins->label_size == 4 ? pr->args[n].value : pr->args[n].value & 0xFFFF);
 	else if (pr->args[n].type == T_REG)
 		return (get_reg(pr, pr->args[n].value));
 	else

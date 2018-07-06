@@ -39,6 +39,7 @@ void	log_fork(t_map *map, t_proc *pr, t_uint new_pc);
 void	log_instruction(t_map *map, t_proc *pr);
 void	log_move(t_map *map, t_proc *pr, t_uint n);
 void	log_reg(t_map *map, t_proc *pr);
+void	log_args(t_map *map, t_proc *pr);
 void	log_more(t_map *map, char *message, ...);
 void	introduce_bots(t_map *map);
 
@@ -65,6 +66,7 @@ void	read_bot(t_map *map, char *filename, int id, t_bool id_frm_cli);
 ** Misc useful stuff
 */
 
+char	*arg_to_str(t_uc type);
 t_uint	bytes_to_uint(const t_uc *bytes, t_uint n);
 t_line	*read_n_bytes(const char *filename, int fd, t_uint n);
 void	collect_ids(t_map *map);

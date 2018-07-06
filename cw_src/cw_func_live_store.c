@@ -26,7 +26,7 @@ void	i_live(t_map *map, t_proc *pr)
 	pr->alive = True;
 	pr->last_live = map->cyc_cnt;
 	if ((i = p_index_from_id(map, pr->args[0].value)) == -1)
-		return log_more(map, "No player with id %d\n", pr->args[0].value);
+		return log_more(map, "live: No player with id %d\n", pr->args[0].value);
 	log_more(map, "Player %d: I'm alive!\n", i + 1);
 //	if (map->viz_mode)
 //		add_special(map, pr->pc, color_inv(map, i), 50);
@@ -63,12 +63,10 @@ void	i_sti(t_map *map, t_proc *pr)
 	t_uint	first_arg;
 	t_uint	sec_arg;
 
-	if (pr->args[0].value == 0 || pr->args[0].value > 16)
-		return ;
 	val = get_reg(pr, pr->args[0].value);
 	first_arg = get_arg(map, pr, 1, False);
 	sec_arg = get_arg(map, pr, 2, False);
-	start_pos = pr->pc + first_arg + sec_arg;
+	start_pos = get_ind(pr, first_arg + sec_arg, False);
 	log_sti(map, pr, first_arg, sec_arg);
 	val_to_map(map, pr, start_pos, val);
 }
@@ -81,7 +79,7 @@ void	i_zjmp(t_map *map, t_proc *pr)
 {
 	if (pr->carry)
 	{
-		pr->pc += ((short)pr->args[0].value) % IDX_MOD;
+		pr->pc += (short)get_arg(map, pr, 0, False) % IDX_MOD;
 		pr->jumped = True;
 	}
 	log_more(map, "Proc %d has jumped! New position: %u\n", pr->index, pr->pc);

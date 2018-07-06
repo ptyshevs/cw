@@ -116,7 +116,7 @@ void	show_procs(t_proc *procs)
 ** Argument type string representation
 */
 
-char	*arg_type_to_str(t_uc type)
+char	*arg_to_str(t_uc type)
 {
 	if (type == T_REG)
 		return ("T_REG");
@@ -143,11 +143,11 @@ void	show_args(t_arg *args)
 	while (i < 4)
 	{
 		if (i < 3)
-			ft_printf("%02X: %s [%d]\n", args[i].code, arg_type_to_str(args[i].type),
+			ft_printf("%02X: %s [%d]\n", args[i].code, arg_to_str(args[i].type),
 					args[i].size);
 		else
 			ft_printf("%02X: %s [%d]\t<-- This should be zero\n",
-				args[i].code, arg_type_to_str(args[i].type), args[i].size);
+				args[i].code, arg_to_str(args[i].type), args[i].size);
 		i++;
 	}
 }

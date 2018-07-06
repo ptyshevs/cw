@@ -20,7 +20,8 @@
 void	vproc(t_map *map, t_viz *viz)
 {
 	t_proc	*pr;
-	int	col;
+	int		col;
+	t_uint	pos;
 
 	pr = map->procs;
 	while (pr)
@@ -30,7 +31,8 @@ void	vproc(t_map *map, t_viz *viz)
 		else
 			col = get_ctable(viz, color_index(viz, get_cmap(map, pr->pc)) + 1);
 		wattron(viz->wmap, col);
-		mvwprintw(viz->wmap, pr->pc / 64, pr->pc % 64 * 3 + 1,
+		pos = (MEM_SIZE + (pr->pc % MEM_SIZE)) % MEM_SIZE;
+		mvwprintw(viz->wmap, pos / 64, pos % 64 * 3 + 1,
 				"%02x", get_map(map, pr->pc));
 		wattroff(viz->wmap, col);
 		pr = pr->next;

@@ -24,7 +24,7 @@ static int	parse_verbosity(t_map *map, int ac, char **av, int i)
 	t = v_essential;
 	if (i + 1 >= ac)
 		ft_panic(1, "No verbosity level specified\n");
-	if (!ft_strisnum(av[i + 1], 10) || (t = ft_atoi(av[i + 1])) < 0 || t > 127)
+	if (!ft_strisnum(av[i + 1], 10) || (t = ft_atoi(av[i + 1])) < 0 || t > 511)
 		ft_panic(1, "Bad verbosity level\n", av[i + 1]);
 	map->log->level = (t_vrb)t;
 	return (1);

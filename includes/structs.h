@@ -102,7 +102,8 @@ typedef enum	e_vrb
 	v_pc = 16,
 	v_mouse = 32,
 	v_reg = 64,
-	v_more = 128
+	v_args = 128,
+	v_more = 256
 }				t_vrb;
 
 /*

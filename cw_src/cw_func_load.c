@@ -63,8 +63,8 @@ void	i_lldi(t_map *map, t_proc *pr)
 {
 	t_uint	val;
 
-	val = get_arg(map, pr, 0, True) + get_arg(map, pr, 1, True);
-	val = get_indval(map, pr, val, False);
+	val = get_arg(map, pr, 0, False) + get_arg(map, pr, 1, False);
+	val = get_indval(map, pr, val, True);
 	set_reg(pr, pr->args[2].value, val);
 	pr->carry = (t_uint)(val == 0);
 }

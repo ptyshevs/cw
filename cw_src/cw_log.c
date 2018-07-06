@@ -89,9 +89,9 @@ void	log_live(t_map *map, t_uint index)
 void	log_zjmp(t_map *map, t_proc *pr)
 {
 	if (pr->carry)
-		to_log(map, "P%5d | zjmp %d OK\n", pr->index, get_arg(map, pr, 0, False));
+		to_log(map, "P%5d | zjmp %hd OK\n", pr->index, get_arg(map, pr, 0, False));
 	else
-		to_log(map, "P%5d | zjmp %d FAILED\n", pr->index, get_arg(map, pr, 0, False));
+		to_log(map, "P%5d | zjmp %hd FAILED\n", pr->index, get_arg(map, pr, 0, False));
 }
 
 void	log_fork(t_map *map, t_proc *pr, t_uint new_pc)
@@ -99,6 +99,20 @@ void	log_fork(t_map *map, t_proc *pr, t_uint new_pc)
 	if (map->log->level & v_ops)
 		to_log(map, "P%5d | %s %d (%u)\n", pr->index, pr->cur_ins->name,
 			pr->args[0].value, new_pc);
+}
+
+void	log_args(t_map *map, t_proc *pr)
+{
+	if (!(map->log->level & v_args))
+		return ;
+	if (pr->cur_ins->nargs == 1)
+		to_log(map, "P%5d | %s\n", pr->index, arg_to_str(pr->args[0].type));
+	else if (pr->cur_ins->nargs == 2)
+		to_log(map, "P%5d | %s %s\n", pr->index, arg_to_str(pr->args[0].type),
+			arg_to_str(pr->args[1].type));
+	else
+		to_log(map, "P%5d | %s %s %s\n", pr->index, arg_to_str(pr->args[0].type),
+			arg_to_str(pr->args[1].type), arg_to_str(pr->args[2].type));
 }
 
 /*
