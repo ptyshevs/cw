@@ -27,6 +27,7 @@ void	game_over(t_map *map)
 		to_log(map, "Game is over. Press any key to finish");
 		viz_arena(map);
 		wgetch(map->viz->wmain);
+		system("pkill afplay 2> /dev/null");
 	}
 }
 
