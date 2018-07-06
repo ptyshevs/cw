@@ -1,10 +1,5 @@
-# #
-
-#
-  	.comment	"This is comment"
-
-  	.name		"Gagnant"
-
+.name		"Celebration Funebre v0.99pl42"
+.comment	"Jour J"
 
 		ld   %0,r3		
 label:		zjmp %:avantdebut
@@ -37,7 +32,7 @@ init:		ld   %393216,r4		 	#7
 		ld   %917504,r12		#7	
 		ld   %1,r11			#7
 		ld   %6,r10			#7
-debut:live %42			#5
+debut:		live %42			#5
 		sti  r4,%:label , %1		#7
 		add  r4,r12,r4			#5	
 		sub  r10,r11,r10		#5

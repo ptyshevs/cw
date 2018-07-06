@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "viz.h"
+#include "ft_memory.h"
 
 /*
 ** Handle controls. If Esc (27) or q is pressed, return True, which means to end
@@ -45,9 +46,7 @@ void	*viz_routine(void *arg)
 {
 	while (42)
 	{
-		pthread_mutex_lock(&lock);
 		viz_arena(arg);
-		pthread_mutex_unlock(&lock);
 		usleep(50000);
 	}
 	pthread_exit(NULL);

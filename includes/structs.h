@@ -13,12 +13,11 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
-#include <curses.h>
+# include <curses.h>
 # include "libft.h"
 # include "op.h"
 
 typedef unsigned int	t_uint;
-struct					s_viz;
 
 /*
 ** Bot structure
@@ -90,6 +89,17 @@ typedef struct	s_proc
 
 /*
 ** Enumerate type for different verbosity levels
+** Fields:
+**    - v_essential: bot introduction and winner announcement
+**    - v_alive: show more info on live instructions
+**    - v_cycles: show current cycle (e.g. It is now cycle 1243)
+**    - v_ops: show operations performed (e.g. P    1 | st 01 r1 r2)
+**    - v_deaths: show when process dies
+**    - v_pc: show movement of caret
+**    - v_keys: show keys pressed
+**    - v_reg: show registry content when instruction is performed
+**    - v_args: show arguments of the instruction being performed
+**    - v_more: show even more info
 */
 
 typedef enum	e_vrb
@@ -100,7 +110,7 @@ typedef enum	e_vrb
 	v_ops = 4,
 	v_deaths = 8,
 	v_pc = 16,
-	v_mouse = 32,
+	v_keys = 32,
 	v_reg = 64,
 	v_args = 128,
 	v_more = 256
@@ -148,23 +158,113 @@ typedef struct	s_pref
 }				t_pref;
 
 /*
+** Color structure
+** Fields:
+**   - name: color name (e.g. bot, map, debug)
+**   - c: chtype returned by COLOR_PAIR(n) macro
+**   - n: color table index (n in COLOR_PAIR(n))
+*/
+
+typedef struct	s_col
+{
+	char	*name;
+	chtype	c;
+	int		n;
+}				t_col;
+
+/*
+** Structure for special places on the map
+** Fields:
+**    - col: color
+**    - i: map position
+**    - n_cycles: how many cycles it should be shown?
+*/
+
+typedef struct	s_special
+{
+	chtype				col;
+	int					i;
+	int					n_cycles;
+	struct s_special	*next;
+}				t_special;
+
+typedef struct	s_song
+{
+	char	*name;
+	char	*filename;
+}				t_song;
+
+/*
+** Structure for vizualization
+** Fields:
+**    - h_main: height of the main window
+**    - w_main: width of the main window
+**    - wmain: main window
+**    - wmap: map window
+**    - winfo: information window
+**    - wlive: live breakdown window
+**    - wlog: logging window
+**
+**    - br: breakdown of lives for the current period
+**    - prev_br: breakdown for the previous period
+**    - active: whether viz is running or paused
+**    - max_cyc_sec: max cycles per second
+**    - cyc_sec: current cycles per second ratiofaffadfd
+*/
+
+typedef struct	s_viz
+{
+	int				h_main;
+	int				w_main;
+
+	WINDOW			*wmain;
+	WINDOW			*wmap;
+	WINDOW			*winfo;
+	WINDOW			*wlive;
+	WINDOW			*wlog;
+
+	t_special		*spec;
+	int				*br;
+	int				*prev_br;
+	int				col_table_size;
+	t_col			*col_table[22];
+	t_bool			active;
+	t_bool			sound;
+	t_bool			playing;
+	int				max_cyc_sec;
+	double			cyc_sec;
+}				t_viz;
+
+/*
 ** Map structure
 ** Fields:
 **    - map: circular arena, so map[k] = map[MEM_SIZE + k] = map[MEM_SIZE - k]
+**    - cmap: map copy of colors associated with each cell
 **    - n_bots: number of bots on the map
+**    - bot_ids: array of bot ids
 **    - bots: structures for representing bots
+**
 **    - n_proc: number of processes currently active
 **    - procs: list of all processes
-**    - cycle: variable for storing current cycle
-**    - game_cycles: regulates game flow
+**
+**    - cyc_cnt: variable for storing current cycle
+**    - cyc_cur: cycle of the current period
+**    - n_checks: number of checks for lives in the period exceed NBR_LIVE
+**    - lives_cur: total number of lives in the current period
+**    - last_alive_i: index of the last player alive
+**    - viz_mode: whether vizualization is turned on
+**    - colorful: whether memory dump should be using colors
+**    - game_over: is game over?
 **    - log: logging structure
-**    - viz: whether vizualization mode is ON or OFF
+**    - viz: vizualization structure
+**    - pref: preferences structure
+**    - dump: struct for regulating memory dumping
 */
 
 typedef struct	s_map
 {
-	t_uc			map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
-	chtype			cmap[MEM_SIZE]; // Map copy for storing colors
+	t_uc			map[MEM_SIZE];
+	chtype			cmap[MEM_SIZE];
 	t_uint			n_bots;
 	int				*bot_ids;
 	t_bot			*bots[MAX_PLAYERS];
@@ -172,16 +272,16 @@ typedef struct	s_map
 	t_uint			n_proc;
 	t_proc			*procs;
 
-	int				cyc_cnt; // this is indicator of current cycle
-	int				cyc_cur; // this regulates game loop
+	int				cyc_cnt;
+	int				cyc_cur;
 	int				n_checks;
-	int				lives_cur; // current total value of lives
-	int				last_alive_i; // index of the last bot declared alive
-	t_bool			viz_mode; // the last argument wins
-	t_bool			colorful; // whether memory dump should be using colors
+	int				lives_cur;
+	int				last_alive_i;
+	t_bool			viz_mode;
+	t_bool			colorful;
 	t_bool			game_over;
 	t_log			*log;
-	struct s_viz	*viz;
+	t_viz			*viz;
 	t_pref			*pref;
 	t_dump			*dump;
 }				t_map;

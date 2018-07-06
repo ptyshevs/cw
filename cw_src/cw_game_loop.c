@@ -130,7 +130,7 @@ void	vgame_loop(t_map *map)
 	while ((ch = getch()))
 	{
 		handle_sound(map, map->viz);
-		if (map->log->level & v_mouse && ch != ERR)
+		if (map->log->level & v_keys && ch != ERR)
 			to_log(map, "Key pressed: %c | %d\n", ch, ch);
 		if (handle_controls(map, ch))
 			return ;

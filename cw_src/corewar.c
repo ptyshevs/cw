@@ -32,6 +32,5 @@ int		main(int ac, char **av)
 	map.viz_mode ? vgame_loop(&map) : game_loop(&map);
 	if (map.viz_mode)
 		wrapup_viz(map.viz);
-	system("leaks corewar");
 	return (0);
 }

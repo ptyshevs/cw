@@ -13,9 +13,8 @@
 #ifndef CW_H
 # define CW_H
 
-# include "structs.h"
-# include "op.h"
 # include <ncurses.h>
+# include <fcntl.h>
 # include "libft.h"
 # include "ft_printf.h"
 # include "ft_gnls.h"
@@ -23,7 +22,8 @@
 # include "ft_str.h"
 # include "ft_strnum.h"
 # include "ft_tell.h"
-# include <fcntl.h>
+# include "structs.h"
+# include "op.h"
 
 /*
 ** Logging and dumping
@@ -99,7 +99,6 @@ void	inhabit_map(t_map *map);
 t_uint	get_map(t_map *map, int n);
 chtype	get_cmap(t_map *map, int n);
 void	set_map(t_map *map, int n, t_uc v, chtype who);
-//void	bytes_to_map(t_map *map, t_uint pc, t_uint val, t_uint nbytes);
 void	move_proc(t_map *map, t_proc *pr, int n);
 
 /*
@@ -157,6 +156,5 @@ void	handle_period(t_map *map);
 
 void	invalid_header(char *filename);
 void	size_error(char *filename);
-
 
 #endif
