@@ -29,7 +29,7 @@ void		read_file(int fd_from, t_list **where)
 			tmp = ft_strchr(iter, STRANGE_CHAR);
 		if (tmp && !is_inside_string(iter))
 		{
-			tmp = ft_strtrunc(iter, tmp - iter, FALSE);
+			tmp = ft_strtrunc(iter, tmp - iter, False);
 			ft_lstappend(where, ft_lstnew(tmp, ft_slen(tmp) + 1));
 			ft_strdel(&tmp);
 		}

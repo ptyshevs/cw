@@ -51,3 +51,20 @@ t_line	*read_n_bytes(const char *filename, int fd, unsigned int n)
 	res->len = n;
 	return (res);
 }
+
+/*
+** Store bots id (need to color processes for vizualization)
+*/
+
+void	collect_ids(t_map *map)
+{
+	t_uint	i;
+
+	map->bot_ids = ft_memalloc(sizeof(int) * map->n_bots);
+	i = 0;
+	while (i < map->n_bots)
+	{
+		map->bot_ids[i] = map->bots[i]->id;
+		i++;
+	}
+}

@@ -13,7 +13,8 @@
 #ifndef CW_H
 # define CW_H
 
-# include "op.h"
+# include <ncurses.h>
+# include <fcntl.h>
 # include "libft.h"
 # include "ft_printf.h"
 # include "ft_gnls.h"
@@ -21,108 +22,133 @@
 # include "ft_str.h"
 # include "ft_strnum.h"
 # include "ft_tell.h"
-# include <fcntl.h>
-
-typedef unsigned int t_uint;
-
-typedef struct	s_bot
-{
-	unsigned int	start_pos;
-	unsigned char	*code;
-	int				id;
-	t_header		*header;
-}				t_bot;
+# include "structs.h"
+# include "op.h"
 
 /*
-** Process - the same as caret
+** Logging and dumping
 */
 
-typedef struct	s_proc
-{
-	unsigned int	pc; // process position
-	unsigned int	carry; // flag that tells if the latest operation was successful
-	unsigned int	id; // Number of the player that have created it
-	unsigned int	reg[REG_NUMBER]; // register
-	t_bool			alive;
-	struct s_proc	*next;
-}				t_proc;
+void	log_map(t_map *map, t_proc *pr, char *message, ...);
+void	to_log(t_map *map, char *message, ...);
+void	to_valog(t_map *map, char *message, va_list ap);
+void	log_live(t_map *map, t_uint index);
+void	log_sti(t_map *map, t_proc *pr, t_uint first_arg, t_uint sec_arg);
+void	log_ldi(t_map *map, t_uint pc, t_uint first_arg, t_uint sec_arg);
+void	log_fork(t_map *map, t_proc *pr, t_uint new_pc);
+void	log_instruction(t_map *map, t_proc *pr);
+void	log_move(t_map *map, t_proc *pr, t_uint n);
+void	log_reg(t_map *map, t_proc *pr);
+void	log_args(t_map *map, t_proc *pr);
+void	log_more(t_map *map, char *message, ...);
+void	introduce_bots(t_map *map);
 
-typedef enum	e_vrb
-{
-	v_none,
-	v_brief,
-	v_full
-}				t_vrb;
-
-
-typedef struct	s_log
-{
-	t_vrb		level;
-	int			to;
-}				t_log;
-
-typedef struct	s_map
-{
-	unsigned char	map[MEM_SIZE]; // Memory is circular, thus map[k] = map[MEM_SIZE + k]
-
-	unsigned int	n_bots;
-	t_bot			*bots[MAX_PLAYERS];
-
-	unsigned int	n_proc;
-	t_proc			*procs;
-
-	int				cycles;
-
-	t_log			log;
-	t_bool			viz; // n-curses mode is ON?
-}				t_map;
-
-/*
-** Logging and debugging
-*/
-
-
-void	logging(t_log log, char *brief, char *full);
-void	log_this(t_log log, char *message, ...);
+void	dump_if_necessary(t_map *map);
 
 /*
 ** Display information
 */
 
 void	show_usage(void);
-void	show_bots(t_bot **bots, unsigned int num_bots);
-void	show_map(t_map *map);
+void	show_bots(t_bot **bots, t_uint num_bots);
+void	show_map(t_map *map, t_bool colorize);
+void	show_procs(t_proc *procs);
+void	show_args(t_arg *args);
 
 /*
 ** CLI parsing and bot reading
 */
 
-void			parse_cli(t_map *map, int ac, char **av);
-void			read_bot(t_map *map, char *filename,
-						int id, t_bool id_frm_cli);
+void	parse_cli(t_map *map, int ac, char **av);
+void	read_bot(t_map *map, char *filename, int id, t_bool id_frm_cli);
 
-unsigned int	bytes_to_uint(const t_uc *bytes, unsigned int n);
-t_line			*read_n_bytes(const char *filename, int fd, unsigned int n);
+/*
+** Misc useful stuff
+*/
 
-unsigned int	parse_magic(char *filename, int fd);
-char			*parse_name(char *filename, int fd);
-unsigned int	parse_size(char *filename, int fd);
-char			*parse_comment(char *filename, int fd);
-void			parse_padding(char *filename, int fd);
+char	*arg_to_str(t_uc type);
+t_uint	bytes_to_uint(const t_uc *bytes, t_uint n);
+t_line	*read_n_bytes(const char *filename, int fd, t_uint n);
+void	collect_ids(t_map *map);
+int		p_index_from_id(t_map *map, int id);
+t_uint	get_reg(t_proc *pr, t_uint n);
+void	set_reg(t_proc *pr, t_uint n, t_uint v);
+t_uint	get_ind(t_proc *pr, t_uint v, t_bool is_long);
+t_uint	get_indval(t_map *map, t_proc *pr, t_uint ind_v, t_bool is_l);
+void	val_to_map(t_map *map, t_proc *pr, t_uint n, t_uint v);
+t_uint	get_arg(t_map *map, t_proc *pr, t_uint n, t_bool is_l);
 
-void			clean_bot(t_bot **abot);
+/*
+** Bot file parsing
+*/
+
+t_uint	parse_magic(char *filename, int fd);
+char	*parse_name(char *filename, int fd);
+t_uint	parse_size(char *filename, int fd);
+char	*parse_comment(char *filename, int fd);
+void	parse_padding(char *filename, int fd);
+
+void	clean_bot(t_bot **abot);
 
 /*
 ** Operations on map
 */
 
+void	set_default_pref(t_map *map);
 void	inhabit_map(t_map *map);
+t_uint	get_map(t_map *map, int n);
+chtype	get_cmap(t_map *map, int n);
+void	set_map(t_map *map, int n, t_uc v, chtype who);
+void	move_proc(t_map *map, t_proc *pr, int n);
 
 /*
-** Operations on proc
+** Operations on processes
 */
 
 void	init_procs(t_map *map);
+
+/*
+** Instructions
+*/
+
+void	i_live(t_map *map, t_proc *pr);
+void	i_load(t_map *map, t_proc *pr);
+void	i_store(t_map *map, t_proc *pr);
+void	i_add(t_map *map, t_proc *pr);
+void	i_sub(t_map *map, t_proc *pr);
+void	i_and(t_map *map, t_proc *pr);
+void	i_or(t_map *map, t_proc *pr);
+void	i_xor(t_map *map, t_proc *pr);
+void	i_zjmp(t_map *map, t_proc *pr);
+void	i_ldi(t_map *map, t_proc *pr);
+void	i_sti(t_map *map, t_proc *pr);
+void	i_fork(t_map *map, t_proc *pr);
+void	i_lload(t_map *map, t_proc *pr);
+void	i_lldi(t_map *map, t_proc *pr);
+void	i_lfork(t_map *map, t_proc *pr);
+void	i_aff(t_map *map, t_proc *pr);
+
+/*
+** Operations on arguments
+*/
+
+t_arg	*codage_to_args(t_map *map, t_proc *pr, const t_op *instr, t_uint cdg);
+t_arg	*instr_to_args(t_map *map, t_proc *pr, const t_op *instr);
+t_bool	args_are_valid(const t_op *instr, t_arg *args);
+t_uint	args_to_bytes(const t_op *instr, t_arg *args);
+t_uint	collect_arg(t_map *map, t_uint size, t_uint pc, t_uint frwd);
+
+/*
+** Execution flow
+*/
+
+void	exec(t_map *map, t_proc *pr);
+t_proc	*create_proc(t_uint id, t_uint pos);
+void	add_proc(t_proc **ahead, t_proc *pr);
+void	update_procs(t_map *map);
+void	game_loop(t_map *map);
+void	vgame_loop(t_map *map);
+void	handle_period(t_map *map);
 
 /*
 ** Errors

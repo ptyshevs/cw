@@ -65,6 +65,7 @@ static t_bot	*create_new_bot(char *filename, int id)
 	bot->id = id;
 	bot->header = read_header(filename, fd);
 	bot->code = read_code(filename, fd, bot->header->size);
+	close(fd);
 	return (bot);
 }
 
@@ -75,7 +76,6 @@ static t_bot	*create_new_bot(char *filename, int id)
 void			read_bot(t_map *map, char *filename, int id, t_bool id_frm_cli)
 {
 	int		i;
-	t_bot	*bot;
 
 	if (map->n_bots == MAX_PLAYERS)
 		ft_panic(1, "Too many champions\n");
@@ -95,9 +95,7 @@ void			read_bot(t_map *map, char *filename, int id, t_bool id_frm_cli)
 		}
 		i++;
 	}
-	bot = create_new_bot(filename, id);
-	log_this(map->log, "Bot %s [%d] was created\n", bot->header->name, bot->id);
-	map->bots[map->n_bots++] = bot;
+	map->bots[map->n_bots++] = create_new_bot(filename, id);
 }
 
 /*

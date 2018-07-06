@@ -37,12 +37,12 @@ void	check_duplicates(t_list *tokens)
 				if (n_c_i[2])
 					return (release_tokens(&prev->next));
 				if (ft_strequ(tmp->tk, NAME_CMD_STRING))
-					n_c_i[0] = !n_c_i[0] ? TRUE : duplicate_error(tmp);
+					n_c_i[0] = !n_c_i[0] ? True : duplicate_error(tmp);
 				else
-					n_c_i[1] = !n_c_i[1] ? TRUE : duplicate_error(tmp);
+					n_c_i[1] = !n_c_i[1] ? True : duplicate_error(tmp);
 			}
 			else if (tmp->type == INSTRUCTION)
-				n_c_i[2] = TRUE;
+				n_c_i[2] = True;
 			tmp = tmp->next;
 		}
 		prev = tokens;

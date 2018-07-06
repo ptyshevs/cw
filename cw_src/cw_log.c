@@ -13,31 +13,79 @@
 #include "cw.h"
 
 /*
-** Log message either to stdout (default behavior) or to fd
+** Log to vizualization
 */
 
-void	logging(t_log log, char *brief, char *full)
+void	to_vlog(t_map *map, char *message, va_list ap)
 {
-	if (log.level == v_brief && brief)
-		ft_dprintf(log.to, "%s\n", brief);
-	else if (log.level == v_elaborate && full)
-		ft_dprintf(log.to, "%s\n", full);
-	else
-		ft_panic(1, "Unrecognized log.level level (%d) or arguments:"
-		"\n%s\n%s\n%s\n", log.level, brief, full);
+	int		i;
+
+	if (map->log->log[map->log->length - 1])
+		ft_strdel(&map->log->log[map->log->length - 1]);
+	i = map->log->cur_length - 1;
+	while (i >= 0)
+	{
+		map->log->log[i + 1] = map->log->log[i];
+		i--;
+	}
+	map->log->log[0] = ft_vsprintf(message, ap);
+	map->log->cur_length += map->log->cur_length < map->log->length ? 1 : 0;
 }
 
 /*
-** Log something to <fd>
+** Log smth, either to log->fd, or to viz log
 */
 
-void	log_this(t_log log, char *message, ...)
+void	to_log(t_map *map, char *message, ...)
 {
 	va_list	ap;
 
-	if (log.level > 0)
+	va_start(ap, message);
+	if (!map->viz_mode)
+		ft_vdprintf(map->log->to, message, ap);
+	else
+		to_vlog(map, message, ap);
+}
+
+/*
+** Log smth, either to log->fd, or to viz log
+*/
+
+void	to_valog(t_map *map, char *message, va_list ap)
+{
+	map->viz_mode ? to_vlog(map, message, ap) :
+					ft_vdprintf(map->log->to, message, ap);
+}
+
+/*
+** Log something that has happened on the map, adding message to it
+*/
+
+void	log_map(t_map *map, t_proc *pr, char *message, ...)
+{
+	va_list	ap;
+	char	*tmp;
+
+	if (map->log->level & v_more)
 	{
 		va_start(ap, message);
-		ft_vdprintf(log.to, message, ap);
+		tmp = ft_vsprintf(message, ap);
+		to_log(map, pr->pc == 0 ? "0x000%d %s: %s\n" : "%#06x %s: %s\n",
+			pr->pc, pr->cur_ins->name, tmp);
+	}
+}
+
+/*
+** Log only if more flag is specified
+*/
+
+void	log_more(t_map *map, char *message, ...)
+{
+	va_list	ap;
+
+	if (map->log->level & v_more)
+	{
+		va_start(ap, message);
+		to_valog(map, message, ap);
 	}
 }

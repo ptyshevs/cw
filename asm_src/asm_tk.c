@@ -72,7 +72,7 @@ static t_tk	*line_to_tk(t_list **lines, int *line_nbr, t_bool *end_placed)
 			tk_append(&tokens, tk);
 		i += line[i] ? 1 : 0;
 	}
-	*end_placed = tokens && !(*lines)->next ? TRUE : *end_placed;
+	*end_placed = tokens && !(*lines)->next ? True : *end_placed;
 	if (tokens)
 		tk_append(&tokens, create_token(NULL, *line_nbr, i + 1, (*lines)->next ?
 																ENDLINE : END));
@@ -91,7 +91,7 @@ t_list		*tokenize(t_list *lines)
 	t_bool	end_placed;
 	int		line_count;
 
-	end_placed = FALSE;
+	end_placed = False;
 	tokens = NULL;
 	line_count = lines ? 0 : 1;
 	while (lines && ++line_count)

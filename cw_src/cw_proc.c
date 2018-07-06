@@ -18,33 +18,27 @@
 
 t_proc	*create_proc(t_uint id, t_uint pos)
 {
-	t_proc	*pr;
+	static t_uint	index = 1;
+	t_proc			*pr;
 
 	pr = ft_memalloc(sizeof(t_proc));
-	pr->alive = TRUE;
+	pr->alive = True;
 	pr->pc = pos;
-	pr->reg[0] = id;
+	pr->reg[0] = id; // do I need it?
+	pr->id = id; // I need this for viz
+	pr->index = index++;
 	return (pr);
 }
 
 /*
-** Add process at the beginning of the list. This will satisfy the requirement
+** Add process to the process list. This will satisfy the requirement
 ** such that the last bot begins first.
 */
 
 void	add_proc(t_proc **ahead, t_proc *pr)
 {
-	t_proc	*tmp;
-
-	if (!*ahead)
-		*ahead = pr;
-	else
-	{
-		tmp = *ahead;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = pr;
-	}
+	pr->next = *ahead;
+	*ahead = pr;
 }
 
 /*
@@ -53,8 +47,8 @@ void	add_proc(t_proc **ahead, t_proc *pr)
 
 void	init_procs(t_map *map)
 {
-	t_proc *pr;
-	int		m;
+	t_proc	*pr;
+	t_uint	m;
 
 	m = 0;
 	while (m < map->n_bots)
