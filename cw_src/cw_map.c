@@ -65,7 +65,6 @@ chtype	get_cmap(t_map *map, int n)
 	return (map->cmap[(MEM_SIZE + (n % MEM_SIZE)) % MEM_SIZE]);
 }
 
-
 /*
 ** Set value to circular map
 */

@@ -135,19 +135,3 @@ t_bool	args_are_valid(const t_op *instr, t_arg *args)
 	}
 	return (True);
 }
-
-/*
-** Calculate cumulative size of all arguments
-*/
-
-t_uint	args_to_bytes(const t_op *instr, t_arg *args)
-{
-	t_uint	cum_size;
-	t_uint	i;
-
-	cum_size = 0;
-	i = 0;
-	while (i < instr->nargs)
-		cum_size += args[i++].size;
-	return (cum_size);
-}
