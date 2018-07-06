@@ -39,6 +39,8 @@ void	game_loop(t_map *map)
 	while (map->pref->cycles_to_die >= 0 && !map->game_over)
 	{
 		dump_if_necessary(map);
+		if (map->log->level & v_cycles)
+			to_log(map, "It is now cycle %d\n", map->cyc_cnt + 1);
 		update_procs(map);
 		handle_period(map);
 	}

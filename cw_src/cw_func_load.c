@@ -52,7 +52,7 @@ void	i_lload(t_map *map, t_proc *pr)
 	t_uint	val;
 
 	val = get_arg(map, pr, 0, True);
-	set_reg(pr, (t_uc)pr->args[1].value, val);
+	set_reg(pr, pr->args[1].value, val); // original VM writes only 2 bytes
 }
 
 /*

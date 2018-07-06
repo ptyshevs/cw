@@ -143,7 +143,7 @@ void	log_move(t_map *map, t_proc *pr, t_uint n)
 	i = 0;
 	while (i < n)
 	{
-		t = ft_sprintf(i + 1 < n || map->log->identical ? "%02x " : "%02x", map->map[pr->pc + i]);
+		t = ft_sprintf(i + 1 < n || map->log->identical ? "%02x " : "%02x", get_map(map, pr->pc + i));
 		cmb = ft_concat(cmb, t, True);
 		i++;
 	}

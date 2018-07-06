@@ -74,10 +74,7 @@ t_uint	get_indval(t_map *map, t_proc *pr, t_uint ind_v, t_bool is_l)
 	i = 0;
 	pos = pr->pc + (is_l ? (short)ind_v : ((short)ind_v  % IDX_MOD));
 	while (i < 4)
-	{
-		val = (val << 8) + get_map(map, pos + i);
-		i++;
-	}
+		val = (val << 8) + get_map(map, pos + i++);
 	return (val);
 }
 

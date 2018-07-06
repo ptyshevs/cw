@@ -18,7 +18,10 @@ void	i_fork(t_map *map, t_proc *pr)
 	int		i;
 
 	new_pr = create_proc(pr->id, pr->pc);
+	new_pr->carry = pr->carry;
+	new_pr->jumped = pr->jumped;
 	new_pr->pc = get_ind(pr, get_arg(map, pr, 0, False), False) % MEM_SIZE;
+	new_pr->alive = False;
 	i = 0;
 	while (i < 16)
 	{
@@ -40,7 +43,10 @@ void	i_lfork(t_map *map, t_proc *pr)
 	int		i;
 
 	new_pr = create_proc(pr->id, pr->pc);
+	new_pr->carry = pr->carry;
+	new_pr->jumped = pr->jumped;
 	new_pr->pc = get_ind(pr, get_arg(map, pr, 0, True), True) % MEM_SIZE;
+	new_pr->alive = False;
 	i = 0;
 	while (i < 16)
 	{

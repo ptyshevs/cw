@@ -55,17 +55,17 @@ void	move_proc(t_map *map, t_proc *pr, int n)
 ** Get value from circular map
 */
 
-t_uint	get_map(t_map *map, t_uint n)
+t_uint	get_map(t_map *map, int n)
 {
-	return (map->map[(MEM_SIZE + n) % MEM_SIZE]);
+	return (map->map[(MEM_SIZE + (n % MEM_SIZE)) % MEM_SIZE]);
 }
 
 /*
 ** Set value to circular map
 */
 
-void	set_map(t_map *map, t_uint n, t_uc v, chtype who)
+void	set_map(t_map *map, int n, t_uc v, chtype who)
 {
-	map->map[(MEM_SIZE + n) % MEM_SIZE] = v;
-	map->cmap[(MEM_SIZE + n) % MEM_SIZE] = who;
+	map->map[(MEM_SIZE + (n % MEM_SIZE)) % MEM_SIZE] = v;
+	map->cmap[(MEM_SIZE + (n % MEM_SIZE)) % MEM_SIZE] = who;
 }

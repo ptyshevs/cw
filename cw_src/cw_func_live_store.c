@@ -63,6 +63,8 @@ void	i_sti(t_map *map, t_proc *pr)
 	t_uint	first_arg;
 	t_uint	sec_arg;
 
+	if (pr->args[0].value == 0 || pr->args[0].value > 16)
+		return ;
 	val = get_reg(pr, pr->args[0].value);
 	first_arg = get_arg(map, pr, 1, False);
 	sec_arg = get_arg(map, pr, 2, False);

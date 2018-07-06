@@ -106,8 +106,6 @@ void	handle_period(t_map *map)
 {
 	map->cyc_cur++;
 	map->cyc_cnt++;
-	if (map->log->level & v_cycles)
-		to_log(map, "It is now cycle %d\n", map->cyc_cnt);
 	if (map->viz_mode)
 		update_breakdown(map);
 	if (map->cyc_cur != map->pref->cycles_to_die)
@@ -117,10 +115,16 @@ void	handle_period(t_map *map)
 	else if (map->lives_cur < NBR_LIVE && map->n_checks == 1)
 	{
 		map->pref->cycles_to_die -= map->pref->cycle_delta;
+		if (map->log->level & v_cycles)
+			to_log(map, "Cycle to die is now %d\n", map->pref->cycles_to_die);
 		map->n_checks = MAX_CHECKS;
 	}
 	else
+	{
 		map->pref->cycles_to_die -= map->pref->cycle_delta;
+	if (map->log->level & v_cycles)
+		to_log(map, "Cycle to die is now %d\n", map->pref->cycles_to_die);
+	}
 	if (map->viz_mode)
 		ft_memcpy(map->viz->prev_br, map->viz->br, sizeof(int) * map->n_bots);
 	map->cyc_cur = 0;
