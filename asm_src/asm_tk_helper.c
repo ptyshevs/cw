@@ -97,14 +97,14 @@ void	release_tokens(t_list **atokens)
 ** the string.
 */
 
-t_bool		is_inside_string(char *line)
+t_bool	is_inside_string(char *line)
 {
 	char	*open_quote;
 	char	*hash;
 	char	*strange;
 	char	*comment;
 
-	if(!(open_quote = ft_strchr(line, '"')))
+	if (!(open_quote = ft_strchr(line, '"')))
 		return (False);
 	hash = ft_strchr(line, COMMENT_CHAR);
 	strange = ft_strchr(line, STRANGE_CHAR);

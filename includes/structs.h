@@ -14,7 +14,7 @@
 # define STRUCTS_H
 
 # include <curses.h>
-#include <zconf.h>
+# include <zconf.h>
 # include "libft.h"
 # include "op.h"
 
