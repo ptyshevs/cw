@@ -40,6 +40,17 @@ void	introduce_bots(t_map *map)
 }
 
 /*
+** Log live command if verbosity has alive flag in level
+*/
+
+void	log_live(t_map *map, t_uint index)
+{
+	if (map->log->level & v_alive)
+		to_log(map, "Player %d (%s) is said to be alive\n", index + 1,
+			map->bots[index]->header->name);
+}
+
+/*
 ** Log more info on sti instruction, if necessary.
 */
 

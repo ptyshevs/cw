@@ -45,3 +45,18 @@ char	*arg_to_str(t_uc type)
 	else
 		return ("Unrecognized");
 }
+
+/*
+** Get <n>-th argument of the current instruction, zero-indexed
+*/
+
+t_uint	get_arg(t_map *map, t_proc *pr, t_uint n, t_bool is_l)
+{
+	if (pr->args[n].type == T_DIR)
+		return (pr->args[n].value);
+//		return (pr->cur_ins->label_size == 4 ? pr->args[n].value : pr->args[n].value);
+	else if (pr->args[n].type == T_REG)
+		return (get_reg(pr, pr->args[n].value));
+	else
+		return get_indval(map, pr, pr->args[n].value, is_l);
+}

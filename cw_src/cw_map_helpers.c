@@ -32,3 +32,21 @@ void	set_default_pref(t_map *map)
 	map->pref->max_checks = MAX_CHECKS;
 	map->pref->nbr_live = NBR_LIVE;
 }
+
+/*
+** Write value <v> to map, starting from <n>-th byte
+*/
+
+void	val_to_map(t_map *map, t_proc *pr, t_uint n, t_uint v)
+{
+	t_uint	i;
+	t_uc	byte;
+
+	i = 0;
+	while (i < 4)
+	{
+		byte = (t_uc)(v >> (8 * (3 - i)) & 0xFF);
+		set_map(map, n + i, byte, bot_color_id(map, pr->id));
+		i++;
+	}
+}

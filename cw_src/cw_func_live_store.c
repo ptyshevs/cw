@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "cw.h"
-#include "viz.h"
 
 /*
 ** Make process alive for the current period

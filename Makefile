@@ -23,7 +23,7 @@ ASM_BIN = $(patsubst %, $(ODIR)/%.o, $(ASM_FILENAMES))
 
 CW_FILENAMES = corewar cw_cli cw_errors cw_parse cw_parse_helpers cw_communicate \
     cw_bot_read cw_map cw_log cw_log_helpers cw_proc cw_args cw_args_helpers \
-    cw_instr cw_dump cw_time cw_game_loop cw_game_period cw_misc \
+    cw_instr cw_dump cw_time cw_game_loop cw_game_period cw_misc cw_log_more \
     cw_func_op cw_func_load cw_func_live_store cw_func_fork cw_map_helpers
 
 CW_SRCDIR = cw_src

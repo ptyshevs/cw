@@ -89,35 +89,3 @@ t_uint	get_ind(t_proc *pr, t_uint v, t_bool is_long)
 	pos = (short)(is_long ? (short)v : ((short)v) % IDX_MOD);
 	return (pr->pc + pos);
 }
-
-/*
-** Write value <v> to map, starting from <n>-th byte
-*/
-
-void	val_to_map(t_map *map, t_proc *pr, t_uint n, t_uint v)
-{
-	t_uint	i;
-	t_uc	byte;
-
-	i = 0;
-	while (i < 4)
-	{
-		byte = (t_uc)(v >> (8 * (3 - i)) & 0xFF);
-		set_map(map, n + i, byte, bot_color_id(map, pr->id));
-		i++;
-	}
-}
-
-/*
-** Get <n>-th argument of the current instruction, zero-indexed
-*/
-
-t_uint	get_arg(t_map *map, t_proc *pr, t_uint n, t_bool is_l)
-{
-	if (pr->args[n].type == T_DIR)
-		return (pr->cur_ins->label_size == 4 ? pr->args[n].value : pr->args[n].value);
-	else if (pr->args[n].type == T_REG)
-		return (get_reg(pr, pr->args[n].value));
-	else
-		return get_indval(map, pr, pr->args[n].value, is_l);
-}
