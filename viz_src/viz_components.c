@@ -25,13 +25,13 @@ void	vproc(t_map *map, t_viz *viz)
 	pr = map->procs;
 	while (pr)
 	{
-		if (map->cmap[pr->pc] == UINT32_MAX)
+		if (get_cmap(map, pr->pc) == UINT32_MAX)
 			col = COLOR_PAIR(1);
 		else
-			col = get_ctable(viz, color_index(viz, map->cmap[pr->pc]) + 1);
+			col = get_ctable(viz, color_index(viz, get_cmap(map, pr->pc)) + 1);
 		wattron(viz->wmap, col);
 		mvwprintw(viz->wmap, pr->pc / 64, pr->pc % 64 * 3 + 1,
-				"%02x", map->map[pr->pc]);
+				"%02x", get_map(map, pr->pc));
 		wattroff(viz->wmap, col);
 		pr = pr->next;
 	}

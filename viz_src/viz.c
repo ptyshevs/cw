@@ -85,12 +85,12 @@ void	viz_arena(t_map *map)
 	werase(map->viz->wlog);
 	werase(map->viz->winfo);
 	vmap(map, map->viz);
-//	vproc(map, map->viz);
+	vproc(map, map->viz);
 	vinfo(map, map->viz);
 	vbots(map, map->viz);
-//	vlive(map, map->viz);
-//	vlog(map, map->viz);
-//	vspec(map, map->viz);
+	vlive(map, map->viz);
+	vlog(map, map->viz);
+	vspec(map, map->viz);
 	wnoutrefresh(map->viz->wmain);
 	wnoutrefresh(map->viz->wmap);
 	wnoutrefresh(map->viz->winfo);

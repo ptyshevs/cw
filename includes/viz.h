@@ -17,6 +17,8 @@
 # include <sys/time.h>
 # include <pthread.h>
 
+pthread_mutex_t lock;
+
 /*
 ** Color structure
 ** Fields:

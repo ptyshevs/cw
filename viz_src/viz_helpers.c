@@ -45,7 +45,9 @@ void	*viz_routine(void *arg)
 {
 	while (42)
 	{
+		pthread_mutex_lock(&lock);
 		viz_arena(arg);
+		pthread_mutex_unlock(&lock);
 		usleep(50000);
 	}
 	pthread_exit(NULL);
