@@ -54,8 +54,8 @@ void	init_color_table(t_viz *viz)
 	add_color(viz, "bg", COLOR_BLACK, COLOR_WHITE);
 	add_color(viz, "map", COLOR_WHITE, COLOR_BLACK);
 	add_color(viz, "bot1", COLOR_GREEN, COLOR_BLACK);
-	add_color(viz, "bot1bg",  COLOR_BLACK, COLOR_GREEN);
-	add_color(viz, "bot1inv",  COLOR_WHITE, COLOR_GREEN);
+	add_color(viz, "bot1bg", COLOR_BLACK, COLOR_GREEN);
+	add_color(viz, "bot1inv", COLOR_WHITE, COLOR_GREEN);
 	add_color(viz, "bot2", COLOR_BLUE, COLOR_BLACK);
 	add_color(viz, "bot2bg", COLOR_BLACK, COLOR_BLUE);
 	add_color(viz, "bot2inv", COLOR_WHITE, COLOR_BLUE);
@@ -75,7 +75,7 @@ void	init_color_table(t_viz *viz)
 chtype	get_ctable(t_viz *viz, int n)
 {
 	return (n > 0 && n <= viz->col_table_size ?
-			viz->col_table[n - 1]->c : (t_uint)-1);
+			viz->col_table[n - 1]->c : (t_uint) - 1);
 }
 
 /*
@@ -94,69 +94,4 @@ chtype	get_color(t_viz *viz, char *color)
 		i++;
 	}
 	return (0);
-}
-
-/*
-** Get index of the color in the colortable.
-*/
-
-short	color_index(t_viz *viz, chtype col)
-{
-	short			i;
-
-	i = 0;
-	while (i < viz->col_table_size)
-	{
-		if (col == viz->col_table[i]->c)
-			return (short)(i + 1);
-		i++;
-	}
-	return (-1);
-}
-
-/*
-** Return bot color by index
-*/
-
-chtype	bot_color(t_map *map, int index)
-{
-	if (!map->viz_mode)
-		return (chtype)(index);
-	if (index == 0)
-		return (get_color(map->viz, "bot1"));
-	else if (index == 1)
-		return (get_color(map->viz, "bot2"));
-	else if (index == 2)
-		return (get_color(map->viz, "bot3"));
-	else if (index == 3)
-		return (get_color(map->viz, "bot4"));
-	else
-		log_more(map, "bot_color was called with bad index: %d\n", index);
-	return (0);
-}
-
-chtype	bot_color_id(t_map *map, int id)
-{
-	return (bot_color(map, p_index_from_id(map, id)));
-}
-
-/*
-** Return inverse of bot color
-*/
-
-chtype	color_inv(t_map *map, int index)
-{
-	return (get_ctable(map->viz,
-				color_index(map->viz, bot_color(map, index)) + 2));
-}
-
-/*
-** Return bot color by index (text-mode)
-*/
-
-char	*bot_strcolor(int index)
-{
-	static char	*colors[4] = {"{green}", "{blue}", "{red}", "{cyan}"};
-
-	return (index >= 0 && index < 4 ? colors[index] : NULL);
 }
