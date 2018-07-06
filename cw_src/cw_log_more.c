@@ -56,7 +56,7 @@ void	log_instruction(t_map *map, t_proc *pr)
 	if (!(map->log->level & v_ops))
 		return ;
 	if (pr->cur_ins->op == 9)
-		return log_zjmp(map, pr);
+		return (log_zjmp(map, pr));
 	else if (pr->cur_ins->op == 12 || pr->cur_ins->op == 15 ||
 			pr->cur_ins->op == 11)
 		return ;

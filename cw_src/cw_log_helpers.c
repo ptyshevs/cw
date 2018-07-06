@@ -71,6 +71,7 @@ void	log_ldi(t_map *map, t_uint pc, t_uint first_arg, t_uint sec_arg)
 	to_log(map, "       | -> load from %hd + %hd = %hd (with pc and mod %hd)\n",
 		first_arg, sec_arg, first_arg + sec_arg, pc + first_arg + sec_arg);
 }
+
 void	log_reg(t_map *map, t_proc *pr)
 {
 	if (!(map->log->level & v_reg))

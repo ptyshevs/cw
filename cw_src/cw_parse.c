@@ -16,7 +16,7 @@
 ** Read 4 bytes of magic, validate the cumulative number
 */
 
-unsigned int	parse_magic(char *filename, int fd)
+t_uint	parse_magic(char *filename, int fd)
 {
 	t_line			*magic;
 	unsigned int	nbr;
@@ -63,7 +63,7 @@ char	*parse_comment(char *filename, int fd)
 ** Parse bot size, which takes 4 bytes
 */
 
-unsigned int	parse_size(char *filename, int fd)
+t_uint	parse_size(char *filename, int fd)
 {
 	t_line			*size;
 	unsigned int	nbr;
@@ -80,7 +80,7 @@ unsigned int	parse_size(char *filename, int fd)
 ** Parse padding, which takes 4 bytes and evaluates to 0
 */
 
-void			parse_padding(char *filename, int fd)
+void	parse_padding(char *filename, int fd)
 {
 	t_line			*pad;
 	unsigned int	nbr;

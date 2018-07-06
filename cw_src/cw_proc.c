@@ -24,8 +24,8 @@ t_proc	*create_proc(t_uint id, t_uint pos)
 	pr = ft_memalloc(sizeof(t_proc));
 	pr->alive = True;
 	pr->pc = pos;
-	pr->reg[0] = id; // do I need it?
-	pr->id = id; // I need this for viz
+	pr->reg[0] = id;
+	pr->id = id;
 	pr->index = index++;
 	return (pr);
 }

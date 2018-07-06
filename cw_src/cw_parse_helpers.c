@@ -37,14 +37,14 @@ unsigned int	bytes_to_uint(const t_uc *bytes, unsigned int n)
 **       to read
 */
 
-t_line	*read_n_bytes(const char *filename, int fd, unsigned int n)
+t_line			*read_n_bytes(const char *filename, int fd, unsigned int n)
 {
 	t_line	*res;
 	ssize_t	nread;
 
 	res = init_line();
 	res->str = ft_memalloc(n + 1);
-	if ((nread = read(fd, res->str, n)) == - 1)
+	if ((nread = read(fd, res->str, n)) == -1)
 		ft_panic(1, "Error: invalid file %s\n", filename);
 	else if (nread < n)
 		ft_panic(1, "Error: file %s has ended unexpectedly\n", filename);
@@ -56,7 +56,7 @@ t_line	*read_n_bytes(const char *filename, int fd, unsigned int n)
 ** Store bots id (need to color processes for vizualization)
 */
 
-void	collect_ids(t_map *map)
+void			collect_ids(t_map *map)
 {
 	t_uint	i;
 
