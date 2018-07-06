@@ -37,7 +37,6 @@ void	i_sub(t_map *map, t_proc *pr)
 	(void)map;
 	val = get_reg(pr, pr->args[0].value) - get_reg(pr, pr->args[1].value);
 	set_reg(pr, pr->args[2].value, val);
-//		log_more(map, "i_sub tried to write to r%d\n", pr->args[2].value);
 	pr->carry = (t_uint)(val == 0);
 }
 
@@ -66,7 +65,6 @@ void	i_or(t_map *map, t_proc *pr)
 
 	val = get_arg(map, pr, 0, False) | get_arg(map, pr, 1, False);
 	set_reg(pr, pr->args[2].value, val);
-//		log_more(map, "i_or tried to write to r%d\n", pr->args[2].value);
 	pr->carry = (t_uint)(val == 0);
 }
 
@@ -81,6 +79,5 @@ void	i_xor(t_map *map, t_proc *pr)
 
 	val = get_arg(map, pr, 0, False) ^ get_arg(map, pr, 1, False);
 	set_reg(pr, pr->args[2].value, val);
-//		log_more(map, "i_xor tried to write to r%d\n", pr->args[2].value);
 	pr->carry = (t_uint)(val == 0);
 }

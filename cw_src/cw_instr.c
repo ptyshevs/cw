@@ -28,7 +28,7 @@ const t_op	*find_instr(t_uint op)
 ** After the instruction was executed, clean-up proc fields
 */
 
-void	wrap_up(t_map *map, t_proc *pr)
+void		wrap_up(t_map *map, t_proc *pr)
 {
 	if (pr->cur_ins->op == 9 && pr->jumped)
 		pr->jumped = False;
@@ -45,21 +45,19 @@ void	wrap_up(t_map *map, t_proc *pr)
 ** Arguments are read regardless of whether there is codage or not
 */
 
-void	activate_instr(t_map *map, t_proc *pr)
+void		activate_instr(t_map *map, t_proc *pr)
 {
-	static void (*functions[16])(t_map *, t_proc *)={i_live, i_load, i_store,
+	static void (*functions[16])(t_map *, t_proc *) = {i_live, i_load, i_store,
 		i_add, i_sub, i_and, i_or, i_xor, i_zjmp, i_ldi, i_sti, i_fork, i_lload,
 		i_lldi, i_lfork, i_aff};
 
 	if (pr->cur_ins->codage)
-		pr->args = codage_to_args(map, pr, pr->cur_ins, get_map(map, pr->pc + 1));
-	else // if no codage
+		pr->args = codage_to_args(map, pr, pr->cur_ins,
+									get_map(map, pr->pc + 1));
+	else
 		pr->args = instr_to_args(map, pr, pr->cur_ins);
 	if (!args_are_valid(pr->cur_ins, pr->args))
-	{
-//		to_log(map, "Invalid arguments for instruction %s\n", pr->cur_ins->name);
 		return ;
-	}
 	log_instruction(map, pr);
 	log_reg(map, pr);
 	log_args(map, pr);
@@ -71,14 +69,14 @@ void	activate_instr(t_map *map, t_proc *pr)
 ** Execute command on which the process currently positioned
 */
 
-void	exec(t_map *map, t_proc *pr)
+void		exec(t_map *map, t_proc *pr)
 {
-	if (!pr->cur_ins) // read instruction and start charging
+	if (!pr->cur_ins)
 	{
-		if (!(pr->cur_ins = find_instr(get_map(map, pr->pc)))) // invalid instruction
-			return move_proc(map, pr, 1); // move forward
+		if (!(pr->cur_ins = find_instr(get_map(map, pr->pc))))
+			return (move_proc(map, pr, 1));
 	}
-	if (pr->cur_cycle < pr->cur_ins->cycles) // charge
+	if (pr->cur_cycle < pr->cur_ins->cycles)
 	{
 		pr->cur_cycle++;
 		log_map(map, pr, "Charging %d/%d", pr->cur_cycle, pr->cur_ins->cycles);
@@ -94,7 +92,7 @@ void	exec(t_map *map, t_proc *pr)
 ** Update all processes
 */
 
-void	update_procs(t_map *map)
+void		update_procs(t_map *map)
 {
 	t_proc	*pr;
 

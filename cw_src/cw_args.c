@@ -35,7 +35,7 @@ static t_uc	code_to_type(t_uc code)
 ** optionally skipping <frwd> bytes.
 */
 
-t_uint	collect_arg(t_map *map, t_uint size, t_uint pc, t_uint frwd)
+t_uint		collect_arg(t_map *map, t_uint size, t_uint pc, t_uint frwd)
 {
 	t_uint	nbr;
 	t_uint	i;
@@ -55,7 +55,8 @@ t_uint	collect_arg(t_map *map, t_uint size, t_uint pc, t_uint frwd)
 ** There are 4 places for arguments in one codage byte
 */
 
-t_arg	*codage_to_args(t_map *map, t_proc *pr, const t_op *instr, t_uint codage)
+t_arg		*codage_to_args(t_map *map, t_proc *pr,
+							const t_op *instr, t_uint cdg)
 {
 	t_arg	*args;
 	t_uint	i;
@@ -63,10 +64,10 @@ t_arg	*codage_to_args(t_map *map, t_proc *pr, const t_op *instr, t_uint codage)
 
 	args = ft_memalloc(sizeof(t_arg) * 4);
 	i = 0;
-	cum_frwd = 2; // skipping codage
+	cum_frwd = 2;
 	while (i < 4)
 	{
-		args[i].code = (t_uc)((codage >> (6 - i * 2)) & 0x3);
+		args[i].code = (t_uc)((cdg >> (6 - i * 2)) & 0x3);
 		args[i].type = code_to_type(args[i].code);
 		if (args[i].type == T_DIR)
 			args[i].size = (t_uc)instr->label_size;
@@ -85,14 +86,15 @@ t_arg	*codage_to_args(t_map *map, t_proc *pr, const t_op *instr, t_uint codage)
 ** Unambiguously extend instruction without codage
 */
 
-t_arg	*instr_to_args(t_map *map, t_proc *pr, const t_op *instr)
+t_arg		*instr_to_args(t_map *map, t_proc *pr, const t_op *instr)
 {
 	t_arg	*args;
 	t_uint	i;
 
 	args = ft_memalloc(sizeof(t_arg) * 4);
 	args[0].type = (t_uc)instr->args[0];
-	args[0].size = (t_uc)(args[0].type == T_DIR ? instr->label_size : args[0].type);
+	args[0].size = (t_uc)(args[0].type == T_DIR ?
+							instr->label_size : args[0].type);
 	if (args[0].type == T_REG)
 		args[0].code = REG_CODE;
 	else if (args[0].type == T_DIR)
@@ -100,8 +102,6 @@ t_arg	*instr_to_args(t_map *map, t_proc *pr, const t_op *instr)
 	else if (args[0].type == T_IND)
 		args[0].code = IND_CODE;
 	args[0].value = collect_arg(map, args[0].size, pr->pc, 1);
-	if (args[0].size == 2)
-		args[0].value = (short)args[0].value;
 	i = 1;
 	while (i < 4)
 	{
@@ -119,7 +119,7 @@ t_arg	*instr_to_args(t_map *map, t_proc *pr, const t_op *instr)
 ** Check if places for codes that weren't used are zeros.
 */
 
-t_bool	args_are_valid(const t_op *instr, t_arg *args)
+t_bool		args_are_valid(const t_op *instr, t_arg *args)
 {
 	t_uint		i;
 

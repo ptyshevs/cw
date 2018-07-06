@@ -57,8 +57,8 @@ void	update_special(t_map *map, t_viz *viz)
 {
 	t_special	*it;
 	t_special	*tmp;
-	(void)map;
 
+	(void)map;
 	it = viz->spec;
 	while (it && it->n_cycles < 0)
 	{
@@ -94,8 +94,8 @@ void	handle_sound(t_map *map, t_viz *viz)
 		{"Childish Gambino - Sweatpants", "sweatpants.3gp"},
 		{"Vitas - 7th element", "vitas.3gp"},
 		{"Childish Gambino - 3005", "3005.3gp"}};
-	t_song		song;
-	char		*tmp;
+	t_song			song;
+	char			*tmp;
 
 	if (viz->sound && !viz->playing)
 	{
@@ -119,12 +119,11 @@ void	handle_sound(t_map *map, t_viz *viz)
 
 void	vgame_loop(t_map *map)
 {
-	pthread_t		vizthr;
 	struct timeval	start;
 	int				ch;
 	int				cycles;
 
-	pthread_create(&vizthr, NULL, viz_routine, map);
+	pthread_create(&map->viz->vizthr, NULL, viz_routine, map);
 	gettimeofday(&start, NULL);
 	cycles = map->cyc_cnt;
 	while ((ch = getch()))
@@ -141,7 +140,7 @@ void	vgame_loop(t_map *map)
 		update_special(map, map->viz);
 		handle_period(map);
 		if (map->game_over)
-			return game_over(map);
+			return (game_over(map));
 		handle_time(map, &start, &cycles);
 	}
 	pthread_exit(NULL);

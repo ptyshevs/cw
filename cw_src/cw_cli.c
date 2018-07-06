@@ -17,7 +17,7 @@
 ** Parse verbosity CLI argument (-v <1|2|3>)
 */
 
-static int	parse_verbosity(t_map *map, int ac, char **av, int i)
+static int		parse_verbosity(t_map *map, int ac, char **av, int i)
 {
 	int	t;
 
@@ -34,7 +34,6 @@ static int	parse_verbosity(t_map *map, int ac, char **av, int i)
 ** Parse id CLI argument (-n <id> <bot>)
 **
 ** If -n is found on i-th index, try to find number at i+1 and bot at i+2
-
 */
 
 static t_bool	parse_id(t_map *map, int ac, char **av, int i)
@@ -53,7 +52,7 @@ static t_bool	parse_id(t_map *map, int ac, char **av, int i)
 ** Parse dump argument (-d|--dump or -s|--stream)
 */
 
-int		parse_dump(t_map *map, char *n, t_bool stream)
+int				parse_dump(t_map *map, char *n, t_bool stream)
 {
 	if (ft_slen(n) == 0 || !ft_strisnum(n, 10))
 		ft_panic(1, "Bad number of cycles specified for dump\n");
@@ -69,7 +68,7 @@ int		parse_dump(t_map *map, char *n, t_bool stream)
 ** Don't ask why. Because I want to.
 */
 
-int		parse_options(t_map *map, int ac, char **av, int i)
+int				parse_options(t_map *map, int ac, char **av, int i)
 {
 	if (ft_strequ(av[i], "-h") || ft_strequ(av[i], "--help"))
 		show_usage();
@@ -94,10 +93,9 @@ int		parse_options(t_map *map, int ac, char **av, int i)
 
 /*
 ** Parse Command-line arguments
-**
 */
 
-void		parse_cli(t_map *map, int ac, char **av)
+void			parse_cli(t_map *map, int ac, char **av)
 {
 	int		i;
 	int		cur_id;

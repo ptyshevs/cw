@@ -28,7 +28,6 @@ void	i_load(t_map *map, t_proc *pr)
 	set_reg(pr, pr->args[1].value, val);
 }
 
-
 /*
 ** load value by index
 */
@@ -52,11 +51,11 @@ void	i_lload(t_map *map, t_proc *pr)
 	t_uint	val;
 
 	val = get_arg(map, pr, 0, True);
-	set_reg(pr, (short)pr->args[1].value, val); // original VM writes only 2 bytes
+	set_reg(pr, (short)pr->args[1].value, val);
 }
 
 /*
-**
+** Long load by index
 */
 
 void	i_lldi(t_map *map, t_proc *pr)

@@ -20,7 +20,7 @@
 ** specified.
 */
 
-void		show_usage(void)
+void	show_usage(void)
 {
 	ft_printf("Usage: ./corewar [-d|--dump nbr_cycles N] [-s|--stream N]"
 			" [-h|--help] [-v|--verbose <level>] [-z|--viz] [-c|--colorful] "

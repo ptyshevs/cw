@@ -14,6 +14,7 @@
 # define STRUCTS_H
 
 # include <curses.h>
+#include <zconf.h>
 # include "libft.h"
 # include "op.h"
 
@@ -223,6 +224,7 @@ typedef struct	s_viz
 	WINDOW			*wlive;
 	WINDOW			*wlog;
 
+	pthread_t		vizthr;
 	t_special		*spec;
 	int				*br;
 	int				*prev_br;
